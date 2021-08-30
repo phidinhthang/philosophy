@@ -17,8 +17,9 @@
   },
   "lint-staged": {
     "*.ts": [
-      "prettier --write",
-      "eslint server/src web/src"
+      "npm run format",
+      "npm run lint",
+      "git add ."
     ]
   },
   "devDependencies": {
