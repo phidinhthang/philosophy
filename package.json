@@ -16,7 +16,7 @@
     "prepare": "husky"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
+    "*.ts": [
       "prettier --write",
       "eslint server/src web/src"
     ]
