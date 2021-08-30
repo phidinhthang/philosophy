@@ -1,0 +1,14 @@
+{
+  "[typescript]": {
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true
+  },
+  "editor.autoClosingBrackets": "always",
+  "editor.autoClosingQuotes": "always",
+  "javascript.preferences.quoteStyle": "single",
+  "typescript.preferences.quoteStyle": "single",
+  "files.eol": "\n",
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true
+  }
+}

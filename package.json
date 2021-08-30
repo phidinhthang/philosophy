@@ -1,0 +1,38 @@
+{
+  "name": "philosophy",
+  "version": "1.0.0",
+  "workspaces": [
+    "web",
+    "server"
+  ],
+  "main": "index.js",
+  "author": "Thang <phidinhthang@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint server/src web/src",
+    "lint:server": "eslint server/src",
+    "lint:web": "eslint web/src",
+    "format": "prettier --write server/src web/src",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "prettier --write",
+      "eslint server/src web/src"
+    ]
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.29.3",
+    "@typescript-eslint/parser": "^4.29.3",
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-plugin-prettier": "^3.4.1",
+    "eslint-plugin-react": "^7.25.1",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "husky": "^7.0.2",
+    "lint-staged": "^11.1.2",
+    "prettier": "^2.3.2",
+    "ts-node": "^10.2.1",
+    "typescript": "^4.4.2"
+  }
+}
