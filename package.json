@@ -8,17 +8,18 @@
   "main": "index.js",
   "author": "Thang <phidinhthang@gmail.com>",
   "license": "MIT",
+  "engines": {
+    "node": "14.x"
+  },
   "scripts": {
     "lint": "eslint server/src web/src",
-    "lint:server": "eslint server/src",
-    "lint:web": "eslint web/src",
-    "format": "prettier --write server/src web/src",
-    "prepare": "husky"
+    "prepare": "husky",
+    "build:server": "yarn workspace server build",
+    "start:server": "yarn workspace server start"
   },
   "lint-staged": {
-    "*.ts": [
-      "npm run format",
-      "npm run lint",
+    "*.aa": [
+      "eslint $(git diff --name-only HEAD | xargs)",
       "git add ."
     ]
   },
@@ -34,6 +35,7 @@
     "lint-staged": "^11.1.2",
     "prettier": "^2.3.2",
     "ts-node": "^10.2.1",
+    "ts-node-dev": "^1.1.8",
     "typescript": "^4.4.2"
   }
 }
