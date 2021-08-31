@@ -1,1 +1,1 @@
-web: npm i -g yarn typescript && npm link typescript && npm run start:server
+web: npm run start:server
