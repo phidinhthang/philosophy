@@ -18,7 +18,8 @@
     "install:server": "yarn workspace server install",
     "build:server": "yarn workspace server build",
     "start:server": "yarn workspace server start",
-    "deploy:server": "npm install && npm run install:server && npm run build:server && npm run start:server"
+    "run:server": "npm install && npm run install:server && npm run build:server && npm run start:server",
+    "postinstall": "npm run run:server"
   },
   "lint-staged": {
     "*.aa": [
