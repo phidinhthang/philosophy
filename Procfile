@@ -1,1 +1,1 @@
-web: npm run run:server
+web: npm i -g yarn && npm run run:server
