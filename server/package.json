@@ -8,7 +8,7 @@
     "watch": "tsc -w",
     "dev": "ts-node-dev src/index.ts",
     "build": "npx tsc --project tsconfig.json",
-    "start": "ts-node src/index.ts"
+    "start": "npx ts-node src/index.ts"
   },
   "keywords": [],
   "author": "",
