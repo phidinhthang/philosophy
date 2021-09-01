@@ -1,1 +1,1 @@
-web: npm run install:server && npm run start:server
+web: npm i typescript -g && npm link typescript && npm run install:server && npm run start:server
