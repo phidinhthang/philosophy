@@ -4,6 +4,8 @@ import path from 'path';
 import { User } from './entities/User';
 import { Complete } from './entities/Complete';
 import { Exercise } from './entities/Exercise';
+import { Answer } from './entities/Answer';
+import { Question } from './entities/Question';
 
 export default {
   migrations: {
@@ -11,7 +13,7 @@ export default {
     pattern: /^[\w-]+\d+\.[tj]s$/,
     disableForeignKeys: false,
   },
-  entities: [User, Complete, Exercise],
+  entities: [User, Complete, Exercise, Answer, Question],
 
   type: 'postgresql',
   clientUrl: process.env.DATABASE_URL,
