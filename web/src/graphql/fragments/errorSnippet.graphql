@@ -1,0 +1,4 @@
+fragment errorSnippet on CustomError {
+  field
+  message
+}

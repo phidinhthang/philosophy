@@ -1,0 +1,4 @@
+fragment userSnippet on User {
+  id
+  name
+}
