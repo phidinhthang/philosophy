@@ -30,10 +30,10 @@ const main = async () => {
   // database configuration
   const orm = await MikroORM.init(mikroOrmConfig);
 
-  const migrator = orm.getMigrator();
-  await migrator.createMigration();
-  await migrator.down({ to: 0 });
-  await migrator.up();
+  // const migrator = orm.getMigrator();
+  // await migrator.createMigration();
+  // await migrator.down({ to: 0 });
+  // await migrator.up();
   if (!__isProd__) {
     const conn = orm.em.getConnection();
     await conn.execute('delete from "users"');
