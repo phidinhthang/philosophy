@@ -32,6 +32,7 @@ const main = async () => {
 
   const migrator = orm.getMigrator();
   await migrator.createMigration();
+  await migrator.down({ to: 0 });
   await migrator.up();
   if (!__isProd__) {
     const conn = orm.em.getConnection();
