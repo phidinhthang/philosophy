@@ -18,9 +18,7 @@
     "install:server": "yarn workspace server install",
     "build:server": "yarn workspace server build",
     "start:server": "yarn workspace server start",
-    "run:server": "npm run install:server && npm run build:server && npm run start:server",
-    "heroku-prebuild": "heroku config:set NODE_ENV=development",
-    "heroku-postbuild": "heroku config:set NODE_ENV=production"
+    "run:server": "npm run install:server && npm run build:server && npm run start:server"
   },
   "lint-staged": {
     "*.aa": [
