@@ -8,9 +8,7 @@
     "watch": "tsc -w",
     "dev": "ts-node-dev src/index.ts",
     "build": "npx tsc --project tsconfig.json",
-    "start": "npx ts-node src/index.ts",
-    "heroku-prebuild": "export NPM_CONFIG_PRODUCTION=false; export NODE_ENV=; NPM_CONFIG_PRODUCTION=false NODE_ENV=development npm install --only=dev --dev",
-    "heroku-postbuild": "export NPM_CONFIG_PRODUCTION=true; export NODE_ENV=production;"
+    "start": "npx ts-node src/index.ts"
   },
   "keywords": [],
   "author": "",

@@ -18,7 +18,9 @@
     "install:server": "yarn workspace server install",
     "build:server": "yarn workspace server build",
     "start:server": "yarn workspace server start",
-    "run:server": "npm run install:server && npm run build:server && npm run start:server"
+    "run:server": "npm run install:server && npm run build:server && npm run start:server",
+    "heroku-prebuild": "export NPM_CONFIG_PRODUCTION=false; export NODE_ENV=; NPM_CONFIG_PRODUCTION=false NODE_ENV=development npm install --only=dev --dev",
+    "heroku-postbuild": "export NPM_CONFIG_PRODUCTION=true; export NODE_ENV=production;"
   },
   "lint-staged": {
     "*.aa": [
