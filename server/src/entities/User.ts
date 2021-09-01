@@ -1,6 +1,13 @@
-import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
+import {
+  Collection,
+  Entity,
+  OneToMany,
+  PrimaryKey,
+  Property,
+} from '@mikro-orm/core';
 import { Field, ID, ObjectType } from 'type-graphql';
 import { v4 } from 'uuid';
+import { Complete } from './Complete';
 
 @ObjectType()
 @Entity({
@@ -17,4 +24,8 @@ export class User {
 
   @Property()
   password!: string;
+
+  @Field(() => [Complete])
+  @OneToMany(() => Complete, (complete) => complete.user)
+  completes = new Collection<Complete>(this);
 }

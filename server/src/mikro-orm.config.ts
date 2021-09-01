@@ -2,6 +2,8 @@ import { MikroORM } from '@mikro-orm/core';
 import { __isProd__ } from './constants';
 import path from 'path';
 import { User } from './entities/User';
+import { Complete } from './entities/Complete';
+import { Exercise } from './entities/Exercise';
 
 export default {
   migrations: {
@@ -9,7 +11,7 @@ export default {
     pattern: /^[\w-]+\d+\.[tj]s$/,
     disableForeignKeys: false,
   },
-  entities: [User],
+  entities: [User, Complete, Exercise],
 
   type: 'postgresql',
   clientUrl: process.env.DATABASE_URL,
@@ -23,4 +25,5 @@ export default {
         },
       }
     : undefined,
+  tsNode: true,
 } as Parameters<typeof MikroORM.init>[0];
