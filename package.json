@@ -19,8 +19,8 @@
     "build:server": "yarn workspace server build",
     "start:server": "yarn workspace server start",
     "run:server": "npm run install:server && npm run build:server && npm run start:server",
-    "heroku-prebuild": "heroku config:set NPM_CONFIG_PRODUCTION=false",
-    "heroku-postbuild": "heroku config:set NPM_CONFIG_PRODUCTION=true"
+    "heroku-prebuild": "heroku config:set NPM_CONFIG_PRODUCTION=development",
+    "heroku-postbuild": "heroku config:set NPM_CONFIG_PRODUCTION=production"
   },
   "lint-staged": {
     "*.aa": [
