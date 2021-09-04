@@ -1,24 +1,16 @@
-import * as React from 'react';
-import Head from 'next/head';
-import { Header } from './Header';
+import React from 'react';
+import { Wrapper, WrapperVariant } from '../ui/Wrapper';
+import { NavBar } from './Navbar';
 
-type Props = {
-  title?: string;
+interface LayoutProps {
+  variant?: WrapperVariant;
+}
+
+export const Layout: React.FC<LayoutProps> = ({ children, variant }) => {
+  return (
+    <>
+      <NavBar />
+      <Wrapper variant={variant}>{children}</Wrapper>
+    </>
+  );
 };
-
-const Layout: React.FunctionComponent<Props> = ({
-  children,
-  title = 'This is the default title',
-}) => (
-  <div>
-    <Head>
-      <title>{title}</title>
-      <meta charSet="utf-8" />
-      <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-    </Head>
-    <Header />
-    {children}
-  </div>
-);
-
-export default Layout;

@@ -19,6 +19,8 @@ import {
   createRefreshToken,
 } from '../utils/auth/createToken';
 import { verify } from 'jsonwebtoken';
+import { UserAnswerInput } from './inputs';
+import { Question } from '../entities/Question';
 
 @InputType()
 class UserInput implements Partial<User> {
@@ -122,5 +124,23 @@ export class UserResolver {
       user,
       accessToken: createAccessToken(user),
     };
+  }
+
+  @Mutation(() => Boolean)
+  async checkAnswer(
+    @Arg('input') input: UserAnswerInput,
+    @Ctx() { em }: MyContext,
+  ): Promise<boolean> {
+    const question = await em
+      .createQueryBuilder(Question)
+      .select('*')
+      .where({ id: input.questionId })
+      .getSingleResult();
+    if (!question) return false;
+    const answers = await question.answers.loadItems();
+    const isCorrect = !!answers.find(
+      (a) => a.id === input.answerId && a.isCorrect,
+    );
+    return isCorrect || false;
   }
 }

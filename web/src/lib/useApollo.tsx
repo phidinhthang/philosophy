@@ -10,27 +10,31 @@ import fetch from 'isomorphic-unfetch';
 import { parse } from 'cookie';
 import { getAccessToken, setAccessToken } from './accessToken';
 import { isServer } from './isServer';
-
+import {
+  ApolloClientParam,
+  ContextWithApolloOptions,
+  WithApolloOptions,
+} from '../types/apollo';
 // On the client, we store the Apollo Client in the following variable.
 // This prevents the client from reinitializing between page transitions.
 let globalApolloClient: ApolloClient<NormalizedCacheObject> | null = null;
 
-type WithApolloOptions = {
-  apolloClient: ApolloClient<NormalizedCacheObject>;
-  apolloState: NormalizedCacheObject;
-};
+// type WithApolloOptions = {
+//   apolloClient: ApolloClient<NormalizedCacheObject>;
+//   apolloState: NormalizedCacheObject;
+// };
 
-type ContextWithApolloOptions = AppContext & {
-  ctx: { apolloClient: WithApolloOptions['apolloClient'] };
-} & NextPageContext &
-  WithApolloOptions;
+// type ContextWithApolloOptions = AppContext & {
+//   ctx: { apolloClient: WithApolloOptions['apolloClient'] };
+// } & NextPageContext &
+//   WithApolloOptions;
 
-type ApolloClientParam =
-  | ApolloClient<NormalizedCacheObject>
-  | ((
-      ctx?: NextPageContext,
-      serverAccessToken?: string,
-    ) => ApolloClient<NormalizedCacheObject>);
+// type ApolloClientParam =
+//   | ApolloClient<NormalizedCacheObject>
+//   | ((
+//       ctx?: NextPageContext,
+//       serverAccessToken?: string,
+//     ) => ApolloClient<NormalizedCacheObject>);
 
 /**
  * Installs the Apollo Client on NextPageContext

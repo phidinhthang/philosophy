@@ -23,6 +23,10 @@ import {
   createAccessToken,
   createRefreshToken,
 } from './utils/auth/createToken';
+// import { seed } from './seed/seed';
+// import { EntityManager } from '@mikro-orm/postgresql';
+import { ExerciseResolver } from './resolvers/exerciseResolver';
+import { QuestionResolver } from './resolvers/questionResolver';
 
 const PORT = process.env.PORT || 4000;
 
@@ -41,6 +45,7 @@ const main = async () => {
       name: 'thang',
       password: await argon2.hash('thang'),
     });
+    // await seed(orm.em as EntityManager);
     await orm.em.persistAndFlush(user);
   }
 
@@ -83,7 +88,12 @@ const main = async () => {
   // Create Apollo server and listen to port
   const server = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [helloResolver, UserResolver],
+      resolvers: [
+        helloResolver,
+        UserResolver,
+        ExerciseResolver,
+        QuestionResolver,
+      ],
       validate: false,
     }),
     context: ({ req, res }) =>

@@ -1,4 +1,4 @@
-import { MikroORM } from '@mikro-orm/core';
+import { Options } from '@mikro-orm/core';
 import { __isProd__ } from './constants';
 import path from 'path';
 import { User } from './entities/User';
@@ -6,6 +6,7 @@ import { Complete } from './entities/Complete';
 import { Exercise } from './entities/Exercise';
 import { Answer } from './entities/Answer';
 import { Question } from './entities/Question';
+import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 
 export default {
   migrations: {
@@ -28,4 +29,4 @@ export default {
       }
     : undefined,
   tsNode: true,
-} as Parameters<typeof MikroORM.init>[0];
+} as Options<PostgreSqlDriver>;

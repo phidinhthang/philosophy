@@ -1,14 +1,13 @@
 import {
+  Cascade,
   Collection,
   Entity,
   ManyToOne,
   OneToMany,
-  OneToOne,
   PrimaryKey,
   Property,
 } from '@mikro-orm/core';
 import { Field, ID, ObjectType } from 'type-graphql';
-import { v4 } from 'uuid';
 import { Answer } from './Answer';
 import { Exercise } from './Exercise';
 
@@ -16,22 +15,18 @@ import { Exercise } from './Exercise';
 @Entity({ tableName: 'questions' })
 export class Question {
   @Field(() => ID)
-  @PrimaryKey({ primary: true })
-  id: string = v4();
+  @PrimaryKey({ primary: true, defaultRaw: 'uuid_generate_v4()' })
+  id: string;
 
   @Field(() => String)
   @Property()
   title: string;
 
   @Field(() => Exercise)
-  @ManyToOne(() => Exercise)
-  exercise: Exercise;
+  @ManyToOne(() => Exercise, { cascade: [Cascade.ALL] })
+  exercise?: Exercise;
 
   @Field(() => [Answer])
   @OneToMany(() => Answer, (answer) => answer.question)
   answers = new Collection<Answer>(this);
-
-  @Field(() => Answer)
-  @OneToOne(() => Answer)
-  correct: Answer;
 }

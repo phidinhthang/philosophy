@@ -1,0 +1,10 @@
+query GetQuestions($id: String!) {
+  getQuestions(id: $id) {
+    id
+    title
+    answers {
+      id
+      text
+    }
+  }
+}

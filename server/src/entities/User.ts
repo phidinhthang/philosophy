@@ -6,7 +6,6 @@ import {
   Property,
 } from '@mikro-orm/core';
 import { Field, ID, ObjectType } from 'type-graphql';
-import { v4 } from 'uuid';
 import { Complete } from './Complete';
 
 @ObjectType()
@@ -15,8 +14,8 @@ import { Complete } from './Complete';
 })
 export class User {
   @Field(() => ID)
-  @PrimaryKey({ primary: true })
-  id: string = v4();
+  @PrimaryKey({ primary: true, defaultRaw: 'uuid_generate_v4()' })
+  id: string;
 
   @Field(() => String)
   @Property()

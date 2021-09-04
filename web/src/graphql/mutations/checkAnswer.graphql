@@ -1,0 +1,3 @@
+mutation CheckAnswer($questionId: ID!, $answerId: ID!) {
+  checkAnswer(input: { questionId: $questionId, answerId: $answerId })
+}

@@ -42,6 +42,9 @@ export const Header: React.FC<Props> = () => {
           <a>bye</a>
         </Link>{' '}
         |{' '}
+        <Link href="/auth">
+          <a>auth</a>
+        </Link>
         {data && data.me ? (
           <button
             onClick={async () => {

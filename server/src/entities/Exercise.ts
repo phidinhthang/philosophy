@@ -1,13 +1,19 @@
-import { Entity, Property, PrimaryKey } from '@mikro-orm/core';
+import {
+  Entity,
+  Property,
+  PrimaryKey,
+  OneToMany,
+  Collection,
+} from '@mikro-orm/core';
 import { ObjectType, Field, ID, Int } from 'type-graphql';
-import { v4 } from 'uuid';
+import { Question } from './Question';
 
 @ObjectType()
 @Entity()
 export class Exercise {
   @Field(() => ID)
-  @PrimaryKey({ primary: true })
-  id: string = v4();
+  @PrimaryKey({ primary: true, defaultRaw: 'uuid_generate_v4()' })
+  id: string;
 
   @Field(() => String)
   @Property()
@@ -16,4 +22,8 @@ export class Exercise {
   @Field(() => Int)
   @Property()
   length!: number;
+
+  @Field(() => [Question])
+  @OneToMany(() => Question, (question) => question.exercise)
+  questions = new Collection<Question>(this);
 }
