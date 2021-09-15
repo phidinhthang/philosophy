@@ -1,3 +1,19 @@
 mutation CreateExercise($input: ExerciseInput!) {
-  createExercise(input: $input)
+  createExercise(input: $input) {
+    hasError
+    errors {
+      title
+      questions {
+        title
+        isCorrect
+        answers {
+          text
+          isCorrect
+        }
+      }
+    }
+    exercise {
+      ...exerciseSnippet
+    }
+  }
 }

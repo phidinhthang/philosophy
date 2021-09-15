@@ -10,7 +10,7 @@ import { AnswerInput } from '../ui/AnswerInput';
 const HomePage = () => {
   useIsAuth();
   const { data, error, loading } = useGetAllExercisesQuery();
-
+  const { data: meData } = useMeQuery();
   if (!loading && !data) {
     return (
       <div>
@@ -25,26 +25,42 @@ const HomePage = () => {
         <div>loading...</div>
       ) : (
         <Stack spacing={8}>
-          {data!.getAllExercises.map((e) => (
-            <Flex key={e.id} p={5} borderWidth="1px">
-              <Box
-                flex={1}
-                display="flex"
-                justifyContent="space-between"
-                alignItems="center"
+          {data!.getAllExercises.map((e, index) => {
+            if (!e) return e;
+            const done = meData?.me?.completes?.find(
+              (c) => c.exercise.id === e.id,
+            );
+            let text = '';
+            if (done) {
+              text = `finished ${done.corrects as number} / ${e.length}`;
+            } else {
+              text = `${e.length} question`;
+            }
+            return (
+              <Flex
+                key={e.id || index}
+                p={5}
+                borderWidth="1px"
+                backgroundColor={done ? 'green.100' : undefined}
               >
-                <NextLink href="/quizzes/[id]" as={`/quizzes/${e.id}`}>
-                  <Link>
-                    <Heading fontSize="large">{e.title}</Heading>
-                  </Link>
-                </NextLink>
-                <Text>{e.length} question</Text>
-              </Box>
-            </Flex>
-          ))}
+                <Box
+                  flex={1}
+                  display="flex"
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
+                  <NextLink href="/quizzes/[id]" as={`/quizzes/${e.id}`}>
+                    <Link>
+                      <Heading fontSize="large">{e.title}</Heading>
+                    </Link>
+                  </NextLink>
+                  <Text>{text}</Text>
+                </Box>
+              </Flex>
+            );
+          })}
         </Stack>
       )}
-      {/* <AnswerInput label="hello" name="hello" /> */}
     </Layout>
   );
 };

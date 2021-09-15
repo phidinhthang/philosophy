@@ -10,7 +10,8 @@ class MyDocument extends Document {
     return (
       <Html>
         <Head />
-        <link href="/global.css"></link>
+        <link href="/global.css" rel="stylesheet"></link>
+        <link href="/fadeOutUp.css" rel="stylesheet"></link>
         <body>
           <Main />
           <NextScript />

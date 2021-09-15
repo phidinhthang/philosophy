@@ -1,9 +1,6 @@
-import { Button } from '@chakra-ui/button';
-import { Checkbox } from '@chakra-ui/checkbox';
 import { Box } from '@chakra-ui/layout';
-import { Radio } from '@chakra-ui/radio';
-import { Field, useField } from 'formik';
 import React, { InputHTMLAttributes } from 'react';
+import { UseFormRegister } from 'react-hook-form';
 import { InputField } from './InputField';
 
 type AnswerInputProps = InputHTMLAttributes<HTMLInputElement> & {
@@ -11,31 +8,33 @@ type AnswerInputProps = InputHTMLAttributes<HTMLInputElement> & {
   label: string;
   // radioName: string;
   name: string;
+  register: UseFormRegister<{ [Key: string]: any }>;
 };
 
 export const AnswerInput: React.FC<AnswerInputProps> = ({
   inputName,
   label,
+  name,
   size: _,
   value,
+  register,
   ...props
 }) => {
-  const [field, { error }] = useField(props);
   return (
     <>
       <InputField
         name={inputName}
         label={label}
         placeholder="write answer here"
+        register={register}
       />
       <Box>
         <input
           // as={Button}
-          {...field}
-          type="radio"
-          name={field.name}
+          // {...field}
           value={value}
-          // multiple={false}
+          type="radio"
+          {...register(name)}
         />
       </Box>
     </>

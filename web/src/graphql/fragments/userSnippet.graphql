@@ -1,4 +1,8 @@
 fragment userSnippet on User {
   id
   name
+  firstName
+  lastName
+  avatarUrl
+  score
 }

@@ -1,17 +1,7 @@
 import { User } from '../entities/User';
-import {
-  Mutation,
-  Resolver,
-  Ctx,
-  Arg,
-  InputType,
-  ObjectType,
-  Field,
-  Query,
-} from 'type-graphql';
+import { Mutation, Resolver, Ctx, Arg, Query } from 'type-graphql';
 import argon2 from 'argon2';
-import { MyContext } from '../types';
-import { CustomError } from '../utils/CustomError';
+import { CheckAnswerResponse, MyContext } from '../types';
 import { validateLogin, validateRegister } from '../utils/auth/validate';
 import { sendRefreshToken } from '../utils/auth/sendRefreshToken';
 import {
@@ -19,27 +9,16 @@ import {
   createRefreshToken,
 } from '../utils/auth/createToken';
 import { verify } from 'jsonwebtoken';
-import { UserAnswerInput } from './inputs';
+import {
+  LoginInput,
+  LoginResponse,
+  RegisterInput,
+  UserAnswerInput,
+} from './inputs';
 import { Question } from '../entities/Question';
-
-@InputType()
-class UserInput implements Partial<User> {
-  @Field(() => String)
-  name: string;
-
-  @Field(() => String)
-  password: string;
-}
-
-@ObjectType()
-class LoginResponse {
-  @Field(() => User, { nullable: true })
-  user?: User;
-  @Field(() => String, { nullable: true })
-  accessToken?: string;
-  @Field(() => [CustomError], { nullable: true })
-  errors?: CustomError[];
-}
+import { ScorePerDay } from '../entities/ScorePerDay';
+import { scorePlaceholder } from '../utils/scorePlaceholder';
+import { getTodayTime } from '../utils/time/getTodayTime';
 
 @Resolver()
 export class UserResolver {
@@ -55,7 +34,8 @@ export class UserResolver {
       const token = authorization.split(' ')[1];
       const payload: any = verify(token, process.env.ACCESS_TOKEN_SECRET!);
       console.log(payload);
-      return await em.findOne(User, payload.userId);
+      const user = await em.findOne(User, payload.userId, ['completes']);
+      return user;
     } catch (err) {
       console.log(err);
       return null;
@@ -70,7 +50,7 @@ export class UserResolver {
 
   @Mutation(() => LoginResponse)
   async login(
-    @Arg('input') { name, password }: UserInput,
+    @Arg('input') { name, password }: LoginInput,
     @Ctx() { em, res }: MyContext,
   ): Promise<LoginResponse> {
     const errors = validateLogin({ name, password });
@@ -101,7 +81,7 @@ export class UserResolver {
 
   @Mutation(() => LoginResponse)
   async register(
-    @Arg('input') { name, password }: UserInput,
+    @Arg('input') { name, password, firstName, lastName }: RegisterInput,
     @Ctx() { res, em }: MyContext,
   ): Promise<LoginResponse> {
     const errors = validateRegister({ name, password });
@@ -115,10 +95,13 @@ export class UserResolver {
     }
 
     const hashedPassword = await argon2.hash(password);
-
-    const user = em.create(User, { name, password: hashedPassword });
+    const user = em.create(User, {
+      name,
+      password: hashedPassword,
+      firstName,
+      lastName,
+    });
     await em.persistAndFlush(user);
-
     sendRefreshToken(res, createRefreshToken(user));
     return {
       user,
@@ -126,21 +109,75 @@ export class UserResolver {
     };
   }
 
-  @Mutation(() => Boolean)
+  @Mutation(() => CheckAnswerResponse)
   async checkAnswer(
     @Arg('input') input: UserAnswerInput,
-    @Ctx() { em }: MyContext,
-  ): Promise<boolean> {
+    @Ctx() { em, req }: MyContext,
+  ): Promise<CheckAnswerResponse> {
+    let user: User;
+    const authorization = req.headers['authorization'];
+    console.log(authorization);
+    if (!authorization) throw new Error('not auth');
+    try {
+      const token = authorization.split(' ')[1];
+      const payload: any = verify(token, process.env.ACCESS_TOKEN_SECRET!);
+      console.log(payload);
+      user = await em.findOneOrFail(User, payload.userId, ['completes']);
+    } catch (err) {
+      console.log(err);
+      throw new Error('not auth');
+    }
     const question = await em
       .createQueryBuilder(Question)
       .select('*')
       .where({ id: input.questionId })
       .getSingleResult();
-    if (!question) return false;
+    if (!question) throw new Error('bad request');
     const answers = await question.answers.loadItems();
     const isCorrect = !!answers.find(
       (a) => a.id === input.answerId && a.isCorrect,
     );
-    return isCorrect || false;
+    let score = Math.round(Math.random() * 10) + 50;
+    if (!isCorrect) {
+      score = -score;
+    }
+
+    await user.updateScore(em, score);
+    return {
+      isCorrect,
+      score,
+    };
+  }
+
+  @Query(() => [ScorePerDay])
+  async getScoreOfWeek(@Ctx() { em, req }: MyContext) {
+    let user: User;
+    const authorization = req.headers['authorization'];
+    if (!authorization) {
+      throw new Error('not auth');
+    }
+    try {
+      const token = authorization.split(' ')[1];
+      const payload: any = verify(token, process.env.ACCESS_TOKEN_SECRET!);
+      console.log(payload);
+      user = await em.findOneOrFail(User, payload.userId);
+    } catch (err) {
+      console.log(err);
+      throw new Error('not auth');
+    }
+    let scoreOfWeek = scorePlaceholder();
+    const scores = await em.find(ScorePerDay, {
+      day: { $gte: getTodayTime({ offset: 6 }) },
+      owner: user,
+    });
+    return scoreOfWeek.map((score) => {
+      let final: ReturnType<typeof scorePlaceholder>[0] = score;
+      scores.map((s) => {
+        if (s.day === score.day) {
+          final = s;
+        }
+      });
+      return final;
+    });
   }
 }

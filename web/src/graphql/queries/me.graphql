@@ -1,5 +1,11 @@
 query Me {
   me {
     ...userSnippet
+    completes {
+      exercise {
+        id
+      }
+      corrects
+    }
   }
 }

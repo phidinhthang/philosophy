@@ -8,13 +8,23 @@ import {
 import Link from 'next/link';
 import { setAccessToken } from '../lib/accessToken';
 import { useApolloClient } from '@apollo/client';
+import { useRouter } from 'next/router';
 
 interface Props {}
 
 export const Header: React.FC<Props> = () => {
-  const [logout] = useLogoutMutation();
+  const [logout] = useLogoutMutation({
+    onCompleted: async () => {
+      await client.cache.reset().then(() => {
+        window.location.replace('http://localhost:3000/login');
+        setAccessToken('');
+      });
+      client.onClearStore(async () => {});
+    },
+  });
   const client = useApolloClient();
   const data = client.readQuery<MeQuery>({ query: MeDocument });
+  const router = useRouter();
   let body: any = null;
 
   if (data && data.me) {
@@ -49,8 +59,6 @@ export const Header: React.FC<Props> = () => {
           <button
             onClick={async () => {
               await logout();
-              setAccessToken('');
-              await client!.resetStore();
             }}
           >
             logout

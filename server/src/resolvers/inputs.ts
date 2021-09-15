@@ -1,5 +1,7 @@
-import { Field, ID, InputType, Int } from 'type-graphql';
+import { Field, ID, InputType, Int, ObjectType } from 'type-graphql';
 import { Answer } from '../entities/Answer';
+import { User } from '../entities/User';
+import { CustomError } from '../utils/CustomError';
 
 @InputType()
 export class AnswerInput implements Partial<Answer> {
@@ -50,4 +52,38 @@ export class CompleteInput {
 
   @Field(() => Int)
   corrects: number;
+}
+
+@InputType()
+export class LoginInput implements Partial<User> {
+  @Field(() => String)
+  name: string;
+
+  @Field(() => String)
+  password: string;
+}
+
+@InputType()
+export class RegisterInput implements Partial<User> {
+  @Field(() => String)
+  name: string;
+
+  @Field(() => String)
+  password: string;
+
+  @Field(() => String)
+  firstName: string;
+
+  @Field(() => String)
+  lastName: string;
+}
+
+@ObjectType()
+export class LoginResponse {
+  @Field(() => User, { nullable: true })
+  user?: User;
+  @Field(() => String, { nullable: true })
+  accessToken?: string;
+  @Field(() => [CustomError], { nullable: true })
+  errors?: CustomError[];
 }

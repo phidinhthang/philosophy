@@ -6,8 +6,54 @@ import { Complete } from '../entities/Complete';
 import { Exercise } from '../entities/Exercise';
 import { Question } from '../entities/Question';
 import { User } from '../entities/User';
-import { MyContext } from '../types';
+import { CreateExerciseResponse, MyContext } from '../types';
 import { CompleteInput, ExerciseInput } from './inputs';
+import { ExerciseError } from '../types';
+
+const validateExerciseInput = (
+  input: ExerciseInput,
+): { hasError: boolean; errors: ExerciseError } => {
+  let errors: ExerciseError;
+  let hasError = false;
+  if (!input.title) {
+    errors = { title: 'this field cannot be blank', questions: [] };
+    hasError = true;
+  } else {
+    errors = { title: undefined, questions: [] };
+  }
+
+  input.questions?.forEach((q, index) => {
+    if (!q.title) {
+      errors.questions?.push({
+        title: 'this field cannot be blank',
+        answers: [],
+      });
+      hasError = true;
+    } else {
+      errors.questions?.push({ title: undefined, answers: [] });
+    }
+    q.answers?.forEach((a) => {
+      if (!a.text) {
+        errors.questions[index].answers?.push({
+          text: 'this field cannot be blank',
+        });
+        hasError = true;
+      } else {
+        errors.questions[index].answers.push({ text: undefined });
+      }
+      const corrects = q.answers?.filter((a) => a.isCorrect);
+      if (corrects?.length !== 1) {
+        errors.questions[index].isCorrect =
+          'one and only one answer can be correct';
+        hasError = true;
+      } else {
+        errors.questions[index].isCorrect = undefined;
+      }
+    });
+  });
+
+  return { hasError, errors };
+};
 
 @Resolver()
 export class ExerciseResolver {
@@ -18,16 +64,22 @@ export class ExerciseResolver {
       .createQueryBuilder(Exercise)
       .select('*')
       .getResult();
-    // await em.populate(exercises, ['questions']);
 
     return exercises;
   }
 
-  @Mutation(() => Boolean)
+  @Mutation(() => CreateExerciseResponse, { nullable: true })
   async createExercise(
     @Ctx() { em }: MyContext,
     @Arg('input') input: ExerciseInput,
-  ): Promise<boolean> {
+  ): Promise<CreateExerciseResponse> {
+    const { errors, hasError } = validateExerciseInput(input);
+    if (hasError) {
+      return {
+        hasError,
+        errors,
+      };
+    }
     const newExercise = em.create(Exercise, {
       title: input.title,
       length: input.questions?.length || 0,
@@ -42,10 +94,10 @@ export class ExerciseResolver {
     });
     try {
       await em.persistAndFlush(newExercise);
-      return true;
+      return { hasError, exercise: newExercise };
     } catch (err) {
       console.log(err);
-      return false;
+      return { hasError: true };
     }
   }
 
@@ -65,11 +117,19 @@ export class ExerciseResolver {
       const user = em.getReference(User, payload.userId);
       const exercise = em.getReference(Exercise, input.exerciseId);
       if (!exercise || !user) return false;
-      await em.nativeInsert(Complete, {
-        corrects: input.corrects,
+      const existedComplete = await em.findOne(Complete, { user, exercise });
+      console.log('existed ', existedComplete);
+      if (existedComplete && existedComplete.corrects < input.corrects) {
+        existedComplete.corrects = input.corrects;
+        await em.persistAndFlush(existedComplete);
+        return true;
+      }
+      const complete = em.create(Complete, {
         user,
         exercise,
+        corrects: input.corrects,
       });
+      await em.persistAndFlush(complete);
       return true;
     } catch (err) {
       console.log(err);

@@ -1,7 +1,25 @@
-mutation Register($name: String!, $password: String!) {
-  register(input: { name: $name, password: $password }) {
+mutation Register(
+  $name: String!
+  $password: String!
+  $lastName: String!
+  $firstName: String!
+) {
+  register(
+    input: {
+      name: $name
+      password: $password
+      lastName: $lastName
+      firstName: $firstName
+    }
+  ) {
     user {
       ...userSnippet
+      completes {
+        exercise {
+          id
+        }
+        corrects
+      }
     }
     errors {
       ...errorSnippet

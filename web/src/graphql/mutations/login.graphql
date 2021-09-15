@@ -2,9 +2,16 @@ mutation Login($name: String!, $password: String!) {
   login(input: { name: $name, password: $password }) {
     user {
       ...userSnippet
+      completes {
+        exercise {
+          id
+        }
+        corrects
+      }
     }
     errors {
-      ...errorSnippet
+      field
+      message
     }
     accessToken
   }

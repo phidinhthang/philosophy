@@ -18,9 +18,9 @@ export class Complete {
   })
   exercise: Exercise;
 
-  @Field(() => Int)
+  @Field(() => Int, { defaultValue: 0 })
   @Property({ default: 0, defaultRaw: '0' })
-  corrects: number = 0;
+  corrects: number;
 
   [PrimaryKeyType]: [string, string];
 }

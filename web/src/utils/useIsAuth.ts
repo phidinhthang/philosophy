@@ -4,12 +4,13 @@ import { getPath } from './getPath';
 import { isServer } from '../lib/isServer';
 export const useIsAuth = () => {
   console.log('here');
-  const { data, error, loading } = useMeQuery();
-  if ((error || !data?.me) && !loading) {
-    if (!isServer() && !data?.me) {
-      const router = useRouter();
+  useMeQuery();
+  const router = useRouter();
+  if (!isServer()) {
+    const { data, loading } = useMeQuery();
+    if (data?.me || loading) {
+    } else {
       router.replace(getPath() + `login?next=${router.pathname}`);
     }
   }
-  return { data };
 };

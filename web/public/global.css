@@ -1,4 +1,5 @@
 html,
-body {
-  height: 100%;
+body,
+div__#next {
+  height: 100% !important;
 }

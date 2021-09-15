@@ -6,9 +6,10 @@ import { isServer } from '../lib/isServer';
 export const useNotAuth = () => {
   console.log('not auth here');
   const { data, loading } = useMeQuery();
-  if (data?.me !== null && !loading) {
+  const router = useRouter();
+  console.log(data?.me);
+  if (data?.me && !loading) {
     if (!isServer()) {
-      const router = useRouter();
       router.replace('/');
     }
   }

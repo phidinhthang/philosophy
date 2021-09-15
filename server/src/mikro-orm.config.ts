@@ -7,6 +7,7 @@ import { Exercise } from './entities/Exercise';
 import { Answer } from './entities/Answer';
 import { Question } from './entities/Question';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
+import { ScorePerDay } from './entities/ScorePerDay';
 
 export default {
   migrations: {
@@ -14,7 +15,7 @@ export default {
     pattern: /^[\w-]+\d+\.[tj]s$/,
     disableForeignKeys: false,
   },
-  entities: [User, Complete, Exercise, Answer, Question],
+  entities: [User, Exercise, Complete, Question, Answer, ScorePerDay],
 
   type: 'postgresql',
   clientUrl: process.env.DATABASE_URL,

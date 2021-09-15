@@ -1,3 +1,6 @@
 mutation CheckAnswer($questionId: ID!, $answerId: ID!) {
-  checkAnswer(input: { questionId: $questionId, answerId: $answerId })
+  checkAnswer(input: { questionId: $questionId, answerId: $answerId }) {
+    isCorrect
+    score
+  }
 }

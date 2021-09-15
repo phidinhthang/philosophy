@@ -16,7 +16,7 @@ import { MyContext } from './types';
 import { helloResolver } from './resolvers/helloResolver';
 import { UserResolver } from './resolvers/userResolver';
 import { User } from './entities/User';
-import argon2 from 'argon2';
+// import argon2 from 'argon2';
 import { verify } from 'jsonwebtoken';
 import { sendRefreshToken } from './utils/auth/sendRefreshToken';
 import {
@@ -34,20 +34,22 @@ const main = async () => {
   // database configuration
   const orm = await MikroORM.init(mikroOrmConfig);
 
-  // const migrator = orm.getMigrator();
-  // await migrator.createMigration();
-  // await migrator.down({ to: 0 });
-  // await migrator.up();
-  if (!__isProd__) {
-    const conn = orm.em.getConnection();
-    await conn.execute('delete from "users"');
-    const user = orm.em.create(User, {
-      name: 'thang',
-      password: await argon2.hash('thang'),
-    });
-    // await seed(orm.em as EntityManager);
-    await orm.em.persistAndFlush(user);
+  if (process.env.NODE_ENV === 'production') {
+    const migrator = orm.getMigrator();
+    await migrator.createMigration();
+    // await migrator.down({ to: 0 });
+    await migrator.up();
   }
+  // if (!__isProd__) {
+  //   const conn = orm.em.getConnection();
+  //   await conn.execute('delete from "users"');
+  //   const user = orm.em.create(User, {
+  //     name: 'thang',
+  //     password: await argon2.hash('thang'),
+  //   });
+  //   // await seed(orm.em as EntityManager);
+  //   await orm.em.persistAndFlush(user);
+  // }
 
   // express app setup
   const app = express();

@@ -1,0 +1,3 @@
+mutation SaveComplete($input: CompleteInput!) {
+  saveComplete(input: $input)
+}

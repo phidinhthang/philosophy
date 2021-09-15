@@ -1,0 +1,5 @@
+fragment exerciseSnippet on Exercise {
+  id
+  title
+  length
+}
