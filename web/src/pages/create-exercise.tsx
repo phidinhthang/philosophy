@@ -1,4 +1,4 @@
-import { Box, Button, FormErrorMessage } from '@chakra-ui/react';
+import { Box, Button } from '@chakra-ui/react';
 import { Text, VStack } from '@chakra-ui/layout';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
@@ -6,7 +6,7 @@ import { withApollo } from '../lib/withApollo';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { InputField } from '../ui/InputField';
-import { Layout } from '../components/Layout';
+import { Layout } from '../layouts/Layout';
 import {
   GetAllExercisesDocument,
   useCreateExerciseMutation,

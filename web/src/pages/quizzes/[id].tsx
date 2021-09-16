@@ -2,7 +2,7 @@ import { Button } from '@chakra-ui/button';
 import { Box, Heading, Stack, Text } from '@chakra-ui/layout';
 import ProgressBar from '@ramonak/react-progress-bar';
 import React, { useState } from 'react';
-import { useQuiz } from '../../hooks/quiz';
+import { useQuiz } from '../../hooks/useQuiz';
 import { withApollo } from '../../lib/withApollo';
 import { QuizOption } from '../../ui/QuizOption';
 import { Wrapper } from '../../ui/Wrapper';

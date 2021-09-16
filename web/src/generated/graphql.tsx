@@ -277,6 +277,11 @@ export type GetQuestionsQueryVariables = Exact<{
 
 export type GetQuestionsQuery = { __typename?: 'Query', getQuestions: Array<{ __typename?: 'Question', id: string, title: string, answers: Array<{ __typename?: 'Answer', id: string, text: string }> }> };
 
+export type GetScoreOfWeekQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetScoreOfWeekQuery = { __typename?: 'Query', getScoreOfWeek: Array<{ __typename?: 'ScorePerDay', id: string, day: string, score: number }> };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -687,6 +692,42 @@ export function useGetQuestionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type GetQuestionsQueryHookResult = ReturnType<typeof useGetQuestionsQuery>;
 export type GetQuestionsLazyQueryHookResult = ReturnType<typeof useGetQuestionsLazyQuery>;
 export type GetQuestionsQueryResult = Apollo.QueryResult<GetQuestionsQuery, GetQuestionsQueryVariables>;
+export const GetScoreOfWeekDocument = gql`
+    query GetScoreOfWeek {
+  getScoreOfWeek {
+    id
+    day
+    score
+  }
+}
+    `;
+
+/**
+ * __useGetScoreOfWeekQuery__
+ *
+ * To run a query within a React component, call `useGetScoreOfWeekQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetScoreOfWeekQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetScoreOfWeekQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetScoreOfWeekQuery(baseOptions?: Apollo.QueryHookOptions<GetScoreOfWeekQuery, GetScoreOfWeekQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetScoreOfWeekQuery, GetScoreOfWeekQueryVariables>(GetScoreOfWeekDocument, options);
+      }
+export function useGetScoreOfWeekLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetScoreOfWeekQuery, GetScoreOfWeekQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetScoreOfWeekQuery, GetScoreOfWeekQueryVariables>(GetScoreOfWeekDocument, options);
+        }
+export type GetScoreOfWeekQueryHookResult = ReturnType<typeof useGetScoreOfWeekQuery>;
+export type GetScoreOfWeekLazyQueryHookResult = ReturnType<typeof useGetScoreOfWeekLazyQuery>;
+export type GetScoreOfWeekQueryResult = Apollo.QueryResult<GetScoreOfWeekQuery, GetScoreOfWeekQueryVariables>;
 export const MeDocument = gql`
     query Me {
   me {

@@ -1,11 +1,10 @@
 import React from 'react';
 import { useGetAllExercisesQuery, useMeQuery } from '../generated/graphql';
-import { Layout } from '../components/Layout';
+import { Layout } from '../layouts/Layout';
 import { withApollo } from '../lib/withApollo';
 import { useIsAuth } from '../utils/useIsAuth';
 import { Box, Flex, Heading, Link, Stack, Text } from '@chakra-ui/layout';
 import NextLink from 'next/link';
-import { AnswerInput } from '../ui/AnswerInput';
 
 const HomePage = () => {
   useIsAuth();

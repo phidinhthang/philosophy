@@ -1,8 +1,16 @@
 import React from 'react';
-import { Box, Link, Flex, Button, Heading, Text } from '@chakra-ui/react';
+import {
+  Box,
+  Link,
+  Flex,
+  Button,
+  Heading,
+  Text,
+  Image,
+  useColorMode,
+} from '@chakra-ui/react';
 import NextLink from 'next/link';
 import { useMeQuery, useLogoutMutation } from '../generated/graphql';
-import { isServer } from '../lib/isServer';
 import { useRouter } from 'next/router';
 import { useApolloClient } from '@apollo/client';
 import { setAccessToken } from '../lib/accessToken';
@@ -15,6 +23,7 @@ const AVATAR_URL_PLACEHOLDER =
 export const NavBar: React.FC<NavbarProps> = ({}) => {
   const router = useRouter();
   const apolloClient = useApolloClient();
+  const { toggleColorMode } = useColorMode();
   const [logout, { loading: logoutFetching }] = useLogoutMutation({
     onCompleted: async () => {
       setAccessToken('');
@@ -48,6 +57,7 @@ export const NavBar: React.FC<NavbarProps> = ({}) => {
           </Button>
         </NextLink>
         <Box mr={2}>{data.me.name}</Box>
+        <Button onClick={toggleColorMode}>change</Button>
         <img
           style={{
             borderRadius: '50%',
@@ -76,7 +86,9 @@ export const NavBar: React.FC<NavbarProps> = ({}) => {
       <Flex flex={1} m="auto" align="center" maxW={800}>
         <NextLink href="/">
           <Link>
-            <Heading>logo</Heading>
+            <Heading>
+              <Image style={{ width: 50, height: 50 }} src="/logo.png" />
+            </Heading>
           </Link>
         </NextLink>
         <Box ml="auto">{body}</Box>

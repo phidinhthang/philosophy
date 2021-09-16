@@ -16,12 +16,10 @@ interface FormValues {
 }
 
 const LoginPage: React.FC<{}> = ({}) => {
-  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const {
     register,
     handleSubmit,
-    watch,
     setError,
     formState: { errors },
   } = useForm({

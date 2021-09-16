@@ -1,0 +1,7 @@
+query GetScoreOfWeek {
+  getScoreOfWeek {
+    id
+    day
+    score
+  }
+}
