@@ -116,8 +116,8 @@ const CreatePostPage: React.FC<{}> = ({}) => {
     <Layout>
       <form onSubmit={handleSubmit(onSubmit)}>
         <InputField
-          label="Title"
-          placeholder="Title"
+          label="Tiêu đề"
+          placeholder="Tiêu đề"
           name="title"
           register={register as any}
         />
@@ -136,10 +136,10 @@ const CreatePostPage: React.FC<{}> = ({}) => {
             fields.map((q, index) => (
               <Box key={index} width="full" pl="4">
                 <InputField
-                  label={`Question ${index + 1} title`}
+                  label={`Tên câu hỏi thứ ${index + 1}`}
                   name={`questions.${index}.title`}
                   register={register as any}
-                  placeholder="write title"
+                  placeholder="Viết ở đây..."
                 />
 
                 <ErrorMessage
@@ -160,7 +160,7 @@ const CreatePostPage: React.FC<{}> = ({}) => {
                   {q.answers.map((a, a_index) => (
                     <>
                       <AnswerInput
-                        label={`answer ${a_index}`}
+                        label={`Nội dung câu trả lời ${a_index}`}
                         name={`questions.${index}.correct`}
                         inputName={`questions.${index}.answers.${a_index}.text`}
                         value={a_index}
@@ -206,12 +206,12 @@ const CreatePostPage: React.FC<{}> = ({}) => {
                 })
               }
             >
-              Add a question
+              Thêm câu hỏi
             </Button>
           )}
           <Box>
             <Button type="submit" isLoading={isSubmitting}>
-              Submit
+              Tạo
             </Button>
           </Box>
         </VStack>

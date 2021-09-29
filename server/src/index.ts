@@ -27,6 +27,7 @@ import {
 // import { EntityManager } from '@mikro-orm/postgresql';
 import { ExerciseResolver } from './resolvers/exerciseResolver';
 import { QuestionResolver } from './resolvers/questionResolver';
+import { configPassport } from './passport-oauth';
 
 const PORT = process.env.PORT || 4000;
 
@@ -61,6 +62,7 @@ const main = async () => {
     }),
   );
   app.use(cookieParser());
+  app.use(express.json());
   app.get('/', (_req, res) => res.send('hello'));
   app.post('/refresh_token', async (req, res) => {
     const em = orm.em.fork();
@@ -86,6 +88,16 @@ const main = async () => {
 
     return res.send({ ok: true, accessToken: createAccessToken(user) });
   });
+
+  app.post('/get_refresh_token', (req, res) => {
+    const refresh_token = req.body.refresh_token;
+    console.log(refresh_token);
+
+    sendRefreshToken(res, refresh_token);
+    res.send({ ok: 1 });
+  });
+
+  configPassport({ app, em: orm.em });
 
   // Create Apollo server and listen to port
   const server = new ApolloServer({

@@ -20,6 +20,9 @@ export class User {
   @PrimaryKey({ primary: true, defaultRaw: 'uuid_generate_v4()' })
   id: string;
 
+  @Property({ nullable: true })
+  googleId?: string;
+
   @Field(() => String)
   @Property()
   name!: string;
@@ -36,8 +39,8 @@ export class User {
   @Property({ nullable: true })
   avatarUrl?: string;
 
-  @Property()
-  password!: string;
+  @Property({ nullable: true })
+  password?: string;
 
   @Field(() => Int)
   @Property({ default: 0, defaultRaw: '0' })

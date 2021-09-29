@@ -1,5 +1,6 @@
 import App, { AppContext, AppProps } from 'next/app';
-import { CSSReset, ChakraProvider, theme } from '@chakra-ui/react';
+import { CSSReset, ChakraProvider } from '@chakra-ui/react';
+import { theme } from '../theme';
 import NProgressContainer from '../lib/nProgress';
 import React from 'react';
 
@@ -8,7 +9,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     <>
       <ChakraProvider theme={theme}>
         <CSSReset />
-        <Component {...pageProps} />;
+        <Component {...pageProps} />
       </ChakraProvider>
       <NProgressContainer />
     </>

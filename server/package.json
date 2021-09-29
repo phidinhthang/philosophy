@@ -36,6 +36,8 @@
     "graphql": "^15.5.2",
     "graphql-scalars": "^1.10.1",
     "jsonwebtoken": "^8.5.1",
+    "passport": "^0.5.0",
+    "passport-google-oauth": "^2.0.0",
     "reflect-metadata": "^0.1.13",
     "ts-node": "^10.2.1",
     "type-graphql": "^1.1.1",
@@ -51,6 +53,8 @@
   },
   "devDependencies": {
     "@types/faker": "^5.5.8",
+    "@types/passport": "^1.0.7",
+    "@types/passport-google-oauth": "^1.0.42",
     "debug": "^2.6.9",
     "faker": "^5.4.0"
   }

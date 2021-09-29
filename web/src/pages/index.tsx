@@ -1,19 +1,22 @@
 import React from 'react';
+import { useRouter } from 'next/router';
 import { useGetAllExercisesQuery, useMeQuery } from '../generated/graphql';
 import { Layout } from '../layouts/Layout';
 import { withApollo } from '../lib/withApollo';
 import { useIsAuth } from '../utils/useIsAuth';
 import { Box, Flex, Heading, Link, Stack, Text } from '@chakra-ui/layout';
 import NextLink from 'next/link';
+import { useColorModeValue } from '@chakra-ui/color-mode';
 
 const HomePage = () => {
-  useIsAuth();
+  const router = useRouter();
+  if (router.query) useIsAuth();
   const { data, error, loading } = useGetAllExercisesQuery();
   const { data: meData } = useMeQuery();
   if (!loading && !data) {
     return (
       <div>
-        <div>you got query failed for some reason</div>
+        <div>Có lỗi xảy ra. Vui lòng thử lại.</div>
         <div>{error?.message}</div>
       </div>
     );
@@ -37,10 +40,13 @@ const HomePage = () => {
             }
             return (
               <Flex
+                boxShadow="md"
                 key={e.id || index}
                 p={5}
                 borderWidth="1px"
-                backgroundColor={done ? 'green.100' : undefined}
+                backgroundColor={
+                  done ? useColorModeValue('cyan.100', '#242424') : undefined
+                }
               >
                 <Box
                   flex={1}

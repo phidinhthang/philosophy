@@ -63,23 +63,23 @@ const Register: React.FC<registerProps> = ({}) => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <InputField
           name="username"
-          placeholder="username"
-          label="Username"
+          placeholder="Tên..."
+          label="Tên tài khoản"
           register={registerForm as any}
           error={errors.username}
         />
         <Box mt={4}>
           <InputField
             name="firstName"
-            placeholder="first Name"
-            label="first name"
+            placeholder="Họ và tên đệm"
+            label="Họ và tên đệm"
             register={registerForm as any}
             error={errors.firstName}
           />
           <InputField
             name="lastName"
-            placeholder="last name"
-            label="Last name"
+            placeholder="Tên của bạn"
+            label="Tên của bạn"
             register={registerForm as any}
             error={errors.lastName}
           />
@@ -87,8 +87,8 @@ const Register: React.FC<registerProps> = ({}) => {
         <Box mt={4}>
           <InputField
             name="password"
-            placeholder="password"
-            label="Password"
+            placeholder="Mật khẩu"
+            label="Mật khẩu"
             type="password"
             register={registerForm as any}
             error={errors.password}
@@ -96,7 +96,7 @@ const Register: React.FC<registerProps> = ({}) => {
         </Box>
         <Box mt={4}>
           <NextLink href="/login">
-            <Link>login</Link>
+            <Link>Đăng nhập ở đây</Link>
           </NextLink>
         </Box>
         <Button
@@ -105,7 +105,7 @@ const Register: React.FC<registerProps> = ({}) => {
           isLoading={isSubmitting}
           colorScheme="teal"
         >
-          register
+          Đăng ký
         </Button>
       </form>
     </Wrapper>

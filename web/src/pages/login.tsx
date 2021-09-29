@@ -3,8 +3,6 @@ import { Box, Button, Link, Flex } from '@chakra-ui/react';
 import { Wrapper } from '../ui/Wrapper';
 import { InputField } from '../ui/InputField';
 import { useLoginMutation, MeQuery, MeDocument } from '../generated/graphql';
-import { toErrorMap } from '../utils/toErrorMap';
-import { useRouter } from 'next/router';
 import NextLink from 'next/link';
 import { withApollo } from '../lib/withApollo';
 import { useNotAuth } from '../utils/useNotAuth';
@@ -60,16 +58,16 @@ const LoginPage: React.FC<{}> = ({}) => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <InputField
           name="username"
-          placeholder="username"
-          label="Username"
+          placeholder="Tên..."
+          label="Tên tài khoản"
           register={register as any}
           error={errors.username}
         />
         <Box mt={4}>
           <InputField
             name="password"
-            placeholder="password"
-            label="Password"
+            placeholder="Mật khẩu..."
+            label="Mật khẩu"
             type="password"
             register={register as any}
             error={errors.password}
@@ -77,10 +75,10 @@ const LoginPage: React.FC<{}> = ({}) => {
         </Box>
         <Flex mt={2} justifyContent="space-between">
           <NextLink href="/register">
-            <Link>register</Link>
+            <Link>Bấm vào đây để đăng ký</Link>
           </NextLink>
           <NextLink href="/">
-            <Link ml="auto">forgot password ?</Link>
+            <Link ml="auto">Quên mật khẩu ?</Link>
           </NextLink>
         </Flex>
         <Button
@@ -89,8 +87,17 @@ const LoginPage: React.FC<{}> = ({}) => {
           isLoading={isSubmitting}
           colorScheme="teal"
         >
-          login
+          Đăng nhập
         </Button>
+        <div>
+          <Button
+            as={Link}
+            colorScheme="teal"
+            href={process.env.NEXT_PUBLIC_API_URL + '/auth/google'}
+          >
+            Đăng nhập bằng Google
+          </Button>
+        </div>
       </form>
     </Wrapper>
   );

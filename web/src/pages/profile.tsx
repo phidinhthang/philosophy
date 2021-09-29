@@ -14,12 +14,12 @@ dayjs.locale('vi');
 function Profile() {
   useIsAuth();
   const { data, loading, error } = useGetScoreOfWeekQuery();
-  if (loading) return <p>loading ...</p>;
+  if (loading) return <p>Đang load...</p>;
   if (error) {
     console.log('get score ', error);
-    return <p>error</p>;
+    return <p>Có lỗi xảy ra.</p>;
   }
-  if (!data) return <p>no data</p>;
+  if (!data) return <p>Không có dữ liệu.</p>;
   const score = data.getScoreOfWeek
     .map((i) => i)
     .sort((a, b) => +a.day - +b.day)

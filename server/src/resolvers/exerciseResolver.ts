@@ -16,7 +16,7 @@ const validateExerciseInput = (
   let errors: ExerciseError;
   let hasError = false;
   if (!input.title) {
-    errors = { title: 'this field cannot be blank', questions: [] };
+    errors = { title: 'Không được bỏ trống.', questions: [] };
     hasError = true;
   } else {
     errors = { title: undefined, questions: [] };
@@ -25,7 +25,7 @@ const validateExerciseInput = (
   input.questions?.forEach((q, index) => {
     if (!q.title) {
       errors.questions?.push({
-        title: 'this field cannot be blank',
+        title: 'Không được bỏ trống.',
         answers: [],
       });
       hasError = true;
@@ -35,7 +35,7 @@ const validateExerciseInput = (
     q.answers?.forEach((a) => {
       if (!a.text) {
         errors.questions[index].answers?.push({
-          text: 'this field cannot be blank',
+          text: 'Không được bỏ trống.',
         });
         hasError = true;
       } else {
@@ -44,7 +44,7 @@ const validateExerciseInput = (
       const corrects = q.answers?.filter((a) => a.isCorrect);
       if (corrects?.length !== 1) {
         errors.questions[index].isCorrect =
-          'one and only one answer can be correct';
+          'Chỉ được chọn một câu trả lời đúng.';
         hasError = true;
       } else {
         errors.questions[index].isCorrect = undefined;

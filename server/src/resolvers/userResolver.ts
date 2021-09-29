@@ -61,15 +61,15 @@ export class UserResolver {
         errors: [
           {
             field: 'username',
-            message: "username doesn't exist",
+            message: 'Tên tài khoản không tồn tại.',
           },
         ],
       };
     }
-    const match = await argon2.verify(user.password, password);
+    const match = await argon2.verify(user.password!, password);
     if (!match) {
       return {
-        errors: [{ field: 'password', message: 'password doesnt match' }],
+        errors: [{ field: 'password', message: 'Mật khẩu không chính xác' }],
       };
     }
     sendRefreshToken(res, createRefreshToken(user));
@@ -90,7 +90,13 @@ export class UserResolver {
     const existedUser = await em.findOne(User, { name });
     if (existedUser) {
       return {
-        errors: [{ field: 'username', message: 'username already taken!' }],
+        errors: [
+          {
+            field: 'username',
+            message:
+              'Tên tài khoản này đã được sử dụng. Vui lòng chọn tên khác.',
+          },
+        ],
       };
     }
 
@@ -117,7 +123,7 @@ export class UserResolver {
     let user: User;
     const authorization = req.headers['authorization'];
     console.log(authorization);
-    if (!authorization) throw new Error('not auth');
+    if (!authorization) throw new Error('Đăng nhập để tiếp tục.');
     try {
       const token = authorization.split(' ')[1];
       const payload: any = verify(token, process.env.ACCESS_TOKEN_SECRET!);
@@ -125,14 +131,14 @@ export class UserResolver {
       user = await em.findOneOrFail(User, payload.userId, ['completes']);
     } catch (err) {
       console.log(err);
-      throw new Error('not auth');
+      throw new Error('Đăng nhập để tiếp tục.');
     }
     const question = await em
       .createQueryBuilder(Question)
       .select('*')
       .where({ id: input.questionId })
       .getSingleResult();
-    if (!question) throw new Error('bad request');
+    if (!question) throw new Error('Không tồn tại.');
     const answers = await question.answers.loadItems();
     const isCorrect = !!answers.find(
       (a) => a.id === input.answerId && a.isCorrect,
@@ -154,7 +160,7 @@ export class UserResolver {
     let user: User;
     const authorization = req.headers['authorization'];
     if (!authorization) {
-      throw new Error('not auth');
+      throw new Error('Đăng nhập để tiếp tục.');
     }
     try {
       const token = authorization.split(' ')[1];
@@ -163,7 +169,7 @@ export class UserResolver {
       user = await em.findOneOrFail(User, payload.userId);
     } catch (err) {
       console.log(err);
-      throw new Error('not auth');
+      throw new Error('Đăng nhập để tiếp tục.');
     }
     let scoreOfWeek = scorePlaceholder();
     const scores = await em.find(ScorePerDay, {
