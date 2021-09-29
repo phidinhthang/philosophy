@@ -29,5 +29,5 @@
     "src/**/*.tsx",
     "src/lib/apolloClient.ts"
   ],
-  "exclude": ["node_modules", "src/generated/graphql.tsx"]
+  "exclude": ["node_modules", "./src/generated/graphql.tsx"]
 }

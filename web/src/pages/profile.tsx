@@ -1,4 +1,5 @@
 import { Box, Stack } from '@chakra-ui/layout';
+import Head from 'next/head';
 import dayjs from 'dayjs';
 import 'dayjs/locale/vi';
 import { Layout } from '../layouts/Layout';
@@ -35,6 +36,10 @@ function Profile() {
     });
   return (
     <Layout variant="regular">
+      <Head>
+        <title>Tài khoản</title>
+        <meta property="og:title" content="Tài khoản" key="title" />
+      </Head>
       <Stack direction={['column', 'row']} alignItems="flex-start">
         <Box flexGrow={2} maxWidth={['95%', '40%']} marginX="auto">
           <AvatarInfo />

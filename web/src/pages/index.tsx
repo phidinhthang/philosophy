@@ -1,5 +1,6 @@
 import React from 'react';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
 import { useGetAllExercisesQuery, useMeQuery } from '../generated/graphql';
 import { Layout } from '../layouts/Layout';
 import { withApollo } from '../lib/withApollo';
@@ -23,6 +24,10 @@ const HomePage = () => {
   }
   return (
     <Layout>
+      <Head>
+        <title>Trang chủ</title>
+        <meta property="og:title" content="Trang chủ" key="title" />
+      </Head>
       {!data && loading ? (
         <div>loading...</div>
       ) : (

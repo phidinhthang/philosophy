@@ -35,9 +35,9 @@ const main = async () => {
   // database configuration
   const orm = await MikroORM.init(mikroOrmConfig);
 
-  if (process.env.NODE_ENV === 'production') {
+  if (process.env.NODE_ENV === 'production' || true) {
     const migrator = orm.getMigrator();
-    await migrator.createMigration();
+    // await migrator.createMigration();
     // await migrator.down({ to: 0 });
     await migrator.up();
   }

@@ -1,4 +1,5 @@
 import React from 'react';
+import Head from 'next/head';
 import { Box, Button, Link, Flex } from '@chakra-ui/react';
 import { Wrapper } from '../ui/Wrapper';
 import { InputField } from '../ui/InputField';
@@ -54,52 +55,58 @@ const LoginPage: React.FC<{}> = ({}) => {
   useNotAuth();
   const [login] = useLoginMutation();
   return (
-    <Wrapper variant="small">
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <InputField
-          name="username"
-          placeholder="Tên..."
-          label="Tên tài khoản"
-          register={register as any}
-          error={errors.username}
-        />
-        <Box mt={4}>
+    <>
+      <Head>
+        <title>Đăng nhập</title>
+        <meta property="og:title" content="Đăng nhập" key="title" />
+      </Head>
+      <Wrapper variant="small">
+        <form onSubmit={handleSubmit(onSubmit)}>
           <InputField
-            name="password"
-            placeholder="Mật khẩu..."
-            label="Mật khẩu"
-            type="password"
+            name="username"
+            placeholder="Tên..."
+            label="Tên tài khoản"
             register={register as any}
-            error={errors.password}
+            error={errors.username}
           />
-        </Box>
-        <Flex mt={2} justifyContent="space-between">
-          <NextLink href="/register">
-            <Link>Bấm vào đây để đăng ký</Link>
-          </NextLink>
-          <NextLink href="/">
-            <Link ml="auto">Quên mật khẩu ?</Link>
-          </NextLink>
-        </Flex>
-        <Button
-          mt={4}
-          type="submit"
-          isLoading={isSubmitting}
-          colorScheme="teal"
-        >
-          Đăng nhập
-        </Button>
-        <div>
+          <Box mt={4}>
+            <InputField
+              name="password"
+              placeholder="Mật khẩu..."
+              label="Mật khẩu"
+              type="password"
+              register={register as any}
+              error={errors.password}
+            />
+          </Box>
+          <Flex mt={2} justifyContent="space-between">
+            <NextLink href="/register">
+              <Link>Bấm vào đây để đăng ký</Link>
+            </NextLink>
+            <NextLink href="/">
+              <Link ml="auto">Quên mật khẩu ?</Link>
+            </NextLink>
+          </Flex>
           <Button
-            as={Link}
+            mt={4}
+            type="submit"
+            isLoading={isSubmitting}
             colorScheme="teal"
-            href={process.env.NEXT_PUBLIC_API_URL + '/auth/google'}
           >
-            Đăng nhập bằng Google
+            Đăng nhập
           </Button>
-        </div>
-      </form>
-    </Wrapper>
+          <div>
+            <Button
+              as={Link}
+              colorScheme="teal"
+              href={process.env.NEXT_PUBLIC_API_URL + '/auth/google'}
+            >
+              Đăng nhập bằng Google
+            </Button>
+          </div>
+        </form>
+      </Wrapper>
+    </>
   );
 };
 

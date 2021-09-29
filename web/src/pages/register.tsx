@@ -1,4 +1,5 @@
 import React from 'react';
+import Head from 'next/head';
 import { Box, Button, Link } from '@chakra-ui/react';
 import { Wrapper } from '../ui/Wrapper';
 import { InputField } from '../ui/InputField';
@@ -59,56 +60,62 @@ const Register: React.FC<registerProps> = ({}) => {
     }
   };
   return (
-    <Wrapper variant="small">
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <InputField
-          name="username"
-          placeholder="Tên..."
-          label="Tên tài khoản"
-          register={registerForm as any}
-          error={errors.username}
-        />
-        <Box mt={4}>
+    <>
+      <Head>
+        <title>Đăng ký</title>
+        <meta property="og:title" content="Đăng ký" key="title" />
+      </Head>
+      <Wrapper variant="small">
+        <form onSubmit={handleSubmit(onSubmit)}>
           <InputField
-            name="firstName"
-            placeholder="Họ và tên đệm"
-            label="Họ và tên đệm"
+            name="username"
+            placeholder="Tên..."
+            label="Tên tài khoản"
             register={registerForm as any}
-            error={errors.firstName}
+            error={errors.username}
           />
-          <InputField
-            name="lastName"
-            placeholder="Tên của bạn"
-            label="Tên của bạn"
-            register={registerForm as any}
-            error={errors.lastName}
-          />
-        </Box>
-        <Box mt={4}>
-          <InputField
-            name="password"
-            placeholder="Mật khẩu"
-            label="Mật khẩu"
-            type="password"
-            register={registerForm as any}
-            error={errors.password}
-          />
-        </Box>
-        <Box mt={4}>
-          <NextLink href="/login">
-            <Link>Đăng nhập ở đây</Link>
-          </NextLink>
-        </Box>
-        <Button
-          mt={4}
-          type="submit"
-          isLoading={isSubmitting}
-          colorScheme="teal"
-        >
-          Đăng ký
-        </Button>
-      </form>
-    </Wrapper>
+          <Box mt={4}>
+            <InputField
+              name="firstName"
+              placeholder="Họ và tên đệm"
+              label="Họ và tên đệm"
+              register={registerForm as any}
+              error={errors.firstName}
+            />
+            <InputField
+              name="lastName"
+              placeholder="Tên của bạn"
+              label="Tên của bạn"
+              register={registerForm as any}
+              error={errors.lastName}
+            />
+          </Box>
+          <Box mt={4}>
+            <InputField
+              name="password"
+              placeholder="Mật khẩu"
+              label="Mật khẩu"
+              type="password"
+              register={registerForm as any}
+              error={errors.password}
+            />
+          </Box>
+          <Box mt={4}>
+            <NextLink href="/login">
+              <Link>Đăng nhập ở đây</Link>
+            </NextLink>
+          </Box>
+          <Button
+            mt={4}
+            type="submit"
+            isLoading={isSubmitting}
+            colorScheme="teal"
+          >
+            Đăng ký
+          </Button>
+        </form>
+      </Wrapper>
+    </>
   );
 };
 

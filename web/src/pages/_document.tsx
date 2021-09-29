@@ -10,6 +10,7 @@ class MyDocument extends Document {
     return (
       <Html>
         <Head />
+        <link rel="icon" type="image/png" href="/favicon.png" />
         <link href="/global.css" rel="stylesheet"></link>
         <link href="/fadeOutUp.css" rel="stylesheet"></link>
         <body>

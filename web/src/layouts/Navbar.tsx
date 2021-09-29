@@ -8,12 +8,10 @@ import {
   Text,
   Image,
   useColorMode,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
   useColorModeValue,
 } from '@chakra-ui/react';
+import { Menu, MenuItem, MenuButton } from '@szhsin/react-menu';
+import '@szhsin/react-menu/dist/index.css';
 import NextLink from 'next/link';
 import { useMeQuery, useLogoutMutation } from '../generated/graphql';
 import { useRouter } from 'next/router';
@@ -59,52 +57,53 @@ export const NavBar: React.FC<NavbarProps> = ({}) => {
         <Text mr="5" fontWeight="bold">
           {data.me.score} Điểm
         </Text>
-        <Menu>
-          <MenuButton style={{ width: 40, height: 40, borderRadius: '50%' }}>
-            <img
-              style={{
-                borderRadius: '50%',
-                width: '40px',
-                height: '40px',
-                backgroundColor: 'white',
-              }}
-              src={
-                data.me.avatarUrl
-                  ? data.me.avatarUrl
-                  : `${AVATAR_URL_PLACEHOLDER}${data.me.id}.svg`
-              }
-            />
-          </MenuButton>
-          <MenuList>
-            <Box mr={2} textAlign="center" my="2" fontWeight="bold">
-              {data.me.name}
-            </Box>
-            <MenuItem>
-              <NextLink href="/profile">
-                <Button w="full">Xem thông tin</Button>
-              </NextLink>
-            </MenuItem>
-            <MenuItem>
-              <NextLink href="/create-exercise">
-                <Button w="full">Thêm bài học</Button>
-              </NextLink>
-            </MenuItem>
-            <MenuItem>
-              <Button w="full" onClick={toggleColorMode}>
-                change
-              </Button>
-            </MenuItem>
-            <MenuItem>
-              <Button
-                w="full"
-                onClick={async () => {
-                  await logout();
+        <Menu
+          menuButton={
+            <MenuButton style={{ width: 40, height: 40, borderRadius: '50%' }}>
+              <img
+                style={{
+                  borderRadius: '50%',
+                  width: '40px',
+                  height: '40px',
+                  backgroundColor: 'white',
                 }}
-              >
-                Đăng xuất
-              </Button>
-            </MenuItem>
-          </MenuList>
+                src={
+                  data.me.avatarUrl
+                    ? data.me.avatarUrl
+                    : `${AVATAR_URL_PLACEHOLDER}${data.me.id}.svg`
+                }
+              />
+            </MenuButton>
+          }
+        >
+          <Box mr={2} textAlign="center" my="2" fontWeight="bold">
+            {data.me.name}
+          </Box>
+          <MenuItem>
+            <NextLink href="/profile">
+              <Button w="full">Xem thông tin</Button>
+            </NextLink>
+          </MenuItem>
+          <MenuItem>
+            <NextLink href="/create-exercise">
+              <Button w="full">Thêm bài học</Button>
+            </NextLink>
+          </MenuItem>
+          <MenuItem>
+            <Button w="full" onClick={toggleColorMode}>
+              change
+            </Button>
+          </MenuItem>
+          <MenuItem>
+            <Button
+              w="full"
+              onClick={async () => {
+                await logout();
+              }}
+            >
+              Đăng xuất
+            </Button>
+          </MenuItem>
         </Menu>
       </Flex>
     );
