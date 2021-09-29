@@ -42,7 +42,12 @@
     "ts-node": "^10.2.1",
     "type-graphql": "^1.1.1",
     "typescript": "^4.4.2",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "@types/faker": "^5.5.8",
+    "@types/passport": "^1.0.7",
+    "@types/passport-google-oauth": "^1.0.42",
+    "debug": "^2.6.9",
+    "faker": "^5.4.0"
   },
   "mikro-orm": {
     "useTsNode": true,
@@ -50,12 +55,5 @@
       "./src/mikro-orm.config.ts",
       "./dist/mikro-orm.config.js"
     ]
-  },
-  "devDependencies": {
-    "@types/faker": "^5.5.8",
-    "@types/passport": "^1.0.7",
-    "@types/passport-google-oauth": "^1.0.42",
-    "debug": "^2.6.9",
-    "faker": "^5.4.0"
   }
 }
