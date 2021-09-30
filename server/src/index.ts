@@ -81,8 +81,10 @@ const main = async () => {
 
   app.get('/', (_req, res) => res.send('hello'));
   app.post('/refresh_token', async (req, res) => {
+    console.log('refresh_token_run');
     const em = orm.em.fork();
     const token = req.cookies.jid;
+    console.log(token);
     if (!token) {
       return res.send({ ok: false, accessToken: '' });
     }
@@ -91,7 +93,7 @@ const main = async () => {
     try {
       payload = verify(token, process.env.REFRESH_TOKEN_SECRET!);
     } catch (err) {
-      console.log(err);
+      console.log('refresh_token_run error', err);
       return res.send({ ok: false, accessToken: '' });
     }
 
