@@ -63,7 +63,7 @@ const main = async () => {
   );
   app.use(cookieParser());
   app.use(express.json());
-  app.set('trust proxy', 1);
+  // app.set('trust proxy', 1);
 
   if (process.env.NODE_ENV === 'production') {
     app.use(function (req, res, next) {
