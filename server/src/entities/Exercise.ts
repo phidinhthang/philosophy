@@ -7,6 +7,7 @@ import {
 } from '@mikro-orm/core';
 import { ObjectType, Field, ID, Int } from 'type-graphql';
 import { Question } from './Question';
+import { SavedExercise } from './SavedExercise';
 
 @ObjectType()
 @Entity()
@@ -22,6 +23,9 @@ export class Exercise {
   @Field(() => Int)
   @Property()
   length!: number;
+
+  @OneToMany(() => SavedExercise, (saved) => saved.exercise)
+  savedExercises = new Collection<SavedExercise>(this);
 
   @Field(() => [Question])
   @OneToMany(() => Question, (question) => question.exercise)

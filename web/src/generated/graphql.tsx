@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
@@ -84,6 +83,14 @@ export type ExerciseInput = {
   questions?: Maybe<Array<QuestionInput>>;
 };
 
+export type ExerciseResponse = {
+  __typename?: 'ExerciseResponse';
+  id: Scalars['ID'];
+  title: Scalars['String'];
+  length: Scalars['Int'];
+  saved?: Maybe<Scalars['Boolean']>;
+};
+
 export type LoginInput = {
   name: Scalars['String'];
   password: Scalars['String'];
@@ -104,6 +111,7 @@ export type Mutation = {
   checkAnswer: CheckAnswerResponse;
   createExercise?: Maybe<CreateExerciseResponse>;
   saveComplete: Scalars['Boolean'];
+  saveExercise: Scalars['Boolean'];
   createQuestion: Scalars['Boolean'];
 };
 
@@ -133,6 +141,11 @@ export type MutationSaveCompleteArgs = {
 };
 
 
+export type MutationSaveExerciseArgs = {
+  exerciseId: Scalars['String'];
+};
+
+
 export type MutationCreateQuestionArgs = {
   input: QuestionInput;
 };
@@ -142,7 +155,8 @@ export type Query = {
   hello: Scalars['String'];
   me?: Maybe<User>;
   getScoreOfWeek: Array<ScorePerDay>;
-  getAllExercises: Array<Exercise>;
+  getAllExercises: Array<ExerciseResponse>;
+  getAllSavedExercise?: Maybe<Array<Exercise>>;
   getQuestions: Array<Question>;
 };
 
@@ -179,6 +193,12 @@ export type RegisterInput = {
   lastName: Scalars['String'];
 };
 
+export type SavedExercise = {
+  __typename?: 'SavedExercise';
+  user: User;
+  exercise: Exercise;
+};
+
 export type ScorePerDay = {
   __typename?: 'ScorePerDay';
   id: Scalars['String'];
@@ -195,6 +215,7 @@ export type User = {
   avatarUrl?: Maybe<Scalars['String']>;
   score: Scalars['Int'];
   completes?: Maybe<Array<Complete>>;
+  savedExercises?: Maybe<Array<SavedExercise>>;
   scorePerDay?: Maybe<Array<ScorePerDay>>;
 };
 
@@ -266,10 +287,17 @@ export type SaveCompleteMutationVariables = Exact<{
 
 export type SaveCompleteMutation = { __typename?: 'Mutation', saveComplete: boolean };
 
+export type SaveExerciseMutationVariables = Exact<{
+  exerciseId: Scalars['String'];
+}>;
+
+
+export type SaveExerciseMutation = { __typename?: 'Mutation', saveExercise: boolean };
+
 export type GetAllExercisesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllExercisesQuery = { __typename?: 'Query', getAllExercises: Array<{ __typename?: 'Exercise', id: string, title: string, length: number }> };
+export type GetAllExercisesQuery = { __typename?: 'Query', getAllExercises: Array<{ __typename?: 'ExerciseResponse', id: string, title: string, length: number, saved?: Maybe<boolean> }> };
 
 export type GetQuestionsQueryVariables = Exact<{
   id: Scalars['String'];
@@ -277,6 +305,11 @@ export type GetQuestionsQueryVariables = Exact<{
 
 
 export type GetQuestionsQuery = { __typename?: 'Query', getQuestions: Array<{ __typename?: 'Question', id: string, title: string, answers: Array<{ __typename?: 'Answer', id: string, text: string }> }> };
+
+export type GetAllSavedExerciseQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllSavedExerciseQuery = { __typename?: 'Query', getAllSavedExercise?: Maybe<Array<{ __typename?: 'Exercise', id: string, title: string }>> };
 
 export type GetScoreOfWeekQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -619,13 +652,47 @@ export function useSaveCompleteMutation(baseOptions?: Apollo.MutationHookOptions
 export type SaveCompleteMutationHookResult = ReturnType<typeof useSaveCompleteMutation>;
 export type SaveCompleteMutationResult = Apollo.MutationResult<SaveCompleteMutation>;
 export type SaveCompleteMutationOptions = Apollo.BaseMutationOptions<SaveCompleteMutation, SaveCompleteMutationVariables>;
+export const SaveExerciseDocument = gql`
+    mutation SaveExercise($exerciseId: String!) {
+  saveExercise(exerciseId: $exerciseId)
+}
+    `;
+export type SaveExerciseMutationFn = Apollo.MutationFunction<SaveExerciseMutation, SaveExerciseMutationVariables>;
+
+/**
+ * __useSaveExerciseMutation__
+ *
+ * To run a mutation, you first call `useSaveExerciseMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSaveExerciseMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [saveExerciseMutation, { data, loading, error }] = useSaveExerciseMutation({
+ *   variables: {
+ *      exerciseId: // value for 'exerciseId'
+ *   },
+ * });
+ */
+export function useSaveExerciseMutation(baseOptions?: Apollo.MutationHookOptions<SaveExerciseMutation, SaveExerciseMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SaveExerciseMutation, SaveExerciseMutationVariables>(SaveExerciseDocument, options);
+      }
+export type SaveExerciseMutationHookResult = ReturnType<typeof useSaveExerciseMutation>;
+export type SaveExerciseMutationResult = Apollo.MutationResult<SaveExerciseMutation>;
+export type SaveExerciseMutationOptions = Apollo.BaseMutationOptions<SaveExerciseMutation, SaveExerciseMutationVariables>;
 export const GetAllExercisesDocument = gql`
     query GetAllExercises {
   getAllExercises {
-    ...exerciseSnippet
+    id
+    title
+    length
+    saved
   }
 }
-    ${ExerciseSnippetFragmentDoc}`;
+    `;
 
 /**
  * __useGetAllExercisesQuery__
@@ -693,6 +760,41 @@ export function useGetQuestionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type GetQuestionsQueryHookResult = ReturnType<typeof useGetQuestionsQuery>;
 export type GetQuestionsLazyQueryHookResult = ReturnType<typeof useGetQuestionsLazyQuery>;
 export type GetQuestionsQueryResult = Apollo.QueryResult<GetQuestionsQuery, GetQuestionsQueryVariables>;
+export const GetAllSavedExerciseDocument = gql`
+    query GetAllSavedExercise {
+  getAllSavedExercise {
+    id
+    title
+  }
+}
+    `;
+
+/**
+ * __useGetAllSavedExerciseQuery__
+ *
+ * To run a query within a React component, call `useGetAllSavedExerciseQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllSavedExerciseQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllSavedExerciseQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllSavedExerciseQuery(baseOptions?: Apollo.QueryHookOptions<GetAllSavedExerciseQuery, GetAllSavedExerciseQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAllSavedExerciseQuery, GetAllSavedExerciseQueryVariables>(GetAllSavedExerciseDocument, options);
+      }
+export function useGetAllSavedExerciseLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllSavedExerciseQuery, GetAllSavedExerciseQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAllSavedExerciseQuery, GetAllSavedExerciseQueryVariables>(GetAllSavedExerciseDocument, options);
+        }
+export type GetAllSavedExerciseQueryHookResult = ReturnType<typeof useGetAllSavedExerciseQuery>;
+export type GetAllSavedExerciseLazyQueryHookResult = ReturnType<typeof useGetAllSavedExerciseLazyQuery>;
+export type GetAllSavedExerciseQueryResult = Apollo.QueryResult<GetAllSavedExerciseQuery, GetAllSavedExerciseQueryVariables>;
 export const GetScoreOfWeekDocument = gql`
     query GetScoreOfWeek {
   getScoreOfWeek {

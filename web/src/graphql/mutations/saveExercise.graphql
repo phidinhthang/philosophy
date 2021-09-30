@@ -1,0 +1,3 @@
+mutation SaveExercise($exerciseId: String!) {
+  saveExercise(exerciseId: $exerciseId)
+}

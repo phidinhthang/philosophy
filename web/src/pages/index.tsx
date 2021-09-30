@@ -1,19 +1,39 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-import { useGetAllExercisesQuery, useMeQuery } from '../generated/graphql';
+import {
+  ExerciseResponse,
+  GetAllExercisesDocument,
+  GetAllExercisesQuery,
+  useGetAllExercisesQuery,
+  useMeQuery,
+  useSaveExerciseMutation,
+} from '../generated/graphql';
 import { Layout } from '../layouts/Layout';
 import { withApollo } from '../lib/withApollo';
 import { useIsAuth } from '../utils/useIsAuth';
-import { Box, Flex, Heading, Link, Stack, Text } from '@chakra-ui/layout';
+import {
+  Box,
+  Flex,
+  Heading,
+  Link,
+  Stack,
+  Text,
+  Button,
+} from '@chakra-ui/react';
+import { AddIcon, DeleteIcon } from '@chakra-ui/icons';
 import NextLink from 'next/link';
 import { useColorModeValue } from '@chakra-ui/color-mode';
+import cloneDeep from 'clone-deep';
 
 const HomePage = () => {
   const router = useRouter();
   if (router.query) useIsAuth();
   const { data, error, loading } = useGetAllExercisesQuery();
   const { data: meData } = useMeQuery();
+  const [targeted, setTargeted] = React.useState<string>('');
+  const [saveExercise, { loading: isSaving, data: saveExerciseData }] =
+    useSaveExerciseMutation();
   if (!loading && !data) {
     return (
       <div>
@@ -64,7 +84,50 @@ const HomePage = () => {
                       <Heading fontSize="large">{e.title}</Heading>
                     </Link>
                   </NextLink>
-                  <Text>{text}</Text>
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                  >
+                    <Text mr="4">{text}</Text>
+                    <Button
+                      isLoading={isSaving && targeted === e.id}
+                      disabled={isSaving && targeted === e.id}
+                      onClick={() => {
+                        setTargeted(e.id);
+                        saveExercise({
+                          variables: { exerciseId: e.id },
+                          update: (cache, { data }) => {
+                            const updatedExercises =
+                              cache.readQuery<GetAllExercisesQuery>({
+                                query: GetAllExercisesDocument,
+                              });
+
+                            const draft = cloneDeep(
+                              updatedExercises?.getAllExercises,
+                            );
+                            let foundChange = false;
+                            draft?.forEach((d) => {
+                              if (d.id === e.id) {
+                                d.saved = !d.saved;
+                                foundChange = true;
+                              }
+                            });
+
+                            if (foundChange) {
+                              cache.writeQuery<GetAllExercisesQuery>({
+                                query: GetAllExercisesDocument,
+                                // @ts-ignore
+                                data: { getAllExercises: draft },
+                              });
+                            }
+                          },
+                        }).then(() => setTargeted(''));
+                      }}
+                    >
+                      {e.saved ? <DeleteIcon /> : <AddIcon />}
+                    </Button>
+                  </Box>
                 </Box>
               </Flex>
             );

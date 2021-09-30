@@ -1,5 +1,8 @@
 query GetAllExercises {
   getAllExercises {
-    ...exerciseSnippet
+    id
+    title
+    length
+    saved
   }
 }

@@ -9,6 +9,7 @@ import { EntityManager } from '@mikro-orm/knex';
 import { Field, ID, Int, ObjectType } from 'type-graphql';
 import { getTodayTime } from '../utils/time/getTodayTime';
 import { Complete } from './Complete';
+import { SavedExercise } from './SavedExercise';
 import { ScorePerDay } from './ScorePerDay';
 
 @ObjectType()
@@ -49,6 +50,10 @@ export class User {
   @Field(() => [Complete], { nullable: true })
   @OneToMany(() => Complete, (complete) => complete.user)
   completes = new Collection<Complete>(this);
+
+  @Field(() => [SavedExercise], { nullable: true })
+  @OneToMany(() => SavedExercise, (saved) => saved.user)
+  savedExercises = new Collection<SavedExercise>(this);
 
   @Field(() => [ScorePerDay], { nullable: true })
   @OneToMany(() => ScorePerDay, (score) => score.owner)

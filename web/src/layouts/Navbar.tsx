@@ -10,6 +10,7 @@ import {
   useColorMode,
   useColorModeValue,
 } from '@chakra-ui/react';
+import { SunIcon, MoonIcon, ChevronDownIcon } from '@chakra-ui/icons';
 import { Menu, MenuItem, MenuButton } from '@szhsin/react-menu';
 import '@szhsin/react-menu/dist/index.css';
 import NextLink from 'next/link';
@@ -37,7 +38,7 @@ export const NavBar: React.FC<NavbarProps> = ({}) => {
   });
   const { data, loading } = useMeQuery();
   const bg = useColorModeValue('blue.200', 'purple.900');
-
+  const isLightMode = useColorModeValue(true, false);
   let body = null;
   if (loading) {
   } else if (!data?.me) {
@@ -54,25 +55,36 @@ export const NavBar: React.FC<NavbarProps> = ({}) => {
   } else {
     body = (
       <Flex align="center">
-        <Text mr="5" fontWeight="bold">
+        <Text mr="4" fontWeight="bold">
           {data.me.score} Điểm
         </Text>
+        <Box
+          style={{
+            borderRadius: '50%',
+            width: '40px',
+            height: '40px',
+            backgroundColor: 'white',
+          }}
+          mr="4"
+        >
+          <img
+            style={{
+              borderRadius: '50%',
+              width: '40px',
+              height: '40px',
+              backgroundColor: 'white',
+            }}
+            src={
+              data.me.avatarUrl
+                ? data.me.avatarUrl
+                : `${AVATAR_URL_PLACEHOLDER}${data.me.id}.svg`
+            }
+          />
+        </Box>
         <Menu
           menuButton={
-            <MenuButton style={{ width: 40, height: 40, borderRadius: '50%' }}>
-              <img
-                style={{
-                  borderRadius: '50%',
-                  width: '40px',
-                  height: '40px',
-                  backgroundColor: 'white',
-                }}
-                src={
-                  data.me.avatarUrl
-                    ? data.me.avatarUrl
-                    : `${AVATAR_URL_PLACEHOLDER}${data.me.id}.svg`
-                }
-              />
+            <MenuButton>
+              <ChevronDownIcon fontSize="3xl" />
             </MenuButton>
           }
         >
@@ -91,8 +103,13 @@ export const NavBar: React.FC<NavbarProps> = ({}) => {
           </MenuItem>
           <MenuItem>
             <Button w="full" onClick={toggleColorMode}>
-              change
+              {isLightMode ? <MoonIcon /> : <SunIcon />}
             </Button>
+          </MenuItem>
+          <MenuItem>
+            <NextLink href="/saved">
+              <Button w="full">Saved</Button>
+            </NextLink>
           </MenuItem>
           <MenuItem>
             <Button

@@ -205,6 +205,7 @@ export function useApollo<P, IP>(ac: ApolloClientParam) {
                   credentials: 'include',
                   headers: {
                     cookie: 'jid=' + cookies.jid,
+                    
                   },
                 },
               );

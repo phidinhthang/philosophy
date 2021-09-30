@@ -1,0 +1,6 @@
+query GetAllSavedExercise {
+  getAllSavedExercise {
+    id
+    title
+  }
+}

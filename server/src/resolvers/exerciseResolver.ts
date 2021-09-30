@@ -7,8 +7,9 @@ import { Exercise } from '../entities/Exercise';
 import { Question } from '../entities/Question';
 import { User } from '../entities/User';
 import { CreateExerciseResponse, MyContext } from '../types';
-import { CompleteInput, ExerciseInput } from './inputs';
+import { CompleteInput, ExerciseInput, ExerciseResponse } from './inputs';
 import { ExerciseError } from '../types';
+import { SavedExercise } from '../entities/SavedExercise';
 
 const validateExerciseInput = (
   input: ExerciseInput,
@@ -57,15 +58,46 @@ const validateExerciseInput = (
 
 @Resolver()
 export class ExerciseResolver {
-  @Query(() => [Exercise])
-  async getAllExercises(@Ctx() { em }: MyContext): Promise<Exercise[]> {
+  @Query(() => [ExerciseResponse])
+  async getAllExercises(
+    @Ctx() { em, req }: MyContext,
+  ): Promise<ExerciseResponse[]> {
+    const authorization = req.headers['authorization'];
+    let userId = '';
+    try {
+      if (authorization) {
+        const token = authorization.split(' ')[1];
+        const payload: any = verify(token, process.env.ACCESS_TOKEN_SECRET!);
+        userId = payload?.userId;
+      }
+    } catch (err) {
+      console.log(err);
+    }
     em = em.fork();
-    const exercises = await em
-      .createQueryBuilder(Exercise)
-      .select('*')
-      .getResult();
-
-    return exercises;
+    let exercises: ExerciseResponse[] = [];
+    try {
+      exercises = await em.getConnection('read').execute<ExerciseResponse[]>(
+        ` 
+          select "e"."id", e."title", e."length" ${
+            userId ? ', s."user_id" as saved' : ''
+          }  
+          from exercise e ${
+            userId
+              ? `left join saved_exercise s 
+            on e."id" = s."exercise_id" 
+            and s."user_id" = '${userId}'`
+              : ''
+          }
+        ;`,
+      );
+      console.log(exercises);
+    } catch (e) {
+      console.log(e);
+    }
+    return exercises.map((exercise) => ({
+      ...exercise,
+      saved: !!exercise.saved,
+    }));
   }
 
   @Mutation(() => CreateExerciseResponse, { nullable: true })
@@ -134,6 +166,58 @@ export class ExerciseResolver {
     } catch (err) {
       console.log(err);
       return false;
+    }
+  }
+
+  @Mutation(() => Boolean)
+  async saveExercise(
+    @Arg('exerciseId', () => String) exerciseId: string,
+    @Ctx() { req, em }: MyContext,
+  ): Promise<boolean> {
+    const authorization = req.headers['authorization'];
+
+    if (!authorization) throw new Error('not auth');
+
+    try {
+      const token = authorization.split(' ')[1];
+      const payload: any = verify(token, process.env.ACCESS_TOKEN_SECRET!);
+      const user = em.getReference(User, payload.userId);
+      const exercise = em.getReference(Exercise, exerciseId);
+      const alreadySaved = await em.findOne(SavedExercise, { user, exercise });
+
+      if (alreadySaved) {
+        await em.remove(alreadySaved).flush();
+      } else {
+        await em.persistAndFlush(em.create(SavedExercise, { user, exercise }));
+      }
+
+      return true;
+    } catch (err) {
+      console.log(err);
+      return false;
+    }
+  }
+
+  @Query(() => [Exercise], { nullable: true })
+  async getAllSavedExercise(
+    @Ctx() { req, em }: MyContext,
+  ): Promise<Exercise[]> {
+    const authorization = req.headers['authorization'];
+
+    if (!authorization) throw new Error('not auth');
+
+    try {
+      const token = authorization.split(' ')[1];
+      const payload: any = verify(token, process.env.ACCESS_TOKEN_SECRET!);
+      const user = (await em.findOneOrFail(User, payload.userId)) as User;
+      const savedExerciseIds = (
+        await em.populate(user, ['savedExercises.exercise'])
+      ).savedExercises;
+
+      return savedExerciseIds.getItems().map((i) => i.exercise);
+    } catch (err) {
+      console.log(err);
+      throw new Error('not auth');
     }
   }
 }

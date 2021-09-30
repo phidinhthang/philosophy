@@ -1,5 +1,6 @@
 import { Field, ID, InputType, Int, ObjectType } from 'type-graphql';
 import { Answer } from '../entities/Answer';
+import { Exercise } from '../entities/Exercise';
 import { User } from '../entities/User';
 import { CustomError } from '../utils/CustomError';
 
@@ -63,6 +64,10 @@ export class LoginInput implements Partial<User> {
   password: string;
 }
 
+/**
+ * Register input
+ */
+
 @InputType()
 export class RegisterInput implements Partial<User> {
   @Field(() => String)
@@ -78,6 +83,10 @@ export class RegisterInput implements Partial<User> {
   lastName: string;
 }
 
+/**
+ * Login Response
+ */
+
 @ObjectType()
 export class LoginResponse {
   @Field(() => User, { nullable: true })
@@ -86,4 +95,22 @@ export class LoginResponse {
   accessToken?: string;
   @Field(() => [CustomError], { nullable: true })
   errors?: CustomError[];
+}
+
+/**
+ * Exercise Response
+ */
+@ObjectType()
+export class ExerciseResponse implements Partial<Exercise> {
+  @Field(() => ID)
+  id: string;
+
+  @Field(() => String)
+  title: string;
+
+  @Field(() => Int)
+  length: number;
+
+  @Field(() => Boolean, { defaultValue: false })
+  saved: boolean = false;
 }
