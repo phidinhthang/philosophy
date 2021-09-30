@@ -53,4 +53,4 @@ function Profile() {
   );
 }
 
-export default withApollo({ ssr: true })(Profile);
+export default withApollo({ ssr: false })(Profile);
