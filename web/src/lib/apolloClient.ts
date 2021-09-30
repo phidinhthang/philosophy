@@ -75,8 +75,8 @@ export const apolloClient = (
   });
 
   const errorLink = onError(({ graphQLErrors, networkError }) => {
-    console.log(graphQLErrors);
-    console.log(networkError);
+    console.log('graphqlErrors ', graphQLErrors);
+    console.log('networkError ', networkError);
   });
 
   return new ApolloClient({
