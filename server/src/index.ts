@@ -88,7 +88,7 @@ const main = async () => {
       return res.send({ ok: false, accessToken: '' });
     }
 
-    sendRefreshToken(res, createRefreshToken(user));
+    // sendRefreshToken(res, createRefreshToken(user));
 
     return res.send({ ok: true, accessToken: createAccessToken(user) });
   });
