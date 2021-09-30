@@ -45,7 +45,7 @@ export const apolloClient = (
       }
     },
     fetchAccessToken: () => {
-      return fetch('http://localhost:4000/refresh_token', {
+      return fetch(`${process.env.API_URL || process.env.NEXT_PUBLIC_API_URL}/refresh_token`, {
         method: 'POST',
         credentials: 'include',
       });
