@@ -19,10 +19,7 @@ import { User } from './entities/User';
 // import argon2 from 'argon2';
 import { verify } from 'jsonwebtoken';
 import { sendRefreshToken } from './utils/auth/sendRefreshToken';
-import {
-  createAccessToken,
-  createRefreshToken,
-} from './utils/auth/createToken';
+import { createAccessToken } from './utils/auth/createToken';
 // import { seed } from './seed/seed';
 // import { EntityManager } from '@mikro-orm/postgresql';
 import { ExerciseResolver } from './resolvers/exerciseResolver';
@@ -58,7 +55,9 @@ const main = async () => {
   app.set('trust proxy', 1);
   app.use(
     cors({
-      origin: process.env.FRONTEND_NEXTJS_URL!,
+      origin:
+        process.env.FRONTEND_NEXTJS_URL! ||
+        'https://suspicious-franklin-3e4af2.netlify.app/',
       credentials: true,
     }),
   );
