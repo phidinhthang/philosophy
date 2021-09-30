@@ -63,6 +63,7 @@ const main = async () => {
   );
   app.use(cookieParser());
   app.use(express.json());
+  app.set('trust proxy', 1);
   app.get('/', (_req, res) => res.send('hello'));
   app.post('/refresh_token', async (req, res) => {
     const em = orm.em.fork();
