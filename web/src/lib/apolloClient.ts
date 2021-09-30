@@ -45,6 +45,7 @@ export const apolloClient = (
       }
     },
     fetchAccessToken: () => {
+      console.log('fetch new access token');
       return fetch(
         `${
           process.env.NEXT_PUBLIC_API_URL || process.env.API_URL
