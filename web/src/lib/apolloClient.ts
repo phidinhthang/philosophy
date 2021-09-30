@@ -30,7 +30,7 @@ export const apolloClient = (
     isTokenValidOrUndefined: () => {
       const token = getAccessToken();
       if (!token) {
-        return true;
+        return false;
       }
 
       try {
