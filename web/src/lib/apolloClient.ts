@@ -45,10 +45,15 @@ export const apolloClient = (
       }
     },
     fetchAccessToken: () => {
-      return fetch(`${process.env.API_URL || process.env.NEXT_PUBLIC_API_URL}/refresh_token`, {
-        method: 'POST',
-        credentials: 'include',
-      });
+      return fetch(
+        `${
+          process.env.NEXT_PUBLIC_API_URL || process.env.API_URL
+        }/refresh_token`,
+        {
+          method: 'POST',
+          credentials: 'include',
+        },
+      );
     },
     handleFetch: (accessToken) => {
       setAccessToken(accessToken);
