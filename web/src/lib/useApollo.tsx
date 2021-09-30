@@ -196,6 +196,7 @@ export function useApollo<P, IP>(ac: ApolloClientParam) {
             const cookies = req?.headers.cookie
               ? parse(req.headers.cookie)
               : undefined;
+            console.log(cookies);
             if (cookies?.jid) {
               const response = await fetch(
                 process.env.API_URL + '/refresh_token',
