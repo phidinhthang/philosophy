@@ -100,4 +100,4 @@ const Question = () => {
   );
 };
 
-export default withApollo({ ssr: true })(Question);
+export default withApollo({ ssr: false })(Question);

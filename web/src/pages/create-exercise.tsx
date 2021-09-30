@@ -220,4 +220,4 @@ const CreatePostPage: React.FC<{}> = ({}) => {
   );
 };
 
-export default withApollo({ ssr: true })(CreatePostPage);
+export default withApollo({ ssr: false })(CreatePostPage);

@@ -110,4 +110,4 @@ const LoginPage: React.FC<{}> = ({}) => {
   );
 };
 
-export default withApollo({ ssr: true })(LoginPage);
+export default withApollo({ ssr: false })(LoginPage);

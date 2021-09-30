@@ -75,4 +75,4 @@ const HomePage = () => {
   );
 };
 
-export default withApollo({ ssr: true })(HomePage);
+export default withApollo({ ssr: false })(HomePage);

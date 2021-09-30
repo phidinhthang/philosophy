@@ -1,8 +1,9 @@
 import { useRouter } from 'next/router';
 
 import { useEffect } from 'react';
+import { withApollo } from '../../../lib/withApollo';
 
-export default function () {
+function GetOAuthToken() {
   const router = useRouter();
   console.log(router.query);
   const refresh_token = router.query.refresh_token as string;
@@ -30,3 +31,5 @@ export default function () {
 
   return <div>loading...</div>;
 }
+
+export default withApollo({})(GetOAuthToken);
