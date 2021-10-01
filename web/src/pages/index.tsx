@@ -52,7 +52,7 @@ const HomePage = () => {
         <div>loading...</div>
       ) : (
         <Stack spacing={8}>
-          {data!.getAllExercises.map((e, index) => {
+          {data?.getAllExercises.map((e, index) => {
             if (!e) return e;
             const done = meData?.me?.completes?.find(
               (c) => c.exercise.id === e.id,

@@ -1,10 +1,15 @@
+// @ts-nocheck
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-const defaultOptions =  {}
+export type Exact<T extends { [key: string]: unknown }> = {
+  [K in keyof T]: T[K];
+};
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> &
+  { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> &
+  { [SubKey in K]: Maybe<T[SubKey]> };
+const defaultOptions = {};
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -123,51 +128,41 @@ export type Mutation = {
   changePassword: Scalars['Boolean'];
 };
 
-
 export type MutationLoginArgs = {
   input: LoginInput;
 };
-
 
 export type MutationRegisterArgs = {
   input: RegisterInput;
 };
 
-
 export type MutationCheckAnswerArgs = {
   input: UserAnswerInput;
 };
-
 
 export type MutationCreateExerciseArgs = {
   input: ExerciseInput;
 };
 
-
 export type MutationSaveCompleteArgs = {
   input: CompleteInput;
 };
-
 
 export type MutationSaveExerciseArgs = {
   exerciseId: Scalars['String'];
 };
 
-
 export type MutationCreateQuestionArgs = {
   input: QuestionInput;
 };
-
 
 export type MutationUploadAvatarArgs = {
   avatarUrl: Scalars['String'];
 };
 
-
 export type MutationUpdateInfoArgs = {
   input: InfoInput;
 };
-
 
 export type MutationChangePasswordArgs = {
   newPassword: Scalars['String'];
@@ -183,7 +178,6 @@ export type Query = {
   getQuestions: Array<Question>;
   getTopUsers: Array<TopUser>;
 };
-
 
 export type QueryGetQuestionsArgs = {
   id: Scalars['String'];
@@ -256,51 +250,135 @@ export type UserAnswerInput = {
   answerId: Scalars['ID'];
 };
 
-export type ErrorSnippetFragment = { __typename?: 'CustomError', field: string, message: string };
+export type ErrorSnippetFragment = {
+  __typename?: 'CustomError';
+  field: string;
+  message: string;
+};
 
-export type ExerciseSnippetFragment = { __typename?: 'Exercise', id: string, title: string, length: number };
+export type ExerciseSnippetFragment = {
+  __typename?: 'Exercise';
+  id: string;
+  title: string;
+  length: number;
+};
 
-export type UserSnippetFragment = { __typename?: 'User', id: string, name: string, firstName: string, lastName: string, avatarUrl?: Maybe<string>, score: number };
+export type UserSnippetFragment = {
+  __typename?: 'User';
+  id: string;
+  name: string;
+  firstName: string;
+  lastName: string;
+  avatarUrl?: Maybe<string>;
+  score: number;
+};
 
 export type CheckAnswerMutationVariables = Exact<{
   questionId: Scalars['ID'];
   answerId: Scalars['ID'];
 }>;
 
-
-export type CheckAnswerMutation = { __typename?: 'Mutation', checkAnswer: { __typename?: 'CheckAnswerResponse', isCorrect: boolean, score: number } };
+export type CheckAnswerMutation = {
+  __typename?: 'Mutation';
+  checkAnswer: {
+    __typename?: 'CheckAnswerResponse';
+    isCorrect: boolean;
+    score: number;
+  };
+};
 
 export type CreateExerciseMutationVariables = Exact<{
   input: ExerciseInput;
 }>;
 
-
-export type CreateExerciseMutation = { __typename?: 'Mutation', createExercise?: Maybe<{ __typename?: 'CreateExerciseResponse', hasError: boolean, errors?: Maybe<{ __typename?: 'ExerciseError', title?: Maybe<string>, questions?: Maybe<Array<{ __typename?: 'QuestionError', title?: Maybe<string>, isCorrect?: Maybe<string>, answers?: Maybe<Array<{ __typename?: 'AnswerError', text?: Maybe<string>, isCorrect?: Maybe<string> }>> }>> }>, exercise?: Maybe<{ __typename?: 'Exercise', id: string, title: string, length: number }> }> };
+export type CreateExerciseMutation = {
+  __typename?: 'Mutation';
+  createExercise?: Maybe<{
+    __typename?: 'CreateExerciseResponse';
+    hasError: boolean;
+    errors?: Maybe<{
+      __typename?: 'ExerciseError';
+      title?: Maybe<string>;
+      questions?: Maybe<
+        Array<{
+          __typename?: 'QuestionError';
+          title?: Maybe<string>;
+          isCorrect?: Maybe<string>;
+          answers?: Maybe<
+            Array<{
+              __typename?: 'AnswerError';
+              text?: Maybe<string>;
+              isCorrect?: Maybe<string>;
+            }>
+          >;
+        }>
+      >;
+    }>;
+    exercise?: Maybe<{
+      __typename?: 'Exercise';
+      id: string;
+      title: string;
+      length: number;
+    }>;
+  }>;
+};
 
 export type CreateQuestionMutationVariables = Exact<{
   input: QuestionInput;
 }>;
 
+export type CreateQuestionMutation = {
+  __typename?: 'Mutation';
+  createQuestion: boolean;
+};
 
-export type CreateQuestionMutation = { __typename?: 'Mutation', createQuestion: boolean };
+export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never }>;
 
-export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type Unnamed_1_Query = { __typename?: 'Query', getScoreOfWeek: Array<{ __typename?: 'ScorePerDay', id: string, day: string, score: number }> };
+export type Unnamed_1_Query = {
+  __typename?: 'Query';
+  getScoreOfWeek: Array<{
+    __typename?: 'ScorePerDay';
+    id: string;
+    day: string;
+    score: number;
+  }>;
+};
 
 export type LoginMutationVariables = Exact<{
   name: Scalars['String'];
   password: Scalars['String'];
 }>;
 
+export type LoginMutation = {
+  __typename?: 'Mutation';
+  login: {
+    __typename?: 'LoginResponse';
+    accessToken?: Maybe<string>;
+    user?: Maybe<{
+      __typename?: 'User';
+      id: string;
+      name: string;
+      firstName: string;
+      lastName: string;
+      avatarUrl?: Maybe<string>;
+      score: number;
+      completes?: Maybe<
+        Array<{
+          __typename?: 'Complete';
+          corrects?: Maybe<number>;
+          exercise: { __typename?: 'Exercise'; id: string };
+        }>
+      >;
+    }>;
+    errors?: Maybe<
+      Array<{ __typename?: 'CustomError'; field: string; message: string }>
+    >;
+  };
+};
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'LoginResponse', accessToken?: Maybe<string>, user?: Maybe<{ __typename?: 'User', id: string, name: string, firstName: string, lastName: string, avatarUrl?: Maybe<string>, score: number, completes?: Maybe<Array<{ __typename?: 'Complete', corrects?: Maybe<number>, exercise: { __typename?: 'Exercise', id: string } }>> }>, errors?: Maybe<Array<{ __typename?: 'CustomError', field: string, message: string }>> } };
+export type LogoutMutationVariables = Exact<{ [key: string]: never }>;
 
-export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
-
-
-export type LogoutMutation = { __typename?: 'Mutation', logout: boolean };
+export type LogoutMutation = { __typename?: 'Mutation'; logout: boolean };
 
 export type RegisterMutationVariables = Exact<{
   name: Scalars['String'];
@@ -309,101 +387,187 @@ export type RegisterMutationVariables = Exact<{
   firstName: Scalars['String'];
 }>;
 
-
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'LoginResponse', accessToken?: Maybe<string>, user?: Maybe<{ __typename?: 'User', id: string, name: string, firstName: string, lastName: string, avatarUrl?: Maybe<string>, score: number, completes?: Maybe<Array<{ __typename?: 'Complete', corrects?: Maybe<number>, exercise: { __typename?: 'Exercise', id: string } }>> }>, errors?: Maybe<Array<{ __typename?: 'CustomError', field: string, message: string }>> } };
+export type RegisterMutation = {
+  __typename?: 'Mutation';
+  register: {
+    __typename?: 'LoginResponse';
+    accessToken?: Maybe<string>;
+    user?: Maybe<{
+      __typename?: 'User';
+      id: string;
+      name: string;
+      firstName: string;
+      lastName: string;
+      avatarUrl?: Maybe<string>;
+      score: number;
+      completes?: Maybe<
+        Array<{
+          __typename?: 'Complete';
+          corrects?: Maybe<number>;
+          exercise: { __typename?: 'Exercise'; id: string };
+        }>
+      >;
+    }>;
+    errors?: Maybe<
+      Array<{ __typename?: 'CustomError'; field: string; message: string }>
+    >;
+  };
+};
 
 export type SaveCompleteMutationVariables = Exact<{
   input: CompleteInput;
 }>;
 
-
-export type SaveCompleteMutation = { __typename?: 'Mutation', saveComplete: boolean };
+export type SaveCompleteMutation = {
+  __typename?: 'Mutation';
+  saveComplete: boolean;
+};
 
 export type SaveExerciseMutationVariables = Exact<{
   exerciseId: Scalars['String'];
 }>;
 
-
-export type SaveExerciseMutation = { __typename?: 'Mutation', saveExercise: boolean };
+export type SaveExerciseMutation = {
+  __typename?: 'Mutation';
+  saveExercise: boolean;
+};
 
 export type UpdateInfoMutationVariables = Exact<{
   input: InfoInput;
 }>;
 
-
-export type UpdateInfoMutation = { __typename?: 'Mutation', updateInfo: boolean };
+export type UpdateInfoMutation = {
+  __typename?: 'Mutation';
+  updateInfo: boolean;
+};
 
 export type UploadAvatarMutationVariables = Exact<{
   avatarUrl: Scalars['String'];
 }>;
 
+export type UploadAvatarMutation = {
+  __typename?: 'Mutation';
+  uploadAvatar: boolean;
+};
 
-export type UploadAvatarMutation = { __typename?: 'Mutation', uploadAvatar: boolean };
+export type GetAllExercisesQueryVariables = Exact<{ [key: string]: never }>;
 
-export type GetAllExercisesQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetAllExercisesQuery = { __typename?: 'Query', getAllExercises: Array<{ __typename?: 'ExerciseResponse', id: string, title: string, length: number, saved?: Maybe<boolean> }> };
+export type GetAllExercisesQuery = {
+  __typename?: 'Query';
+  getAllExercises: Array<{
+    __typename?: 'ExerciseResponse';
+    id: string;
+    title: string;
+    length: number;
+    saved?: Maybe<boolean>;
+  }>;
+};
 
 export type GetQuestionsQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
 
+export type GetQuestionsQuery = {
+  __typename?: 'Query';
+  getQuestions: Array<{
+    __typename?: 'Question';
+    id: string;
+    title: string;
+    answers: Array<{ __typename?: 'Answer'; id: string; text: string }>;
+  }>;
+};
 
-export type GetQuestionsQuery = { __typename?: 'Query', getQuestions: Array<{ __typename?: 'Question', id: string, title: string, answers: Array<{ __typename?: 'Answer', id: string, text: string }> }> };
+export type GetAllSavedExerciseQueryVariables = Exact<{ [key: string]: never }>;
 
-export type GetAllSavedExerciseQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetAllSavedExerciseQuery = {
+  __typename?: 'Query';
+  getAllSavedExercise?: Maybe<
+    Array<{ __typename?: 'Exercise'; id: string; title: string }>
+  >;
+};
 
+export type GetScoreOfWeekQueryVariables = Exact<{ [key: string]: never }>;
 
-export type GetAllSavedExerciseQuery = { __typename?: 'Query', getAllSavedExercise?: Maybe<Array<{ __typename?: 'Exercise', id: string, title: string }>> };
+export type GetScoreOfWeekQuery = {
+  __typename?: 'Query';
+  getScoreOfWeek: Array<{
+    __typename?: 'ScorePerDay';
+    id: string;
+    day: string;
+    score: number;
+  }>;
+};
 
-export type GetScoreOfWeekQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetTopUsersQueryVariables = Exact<{ [key: string]: never }>;
 
+export type GetTopUsersQuery = {
+  __typename?: 'Query';
+  getTopUsers: Array<{
+    __typename?: 'TopUser';
+    id: string;
+    name: string;
+    score: number;
+    avatarUrl?: Maybe<string>;
+  }>;
+};
 
-export type GetScoreOfWeekQuery = { __typename?: 'Query', getScoreOfWeek: Array<{ __typename?: 'ScorePerDay', id: string, day: string, score: number }> };
+export type MeQueryVariables = Exact<{ [key: string]: never }>;
 
-export type GetTopUsersQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetTopUsersQuery = { __typename?: 'Query', getTopUsers: Array<{ __typename?: 'TopUser', id: string, name: string, score: number, avatarUrl?: Maybe<string> }> };
-
-export type MeQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type MeQuery = { __typename?: 'Query', me?: Maybe<{ __typename?: 'User', id: string, name: string, firstName: string, lastName: string, avatarUrl?: Maybe<string>, score: number, completes?: Maybe<Array<{ __typename?: 'Complete', corrects?: Maybe<number>, exercise: { __typename?: 'Exercise', id: string } }>> }> };
+export type MeQuery = {
+  __typename?: 'Query';
+  me?: Maybe<{
+    __typename?: 'User';
+    id: string;
+    name: string;
+    firstName: string;
+    lastName: string;
+    avatarUrl?: Maybe<string>;
+    score: number;
+    completes?: Maybe<
+      Array<{
+        __typename?: 'Complete';
+        corrects?: Maybe<number>;
+        exercise: { __typename?: 'Exercise'; id: string };
+      }>
+    >;
+  }>;
+};
 
 export const ErrorSnippetFragmentDoc = gql`
-    fragment errorSnippet on CustomError {
-  field
-  message
-}
-    `;
+  fragment errorSnippet on CustomError {
+    field
+    message
+  }
+`;
 export const ExerciseSnippetFragmentDoc = gql`
-    fragment exerciseSnippet on Exercise {
-  id
-  title
-  length
-}
-    `;
+  fragment exerciseSnippet on Exercise {
+    id
+    title
+    length
+  }
+`;
 export const UserSnippetFragmentDoc = gql`
-    fragment userSnippet on User {
-  id
-  name
-  firstName
-  lastName
-  avatarUrl
-  score
-}
-    `;
-export const CheckAnswerDocument = gql`
-    mutation CheckAnswer($questionId: ID!, $answerId: ID!) {
-  checkAnswer(input: {questionId: $questionId, answerId: $answerId}) {
-    isCorrect
+  fragment userSnippet on User {
+    id
+    name
+    firstName
+    lastName
+    avatarUrl
     score
   }
-}
-    `;
-export type CheckAnswerMutationFn = Apollo.MutationFunction<CheckAnswerMutation, CheckAnswerMutationVariables>;
+`;
+export const CheckAnswerDocument = gql`
+  mutation CheckAnswer($questionId: ID!, $answerId: ID!) {
+    checkAnswer(input: { questionId: $questionId, answerId: $answerId }) {
+      isCorrect
+      score
+    }
+  }
+`;
+export type CheckAnswerMutationFn = Apollo.MutationFunction<
+  CheckAnswerMutation,
+  CheckAnswerMutationVariables
+>;
 
 /**
  * __useCheckAnswerMutation__
@@ -423,35 +587,53 @@ export type CheckAnswerMutationFn = Apollo.MutationFunction<CheckAnswerMutation,
  *   },
  * });
  */
-export function useCheckAnswerMutation(baseOptions?: Apollo.MutationHookOptions<CheckAnswerMutation, CheckAnswerMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CheckAnswerMutation, CheckAnswerMutationVariables>(CheckAnswerDocument, options);
-      }
-export type CheckAnswerMutationHookResult = ReturnType<typeof useCheckAnswerMutation>;
-export type CheckAnswerMutationResult = Apollo.MutationResult<CheckAnswerMutation>;
-export type CheckAnswerMutationOptions = Apollo.BaseMutationOptions<CheckAnswerMutation, CheckAnswerMutationVariables>;
+export function useCheckAnswerMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CheckAnswerMutation,
+    CheckAnswerMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<CheckAnswerMutation, CheckAnswerMutationVariables>(
+    CheckAnswerDocument,
+    options,
+  );
+}
+export type CheckAnswerMutationHookResult = ReturnType<
+  typeof useCheckAnswerMutation
+>;
+export type CheckAnswerMutationResult =
+  Apollo.MutationResult<CheckAnswerMutation>;
+export type CheckAnswerMutationOptions = Apollo.BaseMutationOptions<
+  CheckAnswerMutation,
+  CheckAnswerMutationVariables
+>;
 export const CreateExerciseDocument = gql`
-    mutation CreateExercise($input: ExerciseInput!) {
-  createExercise(input: $input) {
-    hasError
-    errors {
-      title
-      questions {
+  mutation CreateExercise($input: ExerciseInput!) {
+    createExercise(input: $input) {
+      hasError
+      errors {
         title
-        isCorrect
-        answers {
-          text
+        questions {
+          title
           isCorrect
+          answers {
+            text
+            isCorrect
+          }
         }
       }
-    }
-    exercise {
-      ...exerciseSnippet
+      exercise {
+        ...exerciseSnippet
+      }
     }
   }
-}
-    ${ExerciseSnippetFragmentDoc}`;
-export type CreateExerciseMutationFn = Apollo.MutationFunction<CreateExerciseMutation, CreateExerciseMutationVariables>;
+  ${ExerciseSnippetFragmentDoc}
+`;
+export type CreateExerciseMutationFn = Apollo.MutationFunction<
+  CreateExerciseMutation,
+  CreateExerciseMutationVariables
+>;
 
 /**
  * __useCreateExerciseMutation__
@@ -470,19 +652,36 @@ export type CreateExerciseMutationFn = Apollo.MutationFunction<CreateExerciseMut
  *   },
  * });
  */
-export function useCreateExerciseMutation(baseOptions?: Apollo.MutationHookOptions<CreateExerciseMutation, CreateExerciseMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateExerciseMutation, CreateExerciseMutationVariables>(CreateExerciseDocument, options);
-      }
-export type CreateExerciseMutationHookResult = ReturnType<typeof useCreateExerciseMutation>;
-export type CreateExerciseMutationResult = Apollo.MutationResult<CreateExerciseMutation>;
-export type CreateExerciseMutationOptions = Apollo.BaseMutationOptions<CreateExerciseMutation, CreateExerciseMutationVariables>;
-export const CreateQuestionDocument = gql`
-    mutation CreateQuestion($input: QuestionInput!) {
-  createQuestion(input: $input)
+export function useCreateExerciseMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateExerciseMutation,
+    CreateExerciseMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateExerciseMutation,
+    CreateExerciseMutationVariables
+  >(CreateExerciseDocument, options);
 }
-    `;
-export type CreateQuestionMutationFn = Apollo.MutationFunction<CreateQuestionMutation, CreateQuestionMutationVariables>;
+export type CreateExerciseMutationHookResult = ReturnType<
+  typeof useCreateExerciseMutation
+>;
+export type CreateExerciseMutationResult =
+  Apollo.MutationResult<CreateExerciseMutation>;
+export type CreateExerciseMutationOptions = Apollo.BaseMutationOptions<
+  CreateExerciseMutation,
+  CreateExerciseMutationVariables
+>;
+export const CreateQuestionDocument = gql`
+  mutation CreateQuestion($input: QuestionInput!) {
+    createQuestion(input: $input)
+  }
+`;
+export type CreateQuestionMutationFn = Apollo.MutationFunction<
+  CreateQuestionMutation,
+  CreateQuestionMutationVariables
+>;
 
 /**
  * __useCreateQuestionMutation__
@@ -501,22 +700,36 @@ export type CreateQuestionMutationFn = Apollo.MutationFunction<CreateQuestionMut
  *   },
  * });
  */
-export function useCreateQuestionMutation(baseOptions?: Apollo.MutationHookOptions<CreateQuestionMutation, CreateQuestionMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateQuestionMutation, CreateQuestionMutationVariables>(CreateQuestionDocument, options);
-      }
-export type CreateQuestionMutationHookResult = ReturnType<typeof useCreateQuestionMutation>;
-export type CreateQuestionMutationResult = Apollo.MutationResult<CreateQuestionMutation>;
-export type CreateQuestionMutationOptions = Apollo.BaseMutationOptions<CreateQuestionMutation, CreateQuestionMutationVariables>;
-export const Document = gql`
-    {
-  getScoreOfWeek {
-    id
-    day
-    score
-  }
+export function useCreateQuestionMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateQuestionMutation,
+    CreateQuestionMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateQuestionMutation,
+    CreateQuestionMutationVariables
+  >(CreateQuestionDocument, options);
 }
-    `;
+export type CreateQuestionMutationHookResult = ReturnType<
+  typeof useCreateQuestionMutation
+>;
+export type CreateQuestionMutationResult =
+  Apollo.MutationResult<CreateQuestionMutation>;
+export type CreateQuestionMutationOptions = Apollo.BaseMutationOptions<
+  CreateQuestionMutation,
+  CreateQuestionMutationVariables
+>;
+export const Document = gql`
+  {
+    getScoreOfWeek {
+      id
+      day
+      score
+    }
+  }
+`;
 
 /**
  * __useQuery__
@@ -533,38 +746,46 @@ export const Document = gql`
  *   },
  * });
  */
-export function useQuery(baseOptions?: Apollo.QueryHookOptions<Query, QueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<Query, QueryVariables>(Document, options);
-      }
-export function useLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Query, QueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<Query, QueryVariables>(Document, options);
-        }
+export function useQuery(
+  baseOptions?: Apollo.QueryHookOptions<Query, QueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<Query, QueryVariables>(Document, options);
+}
+export function useLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<Query, QueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<Query, QueryVariables>(Document, options);
+}
 export type QueryHookResult = ReturnType<typeof useQuery>;
 export type LazyQueryHookResult = ReturnType<typeof useLazyQuery>;
 export type QueryResult = Apollo.QueryResult<Query, QueryVariables>;
 export const LoginDocument = gql`
-    mutation Login($name: String!, $password: String!) {
-  login(input: {name: $name, password: $password}) {
-    user {
-      ...userSnippet
-      completes {
-        exercise {
-          id
+  mutation Login($name: String!, $password: String!) {
+    login(input: { name: $name, password: $password }) {
+      user {
+        ...userSnippet
+        completes {
+          exercise {
+            id
+          }
+          corrects
         }
-        corrects
       }
+      errors {
+        field
+        message
+      }
+      accessToken
     }
-    errors {
-      field
-      message
-    }
-    accessToken
   }
-}
-    ${UserSnippetFragmentDoc}`;
-export type LoginMutationFn = Apollo.MutationFunction<LoginMutation, LoginMutationVariables>;
+  ${UserSnippetFragmentDoc}
+`;
+export type LoginMutationFn = Apollo.MutationFunction<
+  LoginMutation,
+  LoginMutationVariables
+>;
 
 /**
  * __useLoginMutation__
@@ -584,19 +805,33 @@ export type LoginMutationFn = Apollo.MutationFunction<LoginMutation, LoginMutati
  *   },
  * });
  */
-export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginMutation, LoginMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument, options);
-      }
+export function useLoginMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    LoginMutation,
+    LoginMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<LoginMutation, LoginMutationVariables>(
+    LoginDocument,
+    options,
+  );
+}
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
-export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
+export type LoginMutationOptions = Apollo.BaseMutationOptions<
+  LoginMutation,
+  LoginMutationVariables
+>;
 export const LogoutDocument = gql`
-    mutation Logout {
-  logout
-}
-    `;
-export type LogoutMutationFn = Apollo.MutationFunction<LogoutMutation, LogoutMutationVariables>;
+  mutation Logout {
+    logout
+  }
+`;
+export type LogoutMutationFn = Apollo.MutationFunction<
+  LogoutMutation,
+  LogoutMutationVariables
+>;
 
 /**
  * __useLogoutMutation__
@@ -614,36 +849,61 @@ export type LogoutMutationFn = Apollo.MutationFunction<LogoutMutation, LogoutMut
  *   },
  * });
  */
-export function useLogoutMutation(baseOptions?: Apollo.MutationHookOptions<LogoutMutation, LogoutMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<LogoutMutation, LogoutMutationVariables>(LogoutDocument, options);
-      }
+export function useLogoutMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    LogoutMutation,
+    LogoutMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<LogoutMutation, LogoutMutationVariables>(
+    LogoutDocument,
+    options,
+  );
+}
 export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
 export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
-export type LogoutMutationOptions = Apollo.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
+export type LogoutMutationOptions = Apollo.BaseMutationOptions<
+  LogoutMutation,
+  LogoutMutationVariables
+>;
 export const RegisterDocument = gql`
-    mutation Register($name: String!, $password: String!, $lastName: String!, $firstName: String!) {
-  register(
-    input: {name: $name, password: $password, lastName: $lastName, firstName: $firstName}
+  mutation Register(
+    $name: String!
+    $password: String!
+    $lastName: String!
+    $firstName: String!
   ) {
-    user {
-      ...userSnippet
-      completes {
-        exercise {
-          id
-        }
-        corrects
+    register(
+      input: {
+        name: $name
+        password: $password
+        lastName: $lastName
+        firstName: $firstName
       }
+    ) {
+      user {
+        ...userSnippet
+        completes {
+          exercise {
+            id
+          }
+          corrects
+        }
+      }
+      errors {
+        ...errorSnippet
+      }
+      accessToken
     }
-    errors {
-      ...errorSnippet
-    }
-    accessToken
   }
-}
-    ${UserSnippetFragmentDoc}
-${ErrorSnippetFragmentDoc}`;
-export type RegisterMutationFn = Apollo.MutationFunction<RegisterMutation, RegisterMutationVariables>;
+  ${UserSnippetFragmentDoc}
+  ${ErrorSnippetFragmentDoc}
+`;
+export type RegisterMutationFn = Apollo.MutationFunction<
+  RegisterMutation,
+  RegisterMutationVariables
+>;
 
 /**
  * __useRegisterMutation__
@@ -665,19 +925,33 @@ export type RegisterMutationFn = Apollo.MutationFunction<RegisterMutation, Regis
  *   },
  * });
  */
-export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<RegisterMutation, RegisterMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument, options);
-      }
+export function useRegisterMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    RegisterMutation,
+    RegisterMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<RegisterMutation, RegisterMutationVariables>(
+    RegisterDocument,
+    options,
+  );
+}
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
-export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export type RegisterMutationOptions = Apollo.BaseMutationOptions<
+  RegisterMutation,
+  RegisterMutationVariables
+>;
 export const SaveCompleteDocument = gql`
-    mutation SaveComplete($input: CompleteInput!) {
-  saveComplete(input: $input)
-}
-    `;
-export type SaveCompleteMutationFn = Apollo.MutationFunction<SaveCompleteMutation, SaveCompleteMutationVariables>;
+  mutation SaveComplete($input: CompleteInput!) {
+    saveComplete(input: $input)
+  }
+`;
+export type SaveCompleteMutationFn = Apollo.MutationFunction<
+  SaveCompleteMutation,
+  SaveCompleteMutationVariables
+>;
 
 /**
  * __useSaveCompleteMutation__
@@ -696,19 +970,36 @@ export type SaveCompleteMutationFn = Apollo.MutationFunction<SaveCompleteMutatio
  *   },
  * });
  */
-export function useSaveCompleteMutation(baseOptions?: Apollo.MutationHookOptions<SaveCompleteMutation, SaveCompleteMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<SaveCompleteMutation, SaveCompleteMutationVariables>(SaveCompleteDocument, options);
-      }
-export type SaveCompleteMutationHookResult = ReturnType<typeof useSaveCompleteMutation>;
-export type SaveCompleteMutationResult = Apollo.MutationResult<SaveCompleteMutation>;
-export type SaveCompleteMutationOptions = Apollo.BaseMutationOptions<SaveCompleteMutation, SaveCompleteMutationVariables>;
-export const SaveExerciseDocument = gql`
-    mutation SaveExercise($exerciseId: String!) {
-  saveExercise(exerciseId: $exerciseId)
+export function useSaveCompleteMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    SaveCompleteMutation,
+    SaveCompleteMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    SaveCompleteMutation,
+    SaveCompleteMutationVariables
+  >(SaveCompleteDocument, options);
 }
-    `;
-export type SaveExerciseMutationFn = Apollo.MutationFunction<SaveExerciseMutation, SaveExerciseMutationVariables>;
+export type SaveCompleteMutationHookResult = ReturnType<
+  typeof useSaveCompleteMutation
+>;
+export type SaveCompleteMutationResult =
+  Apollo.MutationResult<SaveCompleteMutation>;
+export type SaveCompleteMutationOptions = Apollo.BaseMutationOptions<
+  SaveCompleteMutation,
+  SaveCompleteMutationVariables
+>;
+export const SaveExerciseDocument = gql`
+  mutation SaveExercise($exerciseId: String!) {
+    saveExercise(exerciseId: $exerciseId)
+  }
+`;
+export type SaveExerciseMutationFn = Apollo.MutationFunction<
+  SaveExerciseMutation,
+  SaveExerciseMutationVariables
+>;
 
 /**
  * __useSaveExerciseMutation__
@@ -727,19 +1018,36 @@ export type SaveExerciseMutationFn = Apollo.MutationFunction<SaveExerciseMutatio
  *   },
  * });
  */
-export function useSaveExerciseMutation(baseOptions?: Apollo.MutationHookOptions<SaveExerciseMutation, SaveExerciseMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<SaveExerciseMutation, SaveExerciseMutationVariables>(SaveExerciseDocument, options);
-      }
-export type SaveExerciseMutationHookResult = ReturnType<typeof useSaveExerciseMutation>;
-export type SaveExerciseMutationResult = Apollo.MutationResult<SaveExerciseMutation>;
-export type SaveExerciseMutationOptions = Apollo.BaseMutationOptions<SaveExerciseMutation, SaveExerciseMutationVariables>;
-export const UpdateInfoDocument = gql`
-    mutation UpdateInfo($input: InfoInput!) {
-  updateInfo(input: $input)
+export function useSaveExerciseMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    SaveExerciseMutation,
+    SaveExerciseMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    SaveExerciseMutation,
+    SaveExerciseMutationVariables
+  >(SaveExerciseDocument, options);
 }
-    `;
-export type UpdateInfoMutationFn = Apollo.MutationFunction<UpdateInfoMutation, UpdateInfoMutationVariables>;
+export type SaveExerciseMutationHookResult = ReturnType<
+  typeof useSaveExerciseMutation
+>;
+export type SaveExerciseMutationResult =
+  Apollo.MutationResult<SaveExerciseMutation>;
+export type SaveExerciseMutationOptions = Apollo.BaseMutationOptions<
+  SaveExerciseMutation,
+  SaveExerciseMutationVariables
+>;
+export const UpdateInfoDocument = gql`
+  mutation UpdateInfo($input: InfoInput!) {
+    updateInfo(input: $input)
+  }
+`;
+export type UpdateInfoMutationFn = Apollo.MutationFunction<
+  UpdateInfoMutation,
+  UpdateInfoMutationVariables
+>;
 
 /**
  * __useUpdateInfoMutation__
@@ -758,19 +1066,36 @@ export type UpdateInfoMutationFn = Apollo.MutationFunction<UpdateInfoMutation, U
  *   },
  * });
  */
-export function useUpdateInfoMutation(baseOptions?: Apollo.MutationHookOptions<UpdateInfoMutation, UpdateInfoMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateInfoMutation, UpdateInfoMutationVariables>(UpdateInfoDocument, options);
-      }
-export type UpdateInfoMutationHookResult = ReturnType<typeof useUpdateInfoMutation>;
-export type UpdateInfoMutationResult = Apollo.MutationResult<UpdateInfoMutation>;
-export type UpdateInfoMutationOptions = Apollo.BaseMutationOptions<UpdateInfoMutation, UpdateInfoMutationVariables>;
-export const UploadAvatarDocument = gql`
-    mutation UploadAvatar($avatarUrl: String!) {
-  uploadAvatar(avatarUrl: $avatarUrl)
+export function useUpdateInfoMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateInfoMutation,
+    UpdateInfoMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<UpdateInfoMutation, UpdateInfoMutationVariables>(
+    UpdateInfoDocument,
+    options,
+  );
 }
-    `;
-export type UploadAvatarMutationFn = Apollo.MutationFunction<UploadAvatarMutation, UploadAvatarMutationVariables>;
+export type UpdateInfoMutationHookResult = ReturnType<
+  typeof useUpdateInfoMutation
+>;
+export type UpdateInfoMutationResult =
+  Apollo.MutationResult<UpdateInfoMutation>;
+export type UpdateInfoMutationOptions = Apollo.BaseMutationOptions<
+  UpdateInfoMutation,
+  UpdateInfoMutationVariables
+>;
+export const UploadAvatarDocument = gql`
+  mutation UploadAvatar($avatarUrl: String!) {
+    uploadAvatar(avatarUrl: $avatarUrl)
+  }
+`;
+export type UploadAvatarMutationFn = Apollo.MutationFunction<
+  UploadAvatarMutation,
+  UploadAvatarMutationVariables
+>;
 
 /**
  * __useUploadAvatarMutation__
@@ -789,23 +1114,37 @@ export type UploadAvatarMutationFn = Apollo.MutationFunction<UploadAvatarMutatio
  *   },
  * });
  */
-export function useUploadAvatarMutation(baseOptions?: Apollo.MutationHookOptions<UploadAvatarMutation, UploadAvatarMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UploadAvatarMutation, UploadAvatarMutationVariables>(UploadAvatarDocument, options);
-      }
-export type UploadAvatarMutationHookResult = ReturnType<typeof useUploadAvatarMutation>;
-export type UploadAvatarMutationResult = Apollo.MutationResult<UploadAvatarMutation>;
-export type UploadAvatarMutationOptions = Apollo.BaseMutationOptions<UploadAvatarMutation, UploadAvatarMutationVariables>;
-export const GetAllExercisesDocument = gql`
-    query GetAllExercises {
-  getAllExercises {
-    id
-    title
-    length
-    saved
-  }
+export function useUploadAvatarMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UploadAvatarMutation,
+    UploadAvatarMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UploadAvatarMutation,
+    UploadAvatarMutationVariables
+  >(UploadAvatarDocument, options);
 }
-    `;
+export type UploadAvatarMutationHookResult = ReturnType<
+  typeof useUploadAvatarMutation
+>;
+export type UploadAvatarMutationResult =
+  Apollo.MutationResult<UploadAvatarMutation>;
+export type UploadAvatarMutationOptions = Apollo.BaseMutationOptions<
+  UploadAvatarMutation,
+  UploadAvatarMutationVariables
+>;
+export const GetAllExercisesDocument = gql`
+  query GetAllExercises {
+    getAllExercises {
+      id
+      title
+      length
+      saved
+    }
+  }
+`;
 
 /**
  * __useGetAllExercisesQuery__
@@ -822,29 +1161,52 @@ export const GetAllExercisesDocument = gql`
  *   },
  * });
  */
-export function useGetAllExercisesQuery(baseOptions?: Apollo.QueryHookOptions<GetAllExercisesQuery, GetAllExercisesQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetAllExercisesQuery, GetAllExercisesQueryVariables>(GetAllExercisesDocument, options);
-      }
-export function useGetAllExercisesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllExercisesQuery, GetAllExercisesQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetAllExercisesQuery, GetAllExercisesQueryVariables>(GetAllExercisesDocument, options);
-        }
-export type GetAllExercisesQueryHookResult = ReturnType<typeof useGetAllExercisesQuery>;
-export type GetAllExercisesLazyQueryHookResult = ReturnType<typeof useGetAllExercisesLazyQuery>;
-export type GetAllExercisesQueryResult = Apollo.QueryResult<GetAllExercisesQuery, GetAllExercisesQueryVariables>;
+export function useGetAllExercisesQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetAllExercisesQuery,
+    GetAllExercisesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetAllExercisesQuery, GetAllExercisesQueryVariables>(
+    GetAllExercisesDocument,
+    options,
+  );
+}
+export function useGetAllExercisesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetAllExercisesQuery,
+    GetAllExercisesQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    GetAllExercisesQuery,
+    GetAllExercisesQueryVariables
+  >(GetAllExercisesDocument, options);
+}
+export type GetAllExercisesQueryHookResult = ReturnType<
+  typeof useGetAllExercisesQuery
+>;
+export type GetAllExercisesLazyQueryHookResult = ReturnType<
+  typeof useGetAllExercisesLazyQuery
+>;
+export type GetAllExercisesQueryResult = Apollo.QueryResult<
+  GetAllExercisesQuery,
+  GetAllExercisesQueryVariables
+>;
 export const GetQuestionsDocument = gql`
-    query GetQuestions($id: String!) {
-  getQuestions(id: $id) {
-    id
-    title
-    answers {
+  query GetQuestions($id: String!) {
+    getQuestions(id: $id) {
       id
-      text
+      title
+      answers {
+        id
+        text
+      }
     }
   }
-}
-    `;
+`;
 
 /**
  * __useGetQuestionsQuery__
@@ -862,25 +1224,48 @@ export const GetQuestionsDocument = gql`
  *   },
  * });
  */
-export function useGetQuestionsQuery(baseOptions: Apollo.QueryHookOptions<GetQuestionsQuery, GetQuestionsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetQuestionsQuery, GetQuestionsQueryVariables>(GetQuestionsDocument, options);
-      }
-export function useGetQuestionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetQuestionsQuery, GetQuestionsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetQuestionsQuery, GetQuestionsQueryVariables>(GetQuestionsDocument, options);
-        }
-export type GetQuestionsQueryHookResult = ReturnType<typeof useGetQuestionsQuery>;
-export type GetQuestionsLazyQueryHookResult = ReturnType<typeof useGetQuestionsLazyQuery>;
-export type GetQuestionsQueryResult = Apollo.QueryResult<GetQuestionsQuery, GetQuestionsQueryVariables>;
-export const GetAllSavedExerciseDocument = gql`
-    query GetAllSavedExercise {
-  getAllSavedExercise {
-    id
-    title
-  }
+export function useGetQuestionsQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetQuestionsQuery,
+    GetQuestionsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetQuestionsQuery, GetQuestionsQueryVariables>(
+    GetQuestionsDocument,
+    options,
+  );
 }
-    `;
+export function useGetQuestionsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetQuestionsQuery,
+    GetQuestionsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetQuestionsQuery, GetQuestionsQueryVariables>(
+    GetQuestionsDocument,
+    options,
+  );
+}
+export type GetQuestionsQueryHookResult = ReturnType<
+  typeof useGetQuestionsQuery
+>;
+export type GetQuestionsLazyQueryHookResult = ReturnType<
+  typeof useGetQuestionsLazyQuery
+>;
+export type GetQuestionsQueryResult = Apollo.QueryResult<
+  GetQuestionsQuery,
+  GetQuestionsQueryVariables
+>;
+export const GetAllSavedExerciseDocument = gql`
+  query GetAllSavedExercise {
+    getAllSavedExercise {
+      id
+      title
+    }
+  }
+`;
 
 /**
  * __useGetAllSavedExerciseQuery__
@@ -897,26 +1282,49 @@ export const GetAllSavedExerciseDocument = gql`
  *   },
  * });
  */
-export function useGetAllSavedExerciseQuery(baseOptions?: Apollo.QueryHookOptions<GetAllSavedExerciseQuery, GetAllSavedExerciseQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetAllSavedExerciseQuery, GetAllSavedExerciseQueryVariables>(GetAllSavedExerciseDocument, options);
-      }
-export function useGetAllSavedExerciseLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllSavedExerciseQuery, GetAllSavedExerciseQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetAllSavedExerciseQuery, GetAllSavedExerciseQueryVariables>(GetAllSavedExerciseDocument, options);
-        }
-export type GetAllSavedExerciseQueryHookResult = ReturnType<typeof useGetAllSavedExerciseQuery>;
-export type GetAllSavedExerciseLazyQueryHookResult = ReturnType<typeof useGetAllSavedExerciseLazyQuery>;
-export type GetAllSavedExerciseQueryResult = Apollo.QueryResult<GetAllSavedExerciseQuery, GetAllSavedExerciseQueryVariables>;
-export const GetScoreOfWeekDocument = gql`
-    query GetScoreOfWeek {
-  getScoreOfWeek {
-    id
-    day
-    score
-  }
+export function useGetAllSavedExerciseQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetAllSavedExerciseQuery,
+    GetAllSavedExerciseQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    GetAllSavedExerciseQuery,
+    GetAllSavedExerciseQueryVariables
+  >(GetAllSavedExerciseDocument, options);
 }
-    `;
+export function useGetAllSavedExerciseLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetAllSavedExerciseQuery,
+    GetAllSavedExerciseQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    GetAllSavedExerciseQuery,
+    GetAllSavedExerciseQueryVariables
+  >(GetAllSavedExerciseDocument, options);
+}
+export type GetAllSavedExerciseQueryHookResult = ReturnType<
+  typeof useGetAllSavedExerciseQuery
+>;
+export type GetAllSavedExerciseLazyQueryHookResult = ReturnType<
+  typeof useGetAllSavedExerciseLazyQuery
+>;
+export type GetAllSavedExerciseQueryResult = Apollo.QueryResult<
+  GetAllSavedExerciseQuery,
+  GetAllSavedExerciseQueryVariables
+>;
+export const GetScoreOfWeekDocument = gql`
+  query GetScoreOfWeek {
+    getScoreOfWeek {
+      id
+      day
+      score
+    }
+  }
+`;
 
 /**
  * __useGetScoreOfWeekQuery__
@@ -933,27 +1341,50 @@ export const GetScoreOfWeekDocument = gql`
  *   },
  * });
  */
-export function useGetScoreOfWeekQuery(baseOptions?: Apollo.QueryHookOptions<GetScoreOfWeekQuery, GetScoreOfWeekQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetScoreOfWeekQuery, GetScoreOfWeekQueryVariables>(GetScoreOfWeekDocument, options);
-      }
-export function useGetScoreOfWeekLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetScoreOfWeekQuery, GetScoreOfWeekQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetScoreOfWeekQuery, GetScoreOfWeekQueryVariables>(GetScoreOfWeekDocument, options);
-        }
-export type GetScoreOfWeekQueryHookResult = ReturnType<typeof useGetScoreOfWeekQuery>;
-export type GetScoreOfWeekLazyQueryHookResult = ReturnType<typeof useGetScoreOfWeekLazyQuery>;
-export type GetScoreOfWeekQueryResult = Apollo.QueryResult<GetScoreOfWeekQuery, GetScoreOfWeekQueryVariables>;
-export const GetTopUsersDocument = gql`
-    query GetTopUsers {
-  getTopUsers {
-    id
-    name
-    score
-    avatarUrl
-  }
+export function useGetScoreOfWeekQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetScoreOfWeekQuery,
+    GetScoreOfWeekQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetScoreOfWeekQuery, GetScoreOfWeekQueryVariables>(
+    GetScoreOfWeekDocument,
+    options,
+  );
 }
-    `;
+export function useGetScoreOfWeekLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetScoreOfWeekQuery,
+    GetScoreOfWeekQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetScoreOfWeekQuery, GetScoreOfWeekQueryVariables>(
+    GetScoreOfWeekDocument,
+    options,
+  );
+}
+export type GetScoreOfWeekQueryHookResult = ReturnType<
+  typeof useGetScoreOfWeekQuery
+>;
+export type GetScoreOfWeekLazyQueryHookResult = ReturnType<
+  typeof useGetScoreOfWeekLazyQuery
+>;
+export type GetScoreOfWeekQueryResult = Apollo.QueryResult<
+  GetScoreOfWeekQuery,
+  GetScoreOfWeekQueryVariables
+>;
+export const GetTopUsersDocument = gql`
+  query GetTopUsers {
+    getTopUsers {
+      id
+      name
+      score
+      avatarUrl
+    }
+  }
+`;
 
 /**
  * __useGetTopUsersQuery__
@@ -970,30 +1401,52 @@ export const GetTopUsersDocument = gql`
  *   },
  * });
  */
-export function useGetTopUsersQuery(baseOptions?: Apollo.QueryHookOptions<GetTopUsersQuery, GetTopUsersQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetTopUsersQuery, GetTopUsersQueryVariables>(GetTopUsersDocument, options);
-      }
-export function useGetTopUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTopUsersQuery, GetTopUsersQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetTopUsersQuery, GetTopUsersQueryVariables>(GetTopUsersDocument, options);
-        }
+export function useGetTopUsersQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    GetTopUsersQuery,
+    GetTopUsersQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetTopUsersQuery, GetTopUsersQueryVariables>(
+    GetTopUsersDocument,
+    options,
+  );
+}
+export function useGetTopUsersLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetTopUsersQuery,
+    GetTopUsersQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetTopUsersQuery, GetTopUsersQueryVariables>(
+    GetTopUsersDocument,
+    options,
+  );
+}
 export type GetTopUsersQueryHookResult = ReturnType<typeof useGetTopUsersQuery>;
-export type GetTopUsersLazyQueryHookResult = ReturnType<typeof useGetTopUsersLazyQuery>;
-export type GetTopUsersQueryResult = Apollo.QueryResult<GetTopUsersQuery, GetTopUsersQueryVariables>;
+export type GetTopUsersLazyQueryHookResult = ReturnType<
+  typeof useGetTopUsersLazyQuery
+>;
+export type GetTopUsersQueryResult = Apollo.QueryResult<
+  GetTopUsersQuery,
+  GetTopUsersQueryVariables
+>;
 export const MeDocument = gql`
-    query Me {
-  me {
-    ...userSnippet
-    completes {
-      exercise {
-        id
+  query Me {
+    me {
+      ...userSnippet
+      completes {
+        exercise {
+          id
+        }
+        corrects
       }
-      corrects
     }
   }
-}
-    ${UserSnippetFragmentDoc}`;
+  ${UserSnippetFragmentDoc}
+`;
 
 /**
  * __useMeQuery__
@@ -1010,14 +1463,18 @@ export const MeDocument = gql`
  *   },
  * });
  */
-export function useMeQuery(baseOptions?: Apollo.QueryHookOptions<MeQuery, MeQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<MeQuery, MeQueryVariables>(MeDocument, options);
-      }
-export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery, MeQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, options);
-        }
+export function useMeQuery(
+  baseOptions?: Apollo.QueryHookOptions<MeQuery, MeQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<MeQuery, MeQueryVariables>(MeDocument, options);
+}
+export function useMeLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<MeQuery, MeQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, options);
+}
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;

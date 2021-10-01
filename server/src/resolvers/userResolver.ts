@@ -33,6 +33,7 @@ export class UserResolver {
   @Query(() => User, { nullable: true })
   @UseMiddleware(isAuth)
   async me(@Ctx() { req, em }: MyContext): Promise<User | null> {
+    em = em.fork();
     const user = await getUserById({ req, em });
     await em.populate(user, ['completes']);
     return user;
@@ -49,6 +50,7 @@ export class UserResolver {
     @Arg('input') { name, password }: LoginInput,
     @Ctx() { em, res }: MyContext,
   ): Promise<LoginResponse> {
+    em = em.fork();
     const errors = validateLogin({ name, password });
     if (errors.length) return { errors };
     const user = await em.findOne(User, { name });
@@ -80,6 +82,7 @@ export class UserResolver {
     @Arg('input') { name, password, firstName, lastName }: RegisterInput,
     @Ctx() { res, em }: MyContext,
   ): Promise<LoginResponse> {
+    em = em.fork();
     const errors = validateRegister({ name, password });
     if (errors.length) return { errors };
 
@@ -117,6 +120,7 @@ export class UserResolver {
     @Arg('input') input: UserAnswerInput,
     @Ctx() { em, req }: MyContext,
   ): Promise<CheckAnswerResponse> {
+    em = em.fork();
     const user = await getUserById({ req, em });
     const question = await em
       .createQueryBuilder(Question)
@@ -143,6 +147,7 @@ export class UserResolver {
   @Query(() => [ScorePerDay])
   @UseMiddleware(isAuth)
   async getScoreOfWeek(@Ctx() { em, req }: MyContext) {
+    em = em.fork();
     const user = await getUserById({ em, req });
     let scoreOfWeek = scorePlaceholder();
     const scores = await em.find(ScorePerDay, {

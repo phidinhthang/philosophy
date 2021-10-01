@@ -34,6 +34,7 @@ export class QuestionResolver {
     @Ctx() { em }: MyContext,
     @Arg('input') input: QuestionInput,
   ): Promise<boolean> {
+    em = em.fork();
     const hasAnswers = input && input.answers && input.answers.length > 0;
     const exercise = await em.findOneOrFail(Exercise, { id: input.exerciseId });
     const question = em.create(Question, {
