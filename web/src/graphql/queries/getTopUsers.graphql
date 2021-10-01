@@ -1,0 +1,8 @@
+query GetTopUsers {
+  getTopUsers {
+    id
+    name
+    score
+    avatarUrl
+  }
+}

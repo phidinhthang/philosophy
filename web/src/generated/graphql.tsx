@@ -91,6 +91,11 @@ export type ExerciseResponse = {
   saved?: Maybe<Scalars['Boolean']>;
 };
 
+export type InfoInput = {
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+};
+
 export type LoginInput = {
   name: Scalars['String'];
   password: Scalars['String'];
@@ -113,6 +118,9 @@ export type Mutation = {
   saveComplete: Scalars['Boolean'];
   saveExercise: Scalars['Boolean'];
   createQuestion: Scalars['Boolean'];
+  uploadAvatar: Scalars['Boolean'];
+  updateInfo: Scalars['Boolean'];
+  changePassword: Scalars['Boolean'];
 };
 
 
@@ -150,6 +158,21 @@ export type MutationCreateQuestionArgs = {
   input: QuestionInput;
 };
 
+
+export type MutationUploadAvatarArgs = {
+  avatarUrl: Scalars['String'];
+};
+
+
+export type MutationUpdateInfoArgs = {
+  input: InfoInput;
+};
+
+
+export type MutationChangePasswordArgs = {
+  newPassword: Scalars['String'];
+};
+
 export type Query = {
   __typename?: 'Query';
   hello: Scalars['String'];
@@ -158,6 +181,7 @@ export type Query = {
   getAllExercises: Array<ExerciseResponse>;
   getAllSavedExercise?: Maybe<Array<Exercise>>;
   getQuestions: Array<Question>;
+  getTopUsers: Array<TopUser>;
 };
 
 
@@ -204,6 +228,14 @@ export type ScorePerDay = {
   id: Scalars['String'];
   day: Scalars['String'];
   score: Scalars['Int'];
+};
+
+export type TopUser = {
+  __typename?: 'TopUser';
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  score: Scalars['Int'];
+  avatarUrl?: Maybe<Scalars['String']>;
 };
 
 export type User = {
@@ -294,6 +326,20 @@ export type SaveExerciseMutationVariables = Exact<{
 
 export type SaveExerciseMutation = { __typename?: 'Mutation', saveExercise: boolean };
 
+export type UpdateInfoMutationVariables = Exact<{
+  input: InfoInput;
+}>;
+
+
+export type UpdateInfoMutation = { __typename?: 'Mutation', updateInfo: boolean };
+
+export type UploadAvatarMutationVariables = Exact<{
+  avatarUrl: Scalars['String'];
+}>;
+
+
+export type UploadAvatarMutation = { __typename?: 'Mutation', uploadAvatar: boolean };
+
 export type GetAllExercisesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -315,6 +361,11 @@ export type GetScoreOfWeekQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetScoreOfWeekQuery = { __typename?: 'Query', getScoreOfWeek: Array<{ __typename?: 'ScorePerDay', id: string, day: string, score: number }> };
+
+export type GetTopUsersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetTopUsersQuery = { __typename?: 'Query', getTopUsers: Array<{ __typename?: 'TopUser', id: string, name: string, score: number, avatarUrl?: Maybe<string> }> };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -683,6 +734,68 @@ export function useSaveExerciseMutation(baseOptions?: Apollo.MutationHookOptions
 export type SaveExerciseMutationHookResult = ReturnType<typeof useSaveExerciseMutation>;
 export type SaveExerciseMutationResult = Apollo.MutationResult<SaveExerciseMutation>;
 export type SaveExerciseMutationOptions = Apollo.BaseMutationOptions<SaveExerciseMutation, SaveExerciseMutationVariables>;
+export const UpdateInfoDocument = gql`
+    mutation UpdateInfo($input: InfoInput!) {
+  updateInfo(input: $input)
+}
+    `;
+export type UpdateInfoMutationFn = Apollo.MutationFunction<UpdateInfoMutation, UpdateInfoMutationVariables>;
+
+/**
+ * __useUpdateInfoMutation__
+ *
+ * To run a mutation, you first call `useUpdateInfoMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateInfoMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateInfoMutation, { data, loading, error }] = useUpdateInfoMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateInfoMutation(baseOptions?: Apollo.MutationHookOptions<UpdateInfoMutation, UpdateInfoMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateInfoMutation, UpdateInfoMutationVariables>(UpdateInfoDocument, options);
+      }
+export type UpdateInfoMutationHookResult = ReturnType<typeof useUpdateInfoMutation>;
+export type UpdateInfoMutationResult = Apollo.MutationResult<UpdateInfoMutation>;
+export type UpdateInfoMutationOptions = Apollo.BaseMutationOptions<UpdateInfoMutation, UpdateInfoMutationVariables>;
+export const UploadAvatarDocument = gql`
+    mutation UploadAvatar($avatarUrl: String!) {
+  uploadAvatar(avatarUrl: $avatarUrl)
+}
+    `;
+export type UploadAvatarMutationFn = Apollo.MutationFunction<UploadAvatarMutation, UploadAvatarMutationVariables>;
+
+/**
+ * __useUploadAvatarMutation__
+ *
+ * To run a mutation, you first call `useUploadAvatarMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUploadAvatarMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [uploadAvatarMutation, { data, loading, error }] = useUploadAvatarMutation({
+ *   variables: {
+ *      avatarUrl: // value for 'avatarUrl'
+ *   },
+ * });
+ */
+export function useUploadAvatarMutation(baseOptions?: Apollo.MutationHookOptions<UploadAvatarMutation, UploadAvatarMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UploadAvatarMutation, UploadAvatarMutationVariables>(UploadAvatarDocument, options);
+      }
+export type UploadAvatarMutationHookResult = ReturnType<typeof useUploadAvatarMutation>;
+export type UploadAvatarMutationResult = Apollo.MutationResult<UploadAvatarMutation>;
+export type UploadAvatarMutationOptions = Apollo.BaseMutationOptions<UploadAvatarMutation, UploadAvatarMutationVariables>;
 export const GetAllExercisesDocument = gql`
     query GetAllExercises {
   getAllExercises {
@@ -831,6 +944,43 @@ export function useGetScoreOfWeekLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type GetScoreOfWeekQueryHookResult = ReturnType<typeof useGetScoreOfWeekQuery>;
 export type GetScoreOfWeekLazyQueryHookResult = ReturnType<typeof useGetScoreOfWeekLazyQuery>;
 export type GetScoreOfWeekQueryResult = Apollo.QueryResult<GetScoreOfWeekQuery, GetScoreOfWeekQueryVariables>;
+export const GetTopUsersDocument = gql`
+    query GetTopUsers {
+  getTopUsers {
+    id
+    name
+    score
+    avatarUrl
+  }
+}
+    `;
+
+/**
+ * __useGetTopUsersQuery__
+ *
+ * To run a query within a React component, call `useGetTopUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTopUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTopUsersQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetTopUsersQuery(baseOptions?: Apollo.QueryHookOptions<GetTopUsersQuery, GetTopUsersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetTopUsersQuery, GetTopUsersQueryVariables>(GetTopUsersDocument, options);
+      }
+export function useGetTopUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTopUsersQuery, GetTopUsersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetTopUsersQuery, GetTopUsersQueryVariables>(GetTopUsersDocument, options);
+        }
+export type GetTopUsersQueryHookResult = ReturnType<typeof useGetTopUsersQuery>;
+export type GetTopUsersLazyQueryHookResult = ReturnType<typeof useGetTopUsersLazyQuery>;
+export type GetTopUsersQueryResult = Apollo.QueryResult<GetTopUsersQuery, GetTopUsersQueryVariables>;
 export const MeDocument = gql`
     query Me {
   me {

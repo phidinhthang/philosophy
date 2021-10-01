@@ -7,6 +7,7 @@ import {
   Flex,
   IconButton,
   useEditableControls,
+  useColorModeValue,
 } from '@chakra-ui/react';
 import { useField } from 'formik';
 import React from 'react';
@@ -27,6 +28,7 @@ export const EditableField: React.FC<EditableFieldProps> = ({
   /* Here's a custom control */
 
   const [field, {}, { setValue }] = useField(props);
+  const bg = useColorModeValue(undefined, '#1A202C');
   function EditableControls() {
     const {
       isEditing,
@@ -82,9 +84,17 @@ export const EditableField: React.FC<EditableFieldProps> = ({
             console.log(defaultValue);
           }}
           isPreviewFocusable={false}
+          bg={bg}
         >
           <EditablePreview px={4} py={2} />
-          <EditableInput {...field} {...props} id={field.name} px={4} py={2} />
+          <EditableInput
+            {...field}
+            {...props}
+            // bg={bg}
+            id={field.name}
+            px={4}
+            py={2}
+          />
           <EditableControls />
         </Editable>
       </div>

@@ -1,6 +1,13 @@
 // import { QueryOrder } from '@mikro-orm/core';
 import { verify } from 'jsonwebtoken';
-import { Arg, Ctx, Mutation, Query, Resolver } from 'type-graphql';
+import {
+  Arg,
+  Ctx,
+  Mutation,
+  Query,
+  Resolver,
+  UseMiddleware,
+} from 'type-graphql';
 import { Answer } from '../entities/Answer';
 import { Complete } from '../entities/Complete';
 import { Exercise } from '../entities/Exercise';
@@ -10,6 +17,8 @@ import { CreateExerciseResponse, MyContext } from '../types';
 import { CompleteInput, ExerciseInput, ExerciseResponse } from './inputs';
 import { ExerciseError } from '../types';
 import { SavedExercise } from '../entities/SavedExercise';
+import { getUserById } from '../utils/auth/getUserById';
+import { isAuth } from '../middleware/isAuth';
 
 const validateExerciseInput = (
   input: ExerciseInput,
@@ -174,14 +183,8 @@ export class ExerciseResolver {
     @Arg('exerciseId', () => String) exerciseId: string,
     @Ctx() { req, em }: MyContext,
   ): Promise<boolean> {
-    const authorization = req.headers['authorization'];
-
-    if (!authorization) throw new Error('not auth');
-
     try {
-      const token = authorization.split(' ')[1];
-      const payload: any = verify(token, process.env.ACCESS_TOKEN_SECRET!);
-      const user = em.getReference(User, payload.userId);
+      const user = await getUserById({ req, em });
       const exercise = em.getReference(Exercise, exerciseId);
       const alreadySaved = await em.findOne(SavedExercise, { user, exercise });
 
@@ -199,17 +202,13 @@ export class ExerciseResolver {
   }
 
   @Query(() => [Exercise], { nullable: true })
+  @UseMiddleware(isAuth)
   async getAllSavedExercise(
     @Ctx() { req, em }: MyContext,
   ): Promise<Exercise[]> {
-    const authorization = req.headers['authorization'];
-
-    if (!authorization) throw new Error('not auth');
+    const user = await getUserById({ req, em });
 
     try {
-      const token = authorization.split(' ')[1];
-      const payload: any = verify(token, process.env.ACCESS_TOKEN_SECRET!);
-      const user = (await em.findOneOrFail(User, payload.userId)) as User;
       const savedExerciseIds = (
         await em.populate(user, ['savedExercises.exercise'])
       ).savedExercises;

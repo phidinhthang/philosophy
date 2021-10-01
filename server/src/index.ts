@@ -25,6 +25,7 @@ import { createAccessToken } from './utils/auth/createToken';
 import { ExerciseResolver } from './resolvers/exerciseResolver';
 import { QuestionResolver } from './resolvers/questionResolver';
 import { configPassport } from './passport-oauth';
+import { AccountResolver } from './resolvers/accountResolver';
 
 const PORT = process.env.PORT || 4000;
 
@@ -110,6 +111,7 @@ const main = async () => {
         UserResolver,
         ExerciseResolver,
         QuestionResolver,
+        AccountResolver,
       ],
       validate: false,
     }),

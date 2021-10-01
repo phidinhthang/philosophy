@@ -128,13 +128,21 @@ export const NavBar: React.FC<NavbarProps> = ({}) => {
   return (
     <Flex zIndex={1} position="sticky" top={0} bg={bg} p={4}>
       <Flex flex={1} m="auto" align="center" maxW={800}>
-        <NextLink href="/">
-          <Link>
-            <Heading>
-              <Image style={{ width: 50, height: 50 }} src="/logo.png" />
-            </Heading>
-          </Link>
-        </NextLink>
+        <Box display="flex" justifyContent="center" alignItems="center">
+          <NextLink href="/">
+            <Link>
+              <Heading>
+                <Image style={{ width: 50, height: 50 }} src="/logo.png" />
+              </Heading>
+            </Link>
+          </NextLink>
+          <NextLink href="/rank">
+            <Button as={Link} ml="4">
+              BXH
+            </Button>
+          </NextLink>
+        </Box>
+
         <Box ml="auto">{body}</Box>
       </Flex>
     </Flex>

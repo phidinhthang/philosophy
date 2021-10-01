@@ -1,0 +1,3 @@
+mutation UpdateInfo($input: InfoInput!) {
+  updateInfo(input: $input)
+}
