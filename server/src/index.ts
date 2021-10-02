@@ -1,30 +1,40 @@
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
+/**
+ * Node modules
+ */
 import 'reflect-metadata';
-import express from 'express';
 import { MikroORM } from '@mikro-orm/core';
 import { ApolloServer } from 'apollo-server-express';
 import { ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-core';
 import { buildSchema } from 'type-graphql';
-import cookieParser from 'cookie-parser';
-import cors from 'cors';
+import Redis from 'ioredis';
 
 import { __isProd__ } from './constants';
-import mikroOrmConfig from './mikro-orm.config';
 import { MyContext } from './types';
-import { helloResolver } from './resolvers/helloResolver';
-import { UserResolver } from './resolvers/userResolver';
 import { User } from './entities/User';
-// import argon2 from 'argon2';
+
+/**
+ * Auth utils
+ */
 import { verify } from 'jsonwebtoken';
-import { sendRefreshToken } from './utils/auth/sendRefreshToken';
 import { createAccessToken } from './utils/auth/createToken';
-// import { seed } from './seed/seed';
-// import { EntityManager } from '@mikro-orm/postgresql';
+
+/**
+ * Loaders
+ */
+import mikroOrmConfig from './loaders/mikro-orm.config';
+import { app } from './loaders/app';
+import { configPassport } from './loaders/passport-oauth';
+
+/**
+ * Resolver
+ */
+import { UserResolver } from './resolvers/userResolver';
+import { helloResolver } from './resolvers/helloResolver';
 import { ExerciseResolver } from './resolvers/exerciseResolver';
 import { QuestionResolver } from './resolvers/questionResolver';
-import { configPassport } from './passport-oauth';
 import { AccountResolver } from './resolvers/accountResolver';
 
 const PORT = process.env.PORT || 4000;
@@ -35,37 +45,11 @@ const main = async () => {
 
   if (process.env.NODE_ENV === 'production' || true) {
     const migrator = orm.getMigrator();
-    // await migrator.createMigration();
-    // await migrator.down({ to: 0 });
     await migrator.up();
   }
-  // if (!__isProd__) {
-  //   const conn = orm.em.getConnection();
-  //   await conn.execute('delete from "users"');
-  //   const user = orm.em.create(User, {
-  //     name: 'thang',
-  //     password: await argon2.hash('thang'),
-  //   });
-  //   // await seed(orm.em as EntityManager);
-  //   await orm.em.persistAndFlush(user);
-  // }
 
-  // express app setup
-  const app = express();
-  console.log(process.env.FRONTEND_NEXTJS_URL);
-  app.set('trust proxy', 1);
-  app.use(
-    cors({
-      origin:
-        process.env.FRONTEND_NEXTJS_URL! ||
-        'https://suspicious-franklin-3e4af2.netlify.app/',
-      credentials: true,
-    }),
-  );
-  app.use(cookieParser());
-  app.use(express.json());
+  const redis = new Redis(process.env.REDIS_URL);
 
-  app.get('/', (_req, res) => res.send('hello'));
   app.post('/refresh_token', async (req, res) => {
     console.log('refresh_token_run');
     const em = orm.em.fork();
@@ -93,14 +77,6 @@ const main = async () => {
     return res.send({ ok: true, accessToken: createAccessToken(user) });
   });
 
-  app.post('/get_refresh_token', (req, res) => {
-    const refresh_token = req.body.refresh_token;
-    console.log(refresh_token);
-
-    sendRefreshToken(res, refresh_token);
-    res.send({ ok: 1 });
-  });
-
   configPassport({ app, em: orm.em });
 
   // Create Apollo server and listen to port
@@ -116,7 +92,7 @@ const main = async () => {
       validate: false,
     }),
     context: ({ req, res }) =>
-      ({ req, res, em: orm.em } as unknown as MyContext),
+      ({ req, res, em: orm.em, redis } as unknown as MyContext),
     plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
   });
   await server.start();

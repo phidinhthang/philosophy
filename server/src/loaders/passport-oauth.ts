@@ -2,9 +2,9 @@ import passport from 'passport';
 import { OAuth2Strategy as GoogleStrategy } from 'passport-google-oauth';
 import { Application } from 'express';
 import { EntityManager } from '@mikro-orm/postgresql';
-import { User } from './entities/User';
+import { User } from '../entities/User';
 import { v4 } from 'uuid';
-import { createRefreshToken } from './utils/auth/createToken';
+import { createRefreshToken } from '../utils/auth/createToken';
 // import { sendRefreshToken } from './utils/auth/sendRefreshToken';
 // import { createRefreshToken } from './utils/auth/createToken';
 

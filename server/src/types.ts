@@ -1,4 +1,5 @@
 import { EntityManager } from '@mikro-orm/postgresql';
+import { Redis } from 'ioredis';
 import { Request, Response } from 'express';
 import { Field, Int, ObjectType } from 'type-graphql';
 import { Exercise } from './entities/Exercise';
@@ -7,6 +8,7 @@ export type MyContext = {
   req: Request;
   res: Response;
   em: EntityManager;
+  redis: Redis;
 };
 
 @ObjectType()

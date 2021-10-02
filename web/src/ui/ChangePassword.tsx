@@ -2,10 +2,7 @@ import * as React from 'react';
 import { useDisclosure, Button, Text, Box } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
 import { InputField } from './InputField';
-import {
-  ChangePasswordMutation,
-  useChangePasswordMutation,
-} from '../generated/graphql';
+import { useChangePasswordMutation } from '../generated/graphql';
 import * as yup from 'yup';
 
 interface FormValues {
@@ -56,12 +53,13 @@ export const ChangePassword = () => {
   const { isOpen, onToggle } = useDisclosure();
   const [errorMessage, setErrorMessage] = React.useState('');
   const [successMessage, setSuccessMessage] = React.useState('');
-  const [changePassword, { loading }] = useChangePasswordMutation();
+  const [changePassword] = useChangePasswordMutation();
   const resolver = useYupValidationResolver(validationSchema);
   const {
     handleSubmit,
     register,
     formState: { errors, isSubmitting },
+    setError,
   } = useForm<FormValues>({
     defaultValues: {
       password: '',
@@ -70,16 +68,24 @@ export const ChangePassword = () => {
     resolver,
   });
   const onSubmit = async (values: FormValues) => {
-    const { data, errors } = await changePassword({
-      variables: { newPassword: values.newPassword },
-    });
-    if (!data || errors?.length) {
-      setErrorMessage('Co loi xay ra.');
-      setSuccessMessage('');
-      return;
+    try {
+      const { data, errors } = await changePassword({
+        variables: {
+          newPassword: values.newPassword,
+          password: values.password,
+        },
+        errorPolicy: 'none',
+      });
+      if (!data || errors?.length) {
+        setErrorMessage('Co loi xay ra.');
+        setSuccessMessage('');
+        return;
+      }
+      setErrorMessage('');
+      setSuccessMessage('Thay doi thanh cong');
+    } catch (err: any) {
+      setError('password', { message: err.message });
     }
-    setErrorMessage('');
-    setSuccessMessage('Thay doi thanh cong');
   };
   return (
     <>

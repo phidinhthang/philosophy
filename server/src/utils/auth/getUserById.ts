@@ -5,7 +5,7 @@ import { MyContext } from '../../types';
 export const getUserById = async ({
   req,
   em,
-}: Omit<MyContext, 'res'>): Promise<User> => {
+}: Omit<Omit<MyContext, 'res'>, 'redis'>): Promise<User> => {
   const authorization = req.headers['authorization']!;
 
   const token = authorization.split(' ')[1];

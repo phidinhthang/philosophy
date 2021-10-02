@@ -1,14 +1,14 @@
 import { Options } from '@mikro-orm/core';
-import { __isProd__ } from './constants';
+import { __isProd__ } from '../constants';
 import path from 'path';
-import { User } from './entities/User';
-import { Complete } from './entities/Complete';
-import { Exercise } from './entities/Exercise';
-import { Answer } from './entities/Answer';
-import { Question } from './entities/Question';
+import { User } from '../entities/User';
+import { Complete } from '../entities/Complete';
+import { Exercise } from '../entities/Exercise';
+import { Answer } from '../entities/Answer';
+import { Question } from '../entities/Question';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
-import { ScorePerDay } from './entities/ScorePerDay';
-import { SavedExercise } from './entities/SavedExercise';
+import { ScorePerDay } from '../entities/ScorePerDay';
+import { SavedExercise } from '../entities/SavedExercise';
 
 export default {
   migrations: {

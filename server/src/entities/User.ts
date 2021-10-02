@@ -28,6 +28,10 @@ export class User {
   @Property()
   name!: string;
 
+  @Field(() => String, { nullable: true })
+  @Property({ nullable: true })
+  email?: string;
+
   @Field(() => String)
   @Property()
   firstName!: string;
