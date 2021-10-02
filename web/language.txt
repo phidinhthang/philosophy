@@ -1,0 +1,2 @@
+pages/forgot-password
+pages/change-password

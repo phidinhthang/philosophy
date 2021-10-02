@@ -48,7 +48,9 @@ const main = async () => {
     await migrator.up();
   }
 
-  const redis = new Redis(process.env.REDIS_URL);
+  const redis = new Redis(process.env.REDIS_URL, {
+    password: __isProd__ ? process.env.REDIS_PASSWORD : undefined,
+  });
 
   app.post('/refresh_token', async (req, res) => {
     console.log('refresh_token_run');

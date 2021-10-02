@@ -83,7 +83,7 @@ const LoginPage: React.FC<{}> = ({}) => {
             <NextLink href="/register">
               <Link>Bấm vào đây để đăng ký</Link>
             </NextLink>
-            <NextLink href="/">
+            <NextLink href="/forgot-password">
               <Link ml="auto">Quên mật khẩu ?</Link>
             </NextLink>
           </Flex>

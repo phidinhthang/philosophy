@@ -1,14 +1,12 @@
 import nodemailer from 'nodemailer';
 
 export async function sendMail(to: string, html: string) {
-  const testAccount = await nodemailer.createTestAccount();
+  // const testAccount = await nodemailer.createTestAccount({});
   let transporter = nodemailer.createTransport({
-    host: 'smtp.ethereal.email',
-    port: 587,
-    secure: false,
+    service: 'Gmail',
     auth: {
-      user: testAccount.user,
-      pass: testAccount.pass,
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
     },
   });
 

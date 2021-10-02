@@ -161,7 +161,7 @@ export class AccountResolver {
 
     await sendMail(
       email,
-      `<a href="http://localhost:3000/change-password/${token}>Doi mat khau</a>`,
+      `<a href="http://localhost:3000/change-password/${token}">Doi mat khau</a>`,
     );
 
     return true;
@@ -187,6 +187,8 @@ export class AccountResolver {
 
     const key = FORGET_PASSWORD_PREFIX + token;
     const userId = await redis.get(key);
+    console.log('token ', token);
+    console.log('key ', key);
     if (!userId) {
       return {
         errors: [
@@ -213,6 +215,7 @@ export class AccountResolver {
 
     user.password = await argon2.hash(newPassword);
     await redis.del(key);
+    await em.persistAndFlush(user);
 
     sendRefreshToken(res, createRefreshToken(user));
 
@@ -232,26 +235,31 @@ export class AccountResolver {
 
     const user = await getUserById({ req, em });
 
-    const emailExisted = await em.findOne(User, { email });
+    const emailExisted = await em.findOne(User, {
+      email,
+    });
 
-    if (emailExisted) {
+    if (emailExisted && emailExisted.id !== user.id) {
       return false;
     }
 
     const token = v4();
+    console.log('x1 ', token);
+    try {
+      await redis.set(
+        ADD_EMAIL_PREFIX + token,
+        `${user.id}:${email}`,
+        'ex',
+        1000 * 60 * 60 * 24 * 3,
+      );
 
-    await redis.set(
-      ADD_EMAIL_PREFIX + token,
-      `${user.id}:${email}`,
-      'ex',
-      1000 * 60 * 60 * 24 * 3,
-    );
-
-    await sendMail(
-      email,
-      `<a href="http://localhost:3000/change-password/${token}>Xác nhận Email</a>`,
-    );
-
+      await sendMail(
+        email,
+        `<a href="http://localhost:3000/confirm-email/${token}">Xác nhận Email</a>`,
+      );
+    } catch (err) {
+      console.log('abcdef ', err);
+    }
     return true;
   }
 
@@ -260,15 +268,18 @@ export class AccountResolver {
     @Arg('token', () => String) token: string,
     @Ctx() { em, redis }: MyContext,
   ): Promise<boolean> {
+    console.log('run here');
     em = em.fork();
     const key = await redis.get(ADD_EMAIL_PREFIX + token);
+    console.log('x2 ', token);
+    console.log('key ', key);
     if (!key) {
       return false;
     }
 
     const [userId, email] = key.split(':');
-
-    const user = em.getReference(User, userId);
+    console.log('userId', userId, 'email', email);
+    const user = await em.findOneOrFail(User, userId);
     user.email = email;
     await em.persistAndFlush(user);
 

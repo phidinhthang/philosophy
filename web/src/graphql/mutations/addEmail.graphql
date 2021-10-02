@@ -1,0 +1,3 @@
+mutation AddEmail($email: String!) {
+  addEmail(email: $email)
+}
