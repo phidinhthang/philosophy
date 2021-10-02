@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import cloneDeep from 'clone-deep';
 import {
   useGetQuestionsQuery,
   useCheckAnswerMutation,
@@ -8,6 +9,8 @@ import {
   MeQuery,
   ExerciseSnippetFragment,
   ExerciseSnippetFragmentDoc,
+  GetTopUsersDocument,
+  GetTopUsersQuery,
 } from '../generated/graphql';
 import SweetAlert from 'react-bootstrap-sweetalert';
 import { floating } from '../lib/floating';
@@ -39,7 +42,43 @@ export const useQuiz = () => {
         questionId: data?.getQuestions[current].id!,
         answerId: isChoose!,
       },
+      update: (cache, { data }) => {
+        const meCache = cache.readQuery<MeQuery>({
+          query: MeDocument,
+        });
+        const meDraft = cloneDeep(meCache!.me);
+
+        meDraft!.score = meDraft!.score + (data?.checkAnswer.score ?? 0);
+
+        cache.writeQuery<MeQuery>({
+          query: MeDocument,
+          data: {
+            me: meDraft,
+          },
+        });
+
+        const topUsersCache = cache.readQuery<GetTopUsersQuery>({
+          query: GetTopUsersDocument,
+        });
+
+        if (!topUsersCache?.getTopUsers.length) return;
+
+        const topUsersDraft = cloneDeep(topUsersCache.getTopUsers);
+        topUsersDraft.forEach((user) => {
+          if (user.id === meDraft?.id) {
+            user.score += data?.checkAnswer.score ?? 0;
+          }
+        });
+
+        cache.writeQuery<GetTopUsersQuery>({
+          query: GetTopUsersDocument,
+          data: {
+            getTopUsers: topUsersDraft,
+          },
+        });
+      },
     });
+
     if (a.data?.checkAnswer.isCorrect === true) {
       setCorrects((c) => c + 1);
       floating({ number: 5, duration: 6, repeat: '1' });

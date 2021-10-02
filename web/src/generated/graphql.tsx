@@ -1,4 +1,4 @@
-// @ts-nocheck
+//@ts-nocheck
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
@@ -83,6 +83,15 @@ export type ExerciseError = {
   questions?: Maybe<Array<QuestionError>>;
 };
 
+export type ExerciseField = {
+  __typename?: 'ExerciseField';
+  id: Scalars['ID'];
+  title: Scalars['String'];
+  length: Scalars['Int'];
+  saved?: Maybe<Scalars['Boolean']>;
+  createdAt: Scalars['String'];
+};
+
 export type ExerciseInput = {
   title: Scalars['String'];
   questions?: Maybe<Array<QuestionInput>>;
@@ -90,10 +99,8 @@ export type ExerciseInput = {
 
 export type ExerciseResponse = {
   __typename?: 'ExerciseResponse';
-  id: Scalars['ID'];
-  title: Scalars['String'];
-  length: Scalars['Int'];
-  saved?: Maybe<Scalars['Boolean']>;
+  exercises?: Maybe<Array<ExerciseField>>;
+  hasMore?: Maybe<Scalars['Boolean']>;
 };
 
 export type InfoInput = {
@@ -173,10 +180,15 @@ export type Query = {
   hello: Scalars['String'];
   me?: Maybe<User>;
   getScoreOfWeek: Array<ScorePerDay>;
-  getAllExercises: Array<ExerciseResponse>;
+  getAllExercises: ExerciseResponse;
   getAllSavedExercise?: Maybe<Array<Exercise>>;
   getQuestions: Array<Question>;
   getTopUsers: Array<TopUser>;
+};
+
+export type QueryGetAllExercisesArgs = {
+  limit?: Maybe<Scalars['Int']>;
+  cursor?: Maybe<Scalars['String']>;
 };
 
 export type QueryGetQuestionsArgs = {
@@ -271,6 +283,15 @@ export type UserSnippetFragment = {
   lastName: string;
   avatarUrl?: Maybe<string>;
   score: number;
+};
+
+export type ChangePasswordMutationVariables = Exact<{
+  newPassword: Scalars['String'];
+}>;
+
+export type ChangePasswordMutation = {
+  __typename?: 'Mutation';
+  changePassword: boolean;
 };
 
 export type CheckAnswerMutationVariables = Exact<{
@@ -450,17 +471,27 @@ export type UploadAvatarMutation = {
   uploadAvatar: boolean;
 };
 
-export type GetAllExercisesQueryVariables = Exact<{ [key: string]: never }>;
+export type GetAllExercisesQueryVariables = Exact<{
+  limit: Scalars['Int'];
+  cursor?: Maybe<Scalars['String']>;
+}>;
 
 export type GetAllExercisesQuery = {
   __typename?: 'Query';
-  getAllExercises: Array<{
+  getAllExercises: {
     __typename?: 'ExerciseResponse';
-    id: string;
-    title: string;
-    length: number;
-    saved?: Maybe<boolean>;
-  }>;
+    hasMore?: Maybe<boolean>;
+    exercises?: Maybe<
+      Array<{
+        __typename?: 'ExerciseField';
+        id: string;
+        title: string;
+        length: number;
+        saved?: Maybe<boolean>;
+        createdAt: string;
+      }>
+    >;
+  };
 };
 
 export type GetQuestionsQueryVariables = Exact<{
@@ -556,6 +587,54 @@ export const UserSnippetFragmentDoc = gql`
     score
   }
 `;
+export const ChangePasswordDocument = gql`
+  mutation ChangePassword($newPassword: String!) {
+    changePassword(newPassword: $newPassword)
+  }
+`;
+export type ChangePasswordMutationFn = Apollo.MutationFunction<
+  ChangePasswordMutation,
+  ChangePasswordMutationVariables
+>;
+
+/**
+ * __useChangePasswordMutation__
+ *
+ * To run a mutation, you first call `useChangePasswordMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useChangePasswordMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [changePasswordMutation, { data, loading, error }] = useChangePasswordMutation({
+ *   variables: {
+ *      newPassword: // value for 'newPassword'
+ *   },
+ * });
+ */
+export function useChangePasswordMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    ChangePasswordMutation,
+    ChangePasswordMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    ChangePasswordMutation,
+    ChangePasswordMutationVariables
+  >(ChangePasswordDocument, options);
+}
+export type ChangePasswordMutationHookResult = ReturnType<
+  typeof useChangePasswordMutation
+>;
+export type ChangePasswordMutationResult =
+  Apollo.MutationResult<ChangePasswordMutation>;
+export type ChangePasswordMutationOptions = Apollo.BaseMutationOptions<
+  ChangePasswordMutation,
+  ChangePasswordMutationVariables
+>;
 export const CheckAnswerDocument = gql`
   mutation CheckAnswer($questionId: ID!, $answerId: ID!) {
     checkAnswer(input: { questionId: $questionId, answerId: $answerId }) {
@@ -1136,12 +1215,16 @@ export type UploadAvatarMutationOptions = Apollo.BaseMutationOptions<
   UploadAvatarMutationVariables
 >;
 export const GetAllExercisesDocument = gql`
-  query GetAllExercises {
-    getAllExercises {
-      id
-      title
-      length
-      saved
+  query GetAllExercises($limit: Int!, $cursor: String) {
+    getAllExercises(limit: $limit, cursor: $cursor) {
+      exercises {
+        id
+        title
+        length
+        saved
+        createdAt
+      }
+      hasMore
     }
   }
 `;
@@ -1158,11 +1241,13 @@ export const GetAllExercisesDocument = gql`
  * @example
  * const { data, loading, error } = useGetAllExercisesQuery({
  *   variables: {
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
  *   },
  * });
  */
 export function useGetAllExercisesQuery(
-  baseOptions?: Apollo.QueryHookOptions<
+  baseOptions: Apollo.QueryHookOptions<
     GetAllExercisesQuery,
     GetAllExercisesQueryVariables
   >,

@@ -9,6 +9,7 @@ import { AvatarInfo } from '../ui/AvatarInfo';
 import { ScoreChart } from '../ui/ScoreChart';
 import { useIsAuth } from '../utils/useIsAuth';
 import { ChangeInfo } from '../ui/ChangeInfo';
+import { ChangePassword } from '../ui/ChangePassword';
 
 dayjs.locale('vi');
 
@@ -47,6 +48,10 @@ function Profile() {
         </Box>
         <Box width="full" maxWidth={['95%', '55%']} marginX="auto" flexGrow={3}>
           <ChangeInfo />
+
+          <Box mt="6">
+            <ChangePassword />
+          </Box>
         </Box>
       </Stack>
     </Layout>

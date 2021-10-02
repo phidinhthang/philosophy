@@ -3,6 +3,7 @@ import { verify } from 'jsonwebtoken';
 import {
   Arg,
   Ctx,
+  Int,
   Mutation,
   Query,
   Resolver,
@@ -14,7 +15,12 @@ import { Exercise } from '../entities/Exercise';
 import { Question } from '../entities/Question';
 import { User } from '../entities/User';
 import { CreateExerciseResponse, MyContext } from '../types';
-import { CompleteInput, ExerciseInput, ExerciseResponse } from './inputs';
+import {
+  CompleteInput,
+  ExerciseField,
+  ExerciseInput,
+  ExerciseResponse,
+} from './inputs';
 import { ExerciseError } from '../types';
 import { SavedExercise } from '../entities/SavedExercise';
 import { getUserById } from '../utils/auth/getUserById';
@@ -67,27 +73,30 @@ const validateExerciseInput = (
 
 @Resolver()
 export class ExerciseResolver {
-  @Query(() => [ExerciseResponse])
+  @Query(() => ExerciseResponse)
+  @UseMiddleware(isAuth)
   async getAllExercises(
+    @Arg('cursor', () => String, { nullable: true }) cursor: string,
+    @Arg('limit', () => Int, { defaultValue: 1 }) limit: number = 1,
     @Ctx() { em, req }: MyContext,
-  ): Promise<ExerciseResponse[]> {
-    const authorization = req.headers['authorization'];
-    let userId = '';
-    try {
-      if (authorization) {
-        const token = authorization.split(' ')[1];
-        const payload: any = verify(token, process.env.ACCESS_TOKEN_SECRET!);
-        userId = payload?.userId;
-      }
-    } catch (err) {
-      console.log(err);
-    }
+  ): Promise<ExerciseResponse> {
+    /**
+     * Limit can't beyond 30
+     */
+    limit = Math.min(limit, 30);
+    const limitPlusOne = limit + 1;
     em = em.fork();
-    let exercises: ExerciseResponse[] = [];
+    const authorization = req.headers['authorization']!;
+    const token = authorization.split(' ')[1];
+    const payload: any = verify(token, process.env.ACCESS_TOKEN_SECRET!);
+    const userId = payload?.userId;
+
+    let exercises: ExerciseField[] = [];
+    let hasMore = true;
     try {
-      exercises = await em.getConnection('read').execute<ExerciseResponse[]>(
+      exercises = await em.getConnection('read').execute<ExerciseField[]>(
         ` 
-          select "e"."id", e."title", e."length" ${
+          select "e"."id", e."title", e."length", e."created_at" as "createdAt" ${
             userId ? ', s."user_id" as saved' : ''
           }  
           from exercise e ${
@@ -97,16 +106,24 @@ export class ExerciseResolver {
             and s."user_id" = '${userId}'`
               : ''
           }
+          ${cursor ? `where e."created_at" < '${cursor}'` : ``}
+          order by "created_at" desc
+          limit ${limitPlusOne}
         ;`,
       );
+
       console.log(exercises);
+      if (exercises.length !== limitPlusOne) {
+        hasMore = false;
+      }
+      exercises = exercises.slice(0, limit);
+      exercises.forEach((e) => {
+        e.saved = !!e.saved;
+      });
     } catch (e) {
       console.log(e);
     }
-    return exercises.map((exercise) => ({
-      ...exercise,
-      saved: !!exercise.saved,
-    }));
+    return { exercises, hasMore };
   }
 
   @Mutation(() => CreateExerciseResponse, { nullable: true })
@@ -114,6 +131,7 @@ export class ExerciseResolver {
     @Ctx() { em }: MyContext,
     @Arg('input') input: ExerciseInput,
   ): Promise<CreateExerciseResponse> {
+    em = em.fork();
     const { errors, hasError } = validateExerciseInput(input);
     if (hasError) {
       return {
@@ -124,6 +142,7 @@ export class ExerciseResolver {
     const newExercise = em.create(Exercise, {
       title: input.title,
       length: input.questions?.length || 0,
+      createdAt: new Date().getTime().toString(),
     });
     input.questions?.forEach((q) => {
       const newQuestion = em.create(Question, q);

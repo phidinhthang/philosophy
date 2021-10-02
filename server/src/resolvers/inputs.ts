@@ -101,7 +101,7 @@ export class LoginResponse {
  * Exercise Response
  */
 @ObjectType()
-export class ExerciseResponse implements Partial<Exercise> {
+export class ExerciseField implements Partial<Exercise> {
   @Field(() => ID)
   id: string;
 
@@ -113,4 +113,16 @@ export class ExerciseResponse implements Partial<Exercise> {
 
   @Field(() => Boolean, { defaultValue: false })
   saved: boolean = false;
+
+  @Field(() => String)
+  createdAt: string;
+}
+
+@ObjectType()
+export class ExerciseResponse {
+  @Field(() => [ExerciseField], { nullable: true })
+  exercises: ExerciseField[];
+
+  @Field(() => Boolean, { defaultValue: true })
+  hasMore: boolean;
 }

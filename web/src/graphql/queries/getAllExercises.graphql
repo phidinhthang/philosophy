@@ -1,8 +1,12 @@
-query GetAllExercises {
-  getAllExercises {
-    id
-    title
-    length
-    saved
+query GetAllExercises($limit: Int!, $cursor: String) {
+  getAllExercises(limit: $limit, cursor: $cursor) {
+    exercises {
+      id
+      title
+      length
+      saved
+      createdAt
+    }
+    hasMore
   }
 }

@@ -10,6 +10,7 @@ import { onError } from '@apollo/client/link/error';
 import { TokenRefreshLink } from 'apollo-link-token-refresh';
 import jwtDecode from 'jwt-decode';
 import { NextPageContext } from 'next';
+import { ExerciseResponse } from '../generated/graphql';
 import { getAccessToken, setAccessToken } from './accessToken';
 import { isServer } from './isServer';
 
@@ -83,6 +84,28 @@ export const apolloClient = (
   return new ApolloClient({
     ssrMode: typeof window === 'undefined',
     link: ApolloLink.from([refreshLink, authLink, errorLink, httpLink]),
-    cache: new InMemoryCache(),
+    cache: new InMemoryCache({
+      typePolicies: {
+        Query: {
+          fields: {
+            getAllExercises: {
+              keyArgs: [],
+              merge(
+                existing: ExerciseResponse | undefined,
+                incoming: ExerciseResponse,
+              ): ExerciseResponse {
+                return {
+                  ...incoming,
+                  exercises: [
+                    ...(existing?.exercises || []),
+                    ...(incoming.exercises as []),
+                  ],
+                };
+              },
+            },
+          },
+        },
+      },
+    }),
   });
 };

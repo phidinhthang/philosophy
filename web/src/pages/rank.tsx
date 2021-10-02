@@ -50,15 +50,17 @@ const RankPage = () => {
   return (
     <Layout variant="small">
       <Stack spacing={8}>
-        {data!.getTopUsers.map((user) => (
-          <RankItem
-            score={user.score}
-            name={user.name}
-            key={user.id}
-            avatarUrl={user.avatarUrl as string | undefined}
-            id={user.id}
-          />
-        ))}
+        {[...data!.getTopUsers]
+          .sort((a, b) => b.score - a.score)
+          .map((user) => (
+            <RankItem
+              score={user.score}
+              name={user.name}
+              key={user.id}
+              avatarUrl={user.avatarUrl as string | undefined}
+              id={user.id}
+            />
+          ))}
       </Stack>
     </Layout>
   );

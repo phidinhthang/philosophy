@@ -24,6 +24,9 @@ export class Exercise {
   @Property()
   length!: number;
 
+  @Property({ nullable: true })
+  createdAt: string;
+
   @OneToMany(() => SavedExercise, (saved) => saved.exercise)
   savedExercises = new Collection<SavedExercise>(this);
 

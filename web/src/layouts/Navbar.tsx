@@ -14,6 +14,7 @@ import { SunIcon, MoonIcon, ChevronDownIcon } from '@chakra-ui/icons';
 import { Menu, MenuItem, MenuButton } from '@szhsin/react-menu';
 import '@szhsin/react-menu/dist/index.css';
 import NextLink from 'next/link';
+import Skeleton from 'react-loading-skeleton';
 import { useMeQuery, useLogoutMutation } from '../generated/graphql';
 import { useRouter } from 'next/router';
 import { useApolloClient } from '@apollo/client';
@@ -80,6 +81,7 @@ export const NavBar: React.FC<NavbarProps> = ({}) => {
                 : `${AVATAR_URL_PLACEHOLDER}${data.me.id}.svg`
             }
           />
+          {loading && <Skeleton circle={true} height={40} width={40} />}
         </Box>
         <Menu
           menuButton={
