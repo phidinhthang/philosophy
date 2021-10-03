@@ -77,12 +77,12 @@ export const ChangePassword = () => {
         errorPolicy: 'none',
       });
       if (!data || errors?.length) {
-        setErrorMessage('Co loi xay ra.');
+        setErrorMessage('Có lỗi xảy ra.');
         setSuccessMessage('');
         return;
       }
       setErrorMessage('');
-      setSuccessMessage('Thay doi thanh cong');
+      setSuccessMessage('Thay đổi thành công.');
     } catch (err: any) {
       setError('password', { message: err.message });
     }
@@ -90,7 +90,7 @@ export const ChangePassword = () => {
   return (
     <>
       <Button mb="1" onClick={onToggle}>
-        Change Password
+        Đổi mật khẩu
       </Button>
       {isOpen && (
         <>
@@ -102,7 +102,7 @@ export const ChangePassword = () => {
           <Box mb="2" />
           <form onSubmit={handleSubmit(onSubmit)}>
             <InputField
-              label="Current Password"
+              label="Mật khẩu hiện tại"
               name="password"
               register={register as any}
               error={errors.password}
@@ -110,7 +110,7 @@ export const ChangePassword = () => {
               type="password"
             />
             <InputField
-              label="New Password"
+              label="Mật khẩu mới"
               name="newPassword"
               register={register as any}
               error={errors.newPassword}
@@ -118,7 +118,7 @@ export const ChangePassword = () => {
               type="password"
             />
             <InputField
-              label="Confirm Password"
+              label="Nhập lại mật khẩu mới"
               name="confirmPassword"
               register={register as any}
               error={errors.confirmPassword}

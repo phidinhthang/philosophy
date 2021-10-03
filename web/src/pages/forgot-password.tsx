@@ -26,20 +26,34 @@ const ForgotPassword: React.FC<{}> = ({}) => {
   return (
     <Wrapper variant="small">
       {complete ? (
-        <Box>if an account with that email exists, we sent you an email</Box>
+        <Box>
+          Nếu tài khoản cùng với email vừa nhập của bạn tồn tại, kiểm tra email
+          của bạn.
+        </Box>
       ) : (
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <InputField
-            name="email"
-            register={register as any}
-            label="Email"
-            type="email"
-          />
+        <>
+          <Box>
+            Nhập email của bạn. Chúng tôi sẽ giúp bạn nhận lại mật khẩu với
+            email đó.
+          </Box>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <InputField
+              name="email"
+              register={register as any}
+              label="Email"
+              type="email"
+            />
 
-          <Button mt={4} type="submit" isLoading={isSubmitting} variant="teal">
-            forgot password
-          </Button>
-        </form>
+            <Button
+              mt={4}
+              type="submit"
+              isLoading={isSubmitting}
+              variant="teal"
+            >
+              Xác nhận
+            </Button>
+          </form>
+        </>
       )}
     </Wrapper>
   );

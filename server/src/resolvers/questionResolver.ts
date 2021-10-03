@@ -17,9 +17,6 @@ export class QuestionResolver {
     console.log(id);
     const exercise = em.getReference(Exercise, id);
     console.log(exercise);
-    // const questions = await em.find(Question, { exercise });
-    // console.log(questions);
-    // return questions;
     const questions = await em
       .createQueryBuilder(Question)
       .select('*')

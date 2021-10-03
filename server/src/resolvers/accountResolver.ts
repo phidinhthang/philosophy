@@ -66,8 +66,6 @@ export class AccountResolver {
 				`,
       );
 
-      console.log(topUsers);
-
       return topUsers;
     } catch (err) {
       console.log(err);
@@ -247,7 +245,6 @@ export class AccountResolver {
     }
 
     const token = v4();
-    console.log('x1 ', token);
     try {
       await redis.set(
         ADD_EMAIL_PREFIX + token,
@@ -274,14 +271,11 @@ export class AccountResolver {
     console.log('run here');
     em = em.fork();
     const key = await redis.get(ADD_EMAIL_PREFIX + token);
-    console.log('x2 ', token);
-    console.log('key ', key);
     if (!key) {
       return false;
     }
 
     const [userId, email] = key.split(':');
-    console.log('userId', userId, 'email', email);
     const user = await em.findOneOrFail(User, userId);
     user.email = email;
     await em.persistAndFlush(user);

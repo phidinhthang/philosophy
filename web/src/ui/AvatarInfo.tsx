@@ -169,7 +169,7 @@ export const AvatarInfo = () => {
       <p style={{ textAlign: 'center', marginTop: 15, marginBottom: 15 }}>
         {data?.me?.firstName} {data?.me?.lastName}
       </p>
-      <p style={{ textAlign: 'center' }}>score {data?.me?.score}</p>
+      <p style={{ textAlign: 'center' }}>{data?.me?.score} điểm</p>
     </div>
   );
 };

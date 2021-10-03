@@ -110,6 +110,7 @@ const Register: React.FC<registerProps> = ({}) => {
             type="submit"
             isLoading={isSubmitting}
             colorScheme="teal"
+            isFullWidth={true}
           >
             Đăng ký
           </Button>

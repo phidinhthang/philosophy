@@ -16,7 +16,7 @@ export const ChangeInfo = () => {
   return (
     <div style={{ width: '100%' }}>
       <h2 style={{ fontSize: 24, marginBottom: 16, fontWeight: 600 }}>
-        Change Info
+        Thay đổi thông tin
       </h2>
       <Formik
         initialValues={{
@@ -56,12 +56,12 @@ export const ChangeInfo = () => {
           <Form>
             <EditableField
               name="firstName"
-              label="First Name"
+              label="Họ và tên đệm"
               defaultValue={data?.me?.firstName || ''}
             />
             <EditableField
               name="lastName"
-              label="Last Name"
+              label="Tên"
               defaultValue={data?.me?.lastName || ''}
             />
             <Button
@@ -70,7 +70,7 @@ export const ChangeInfo = () => {
               type="submit"
               marginTop={2}
             >
-              submit
+              Thay đổi
             </Button>
           </Form>
         )}

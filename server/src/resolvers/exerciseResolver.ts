@@ -237,7 +237,7 @@ export class ExerciseResolver {
       return savedExerciseIds.getItems().map((i) => i.exercise);
     } catch (err) {
       console.log(err);
-      throw new Error('not auth');
+      throw new Error('Có lỗi xảy ra. Vui lòng thử lại');
     }
   }
 }

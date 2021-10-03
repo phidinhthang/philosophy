@@ -30,7 +30,7 @@ export const UserInfoModal = ({ userId }: { userId: string }) => {
 
           <ModalFooter>
             <Button colorScheme="blue" mr={3} onClick={onClose}>
-              Close
+              Đóng
             </Button>
           </ModalFooter>
         </ModalContent>

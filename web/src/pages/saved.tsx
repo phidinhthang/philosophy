@@ -52,9 +52,9 @@ const SavedPage = () => {
             );
             let text = '';
             if (done) {
-              text = `finished ${done.corrects as number} / ${e.length}`;
+              text = `Hoàn thành ${done.corrects as number} / ${e.length}`;
             } else {
-              text = `${e.length} question`;
+              text = `${e.length} câu hỏi`;
             }
             return (
               <Flex

@@ -88,18 +88,20 @@ const LoginPage: React.FC<{}> = ({}) => {
             </NextLink>
           </Flex>
           <Button
-            mt={4}
+            my={4}
             type="submit"
             isLoading={isSubmitting}
             colorScheme="teal"
+            isFullWidth={true}
           >
             Đăng nhập
           </Button>
           <div>
             <Button
               as={Link}
-              colorScheme="teal"
+              colorScheme="blue"
               href={process.env.NEXT_PUBLIC_API_URL + '/auth/google'}
+              isFullWidth={true}
             >
               Đăng nhập bằng Google
             </Button>

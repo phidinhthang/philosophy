@@ -40,7 +40,7 @@ const Question = () => {
     score,
     totalScore,
   } = useQuiz();
-  if (!loading && !data) return <div>an error has occur</div>;
+  if (!loading && !data) return <div>có lỗi xảy ra </div>;
   if (!data && loading) return <div>loading ...</div>;
   return (
     <>

@@ -21,9 +21,9 @@ const ConfirmEmail = () => {
       {loading ? (
         <p>loading...</p>
       ) : !loading && data ? (
-        <p>success</p>
+        <p>Cập nhật email thành công</p>
       ) : (
-        <p>: error </p>
+        <p>: Có lỗi xảy ra. </p>
       )}
     </Wrapper>
   );

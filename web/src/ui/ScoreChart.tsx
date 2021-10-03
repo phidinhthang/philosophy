@@ -14,7 +14,7 @@ export const ScoreChart = ({ labels, data }: ScoreChartProps) => {
           labels,
           datasets: [
             {
-              label: 'Score',
+              label: 'Điểm',
               data,
               fill: false,
               borderColor: 'rgba(255, 99, 132, 0.8)',

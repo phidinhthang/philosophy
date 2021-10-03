@@ -82,7 +82,7 @@ const ChangePassword: NextPage = () => {
               {tokenError}
             </Box>
             <NextLink href="/forgot-password">
-              <Link>click here to get a new one</Link>
+              <Link>Bấm vào đây để nhận được đường link mới.</Link>
             </NextLink>
           </Flex>
         ) : null}
@@ -93,7 +93,7 @@ const ChangePassword: NextPage = () => {
           isDisabled={isSubmitting}
           colorScheme="teal"
         >
-          change password
+          Đổi mật khẩu
         </Button>
       </form>
     </Wrapper>

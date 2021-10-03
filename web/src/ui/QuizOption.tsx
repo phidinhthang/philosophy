@@ -1,4 +1,4 @@
-import { Button } from '@chakra-ui/react';
+import { Button, useColorModeValue } from '@chakra-ui/react';
 import { CheckIcon, WarningIcon } from '@chakra-ui/icons';
 import React from 'react';
 
@@ -24,6 +24,9 @@ export const QuizOption: React.FC<ButtonProps> = ({
       isFullWidth
       size="lg"
       justifyContent="flex-start"
+      mt={3}
+      borderWidth={2}
+      borderColor={useColorModeValue('gray.200', 'gray.700')}
       leftIcon={
         !isChoose ? undefined : isSubmited && isCorrect === true ? (
           <CheckIcon />
