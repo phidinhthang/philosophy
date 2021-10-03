@@ -89,6 +89,10 @@ export const NavBar: React.FC<NavbarProps> = ({}) => {
               <ChevronDownIcon fontSize="3xl" />
             </MenuButton>
           }
+          menuStyles={{
+            marginTop: 15,
+            marginRight: 50,
+          }}
         >
           <Box mr={2} textAlign="center" my="2" fontWeight="bold">
             {data.me.name}
@@ -110,7 +114,7 @@ export const NavBar: React.FC<NavbarProps> = ({}) => {
           </MenuItem>
           <MenuItem>
             <NextLink href="/saved">
-              <Button w="full">Saved</Button>
+              <Button w="full">Đã lưu</Button>
             </NextLink>
           </MenuItem>
           <MenuItem>

@@ -204,6 +204,7 @@ export type Query = {
   hello: Scalars['String'];
   getAllExercises: ExerciseResponse;
   getAllSavedExercise?: Maybe<Array<Exercise>>;
+  getRandomExercise: Scalars['ID'];
   getQuestions: Array<Question>;
   getTopUsers: Array<TopUser>;
   getUserInfo: UserInfoResponse;
@@ -212,6 +213,10 @@ export type Query = {
 export type QueryGetAllExercisesArgs = {
   limit?: Maybe<Scalars['Int']>;
   cursor?: Maybe<Scalars['String']>;
+};
+
+export type QueryGetRandomExerciseArgs = {
+  currentId: Scalars['String'];
 };
 
 export type QueryGetQuestionsArgs = {
@@ -617,6 +622,15 @@ export type GetAllSavedExerciseQuery = {
       length: number;
     }>
   >;
+};
+
+export type GetRandomExerciseQueryVariables = Exact<{
+  currentId: Scalars['String'];
+}>;
+
+export type GetRandomExerciseQuery = {
+  __typename?: 'Query';
+  getRandomExercise: string;
 };
 
 export type GetScoreOfWeekQueryVariables = Exact<{ [key: string]: never }>;
@@ -1734,6 +1748,62 @@ export type GetAllSavedExerciseLazyQueryHookResult = ReturnType<
 export type GetAllSavedExerciseQueryResult = Apollo.QueryResult<
   GetAllSavedExerciseQuery,
   GetAllSavedExerciseQueryVariables
+>;
+export const GetRandomExerciseDocument = gql`
+  query GetRandomExercise($currentId: String!) {
+    getRandomExercise(currentId: $currentId)
+  }
+`;
+
+/**
+ * __useGetRandomExerciseQuery__
+ *
+ * To run a query within a React component, call `useGetRandomExerciseQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetRandomExerciseQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetRandomExerciseQuery({
+ *   variables: {
+ *      currentId: // value for 'currentId'
+ *   },
+ * });
+ */
+export function useGetRandomExerciseQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetRandomExerciseQuery,
+    GetRandomExerciseQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    GetRandomExerciseQuery,
+    GetRandomExerciseQueryVariables
+  >(GetRandomExerciseDocument, options);
+}
+export function useGetRandomExerciseLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetRandomExerciseQuery,
+    GetRandomExerciseQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    GetRandomExerciseQuery,
+    GetRandomExerciseQueryVariables
+  >(GetRandomExerciseDocument, options);
+}
+export type GetRandomExerciseQueryHookResult = ReturnType<
+  typeof useGetRandomExerciseQuery
+>;
+export type GetRandomExerciseLazyQueryHookResult = ReturnType<
+  typeof useGetRandomExerciseLazyQuery
+>;
+export type GetRandomExerciseQueryResult = Apollo.QueryResult<
+  GetRandomExerciseQuery,
+  GetRandomExerciseQueryVariables
 >;
 export const GetScoreOfWeekDocument = gql`
   query GetScoreOfWeek {

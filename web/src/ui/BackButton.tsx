@@ -33,9 +33,9 @@ export const BackButton = ({
         px="4"
         py="2"
         zIndex="10000"
-        leftIcon={<ArrowBackIcon />}
+        leftIcon={children ? <ArrowBackIcon /> : undefined}
       >
-        {children}
+        {children ? children : <ArrowBackIcon />}
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose}>

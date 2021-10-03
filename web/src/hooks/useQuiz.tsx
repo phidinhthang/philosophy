@@ -7,25 +7,28 @@ import {
   useSaveCompleteMutation,
   MeDocument,
   MeQuery,
-  ExerciseSnippetFragment,
+  GetAllExercisesQuery,
+  GetAllExercisesDocument,
   ExerciseSnippetFragmentDoc,
   GetTopUsersDocument,
   GetTopUsersQuery,
+  useMeQuery,
 } from '../generated/graphql';
-import SweetAlert from 'react-bootstrap-sweetalert';
 import { floating } from '../lib/floating';
+import { useDisclosure } from '@chakra-ui/hooks';
 
 export const useQuiz = () => {
   const router = useRouter();
   const [score, setScore] = useState(0);
   const [totalScore, setTotalScore] = useState(0);
-  const [alert, setAlert] = useState<React.ReactElement>();
   const [current, setCurrent] = useState(0);
   const [complete, setComplete] = useState(0);
   const [isChoose, setIsChoose] = useState<string>();
   const [correct, setCorrect] = useState<boolean>();
   const [corrects, setCorrects] = useState<number>(0);
   const [checked, setChecked] = useState(false);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { data: meData } = useMeQuery();
   const { data, loading } = useGetQuestionsQuery({
     variables: { id: router.query.id as string },
     fetchPolicy: 'no-cache',
@@ -36,6 +39,15 @@ export const useQuiz = () => {
   const [saveComplete, { loading: isSaving }] = useSaveCompleteMutation({
     fetchPolicy: 'no-cache',
   });
+  const resetState = () => {
+    setTotalScore(0);
+    setCurrent(0);
+    setComplete(0);
+    setIsChoose('');
+    setCorrect(undefined);
+    setCorrects(0);
+    setChecked(false);
+  };
   const onCheckAnswer = async () => {
     const a = await checkAnswer({
       variables: {
@@ -46,6 +58,8 @@ export const useQuiz = () => {
         const meCache = cache.readQuery<MeQuery>({
           query: MeDocument,
         });
+
+        if (!meCache?.me) router.push('/');
         const meDraft = cloneDeep(meCache!.me);
 
         meDraft!.score = meDraft!.score + (data?.checkAnswer.score ?? 0);
@@ -105,26 +119,26 @@ export const useQuiz = () => {
         },
         update(cache, { data }) {
           if (data?.saveComplete) {
-            const existing = cache.readQuery<MeQuery>({
-              query: MeDocument,
+            const exercises = cache.readQuery<GetAllExercisesQuery>({
+              query: GetAllExercisesDocument,
             });
-            const exercise = cache.readFragment<ExerciseSnippetFragment>({
-              fragment: ExerciseSnippetFragmentDoc,
-              variables: {
-                id: router.query.id,
+            const exercise = exercises?.getAllExercises.exercises?.find(
+              (exercise) => {
+                return exercise.id === router.query.id;
               },
-            });
-            if (!existing) {
+            );
+            console.log(meData);
+            if (!meData?.me) {
               return router.push('/');
             }
             cache.writeQuery({
               query: MeDocument,
               data: {
                 me: {
-                  ...existing!.me!,
+                  ...meData!.me!,
                   completes: [
-                    ...(existing!.me?.completes as any),
-                    { __typename: 'Complete', exercise, corrects },
+                    ...(meData!.me?.completes || []),
+                    { __typename: 'Complete', exercise: exercise, corrects },
                   ],
                 },
               },
@@ -138,14 +152,7 @@ export const useQuiz = () => {
       floats.forEach((f) => {
         (f as any).remove();
       });
-      setAlert(
-        <SweetAlert
-          title={'Finished'}
-          onConfirm={() => router.replace('/')}
-          onCancel={() => router.replace('/')}
-          type={'success'}
-        ></SweetAlert>,
-      );
+      onOpen();
     } else {
       const floatElements = document.getElementsByClassName('float-container');
       const floats = [].slice.call(floatElements);
@@ -171,8 +178,11 @@ export const useQuiz = () => {
     setIsChoose,
     onCheckAnswer,
     onSaveComplete,
-    alert,
+    resetState,
     score,
     totalScore,
+    isOpen,
+    onOpen,
+    onClose,
   };
 };

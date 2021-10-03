@@ -40,7 +40,7 @@ export const CompareScoreChart = ({ id }: { id: string }) => {
   } else {
     datasets = [
       {
-        label: 'Me',
+        label: 'Bạn',
         data: data!.getScoreOfWeek
           .map((i) => i)
           .sort((a, b) => +a.day - +b.day)
@@ -49,7 +49,7 @@ export const CompareScoreChart = ({ id }: { id: string }) => {
         borderColor: 'rgba(255, 99, 132, 0.8)',
       },
       {
-        label: 'Other',
+        label: dataUser!.getUserInfo.name,
         data: dataUser!.getUserInfo?.scorePerDay
           ?.map((i) => i)
           .sort((a, b) => +a.day - +b.day)

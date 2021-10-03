@@ -1,5 +1,18 @@
 import Head from 'next/head';
-import { Box, Heading, Stack, Text, Button } from '@chakra-ui/react';
+import {
+  Box,
+  Heading,
+  Stack,
+  Text,
+  Button,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+} from '@chakra-ui/react';
 import ProgressBar from '@ramonak/react-progress-bar';
 import CountUp from 'react-countup';
 import React, { useState } from 'react';
@@ -8,8 +21,9 @@ import { withApollo } from '../../lib/withApollo';
 import { QuizOption } from '../../ui/QuizOption';
 import { Wrapper } from '../../ui/Wrapper';
 import styled from '@emotion/styled';
-import { useColorModeValue } from '@chakra-ui/color-mode';
 import { BackButton } from '../../ui/BackButton';
+import { useGetRandomExerciseQuery } from '../../generated/graphql';
+import { useRouter } from 'next/router';
 
 const WrapperAlert = styled('div')`
   & a.btn.btn-lg.btn-primary {
@@ -36,10 +50,20 @@ const Question = () => {
     isSubmming,
     onCheckAnswer,
     onSaveComplete,
-    alert,
+    resetState,
+    isOpen,
+    onClose,
+    onOpen,
     score,
     totalScore,
   } = useQuiz();
+  const router = useRouter();
+  console.log('router ', router.query.id);
+  const { data: nextExerciseData } = useGetRandomExerciseQuery({
+    variables: {
+      currentId: typeof router.query.id === 'string' ? router.query.id : '',
+    },
+  });
   if (!loading && !data) return <div>có lỗi xảy ra </div>;
   if (!data && loading) return <div>loading ...</div>;
   return (
@@ -56,9 +80,45 @@ const Question = () => {
           height: window.innerHeight - 100,
         }}
       >
-        <WrapperAlert color={useColorModeValue('white', 'black')}>
+        {/* <WrapperAlert color={useColorModeValue('black', 'black')}>
           {alert}
-        </WrapperAlert>
+        </WrapperAlert> */}
+        <Modal isOpen={isOpen} onClose={onClose}>
+          <ModalContent>
+            <ModalHeader>Hoàn thành</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody></ModalBody>
+
+            <ModalFooter>
+              <Button
+                colorScheme="blue"
+                mr={3}
+                onClick={() => {
+                  router.replace('/').then(() => onClose());
+                }}
+              >
+                Trở lại trang chủ
+              </Button>
+              <Button
+                colorScheme="teal"
+                onClick={() => {
+                  const nextId = nextExerciseData?.getRandomExercise;
+                  console.log('nextId', nextId);
+                  if (nextId) {
+                    router.push(`/quizzes/${nextId}`).then(() => {
+                      resetState();
+                      onClose();
+                    });
+                  } else {
+                    router.push('/');
+                  }
+                }}
+              >
+                Câu tiếp
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
         <Box
           w="full"
           position="relative"
@@ -72,15 +132,16 @@ const Question = () => {
           <Box w="10" position="absolute" left="0" zIndex="1000">
             <BackButton />
           </Box>
-          <ProgressBar
-            completed={Math.round(
-              (complete / data?.getQuestions.length!) * 100,
-            )}
-            isLabelVisible={false}
-            height={'15px'}
-            margin="0 0 0 60px"
-            width={`${800 - 60}px`}
-          />
+          <Box marginLeft="66px" flexGrow={1}>
+            <ProgressBar
+              completed={Math.round(
+                (complete / data?.getQuestions.length!) * 100,
+              )}
+              isLabelVisible={false}
+              height={'15px'}
+              width="100%"
+            />
+          </Box>
         </Box>
         <Heading mb="5" flexGrow={1}>
           {data!.getQuestions[current].title}

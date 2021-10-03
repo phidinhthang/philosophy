@@ -3,6 +3,7 @@ import { verify } from 'jsonwebtoken';
 import {
   Arg,
   Ctx,
+  ID,
   Int,
   Mutation,
   Query,
@@ -239,5 +240,21 @@ export class ExerciseResolver {
       console.log(err);
       throw new Error('Có lỗi xảy ra. Vui lòng thử lại');
     }
+  }
+
+  @Query(() => ID)
+  async getRandomExercise(
+    @Ctx() { em }: MyContext,
+    @Arg('currentId', () => String) currentId: string,
+  ) {
+    em = em.fork();
+    const exericse = await em.getConnection('read').execute<Exercise[]>(
+      `
+      select e."id", e."title", e."length", e."created_at" from exercise e where e."id" <> ? order by random() limit 1;
+    `,
+      [currentId],
+    );
+
+    return exericse[0].id;
   }
 }

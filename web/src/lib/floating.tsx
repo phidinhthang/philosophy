@@ -33,20 +33,20 @@ export function floating({
 			${Array.from({ length: MAX + 1 })
         .map((v, x) => ({
           percent: (x * 100) / MAX,
-          width: Math.sin(x / 10) * 10,
+          width: Math.sin(x / 10) * 5,
           height: 100 + x * (-110 / MAX),
         }))
-        .map(({ percent, width, height }) =>
-          percent < 60
-            ? `
+        .map(
+          ({ percent, width, height }) =>
+            `
 						${percent}% {
 							transform: translate(
 								${width}vw,
 								${height}vh
 							);
+              opacity: ${1 - Math.round(percent / 5) / 10};
 						}
-					`
-            : '',
+					`,
         )
         .join('')}
 		}

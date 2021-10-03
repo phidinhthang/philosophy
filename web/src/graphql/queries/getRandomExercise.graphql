@@ -1,0 +1,3 @@
+query GetRandomExercise($currentId: String!) {
+  getRandomExercise(currentId: $currentId)
+}
