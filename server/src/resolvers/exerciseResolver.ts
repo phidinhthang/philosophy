@@ -225,6 +225,8 @@ export class ExerciseResolver {
   async getAllSavedExercise(
     @Ctx() { req, em }: MyContext,
   ): Promise<Exercise[]> {
+    em = em.fork();
+
     const user = await getUserById({ req, em });
 
     try {

@@ -206,6 +206,7 @@ export type Query = {
   getAllSavedExercise?: Maybe<Array<Exercise>>;
   getQuestions: Array<Question>;
   getTopUsers: Array<TopUser>;
+  getUserInfo: UserInfoResponse;
 };
 
 export type QueryGetAllExercisesArgs = {
@@ -215,6 +216,10 @@ export type QueryGetAllExercisesArgs = {
 
 export type QueryGetQuestionsArgs = {
   id: Scalars['String'];
+};
+
+export type QueryGetUserInfoArgs = {
+  id: Scalars['ID'];
 };
 
 export type Question = {
@@ -283,6 +288,14 @@ export type User = {
 export type UserAnswerInput = {
   questionId: Scalars['ID'];
   answerId: Scalars['ID'];
+};
+
+export type UserInfoResponse = {
+  __typename?: 'UserInfoResponse';
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  avatarUrl?: Maybe<Scalars['String']>;
+  scorePerDay?: Maybe<Array<ScorePerDay>>;
 };
 
 export type ErrorSnippetFragment = {
@@ -597,7 +610,12 @@ export type GetAllSavedExerciseQueryVariables = Exact<{ [key: string]: never }>;
 export type GetAllSavedExerciseQuery = {
   __typename?: 'Query';
   getAllSavedExercise?: Maybe<
-    Array<{ __typename?: 'Exercise'; id: string; title: string }>
+    Array<{
+      __typename?: 'Exercise';
+      id: string;
+      title: string;
+      length: number;
+    }>
   >;
 };
 
@@ -624,6 +642,28 @@ export type GetTopUsersQuery = {
     score: number;
     avatarUrl?: Maybe<string>;
   }>;
+};
+
+export type GetUserInfoQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+export type GetUserInfoQuery = {
+  __typename?: 'Query';
+  getUserInfo: {
+    __typename?: 'UserInfoResponse';
+    id: string;
+    name: string;
+    avatarUrl?: Maybe<string>;
+    scorePerDay?: Maybe<
+      Array<{
+        __typename?: 'ScorePerDay';
+        id: string;
+        day: string;
+        score: number;
+      }>
+    >;
+  };
 };
 
 export type MeQueryVariables = Exact<{ [key: string]: never }>;
@@ -1641,6 +1681,7 @@ export const GetAllSavedExerciseDocument = gql`
     getAllSavedExercise {
       id
       title
+      length
     }
   }
 `;
@@ -1810,6 +1851,69 @@ export type GetTopUsersLazyQueryHookResult = ReturnType<
 export type GetTopUsersQueryResult = Apollo.QueryResult<
   GetTopUsersQuery,
   GetTopUsersQueryVariables
+>;
+export const GetUserInfoDocument = gql`
+  query GetUserInfo($id: ID!) {
+    getUserInfo(id: $id) {
+      id
+      name
+      avatarUrl
+      scorePerDay {
+        id
+        day
+        score
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetUserInfoQuery__
+ *
+ * To run a query within a React component, call `useGetUserInfoQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserInfoQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserInfoQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetUserInfoQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetUserInfoQuery,
+    GetUserInfoQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetUserInfoQuery, GetUserInfoQueryVariables>(
+    GetUserInfoDocument,
+    options,
+  );
+}
+export function useGetUserInfoLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetUserInfoQuery,
+    GetUserInfoQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetUserInfoQuery, GetUserInfoQueryVariables>(
+    GetUserInfoDocument,
+    options,
+  );
+}
+export type GetUserInfoQueryHookResult = ReturnType<typeof useGetUserInfoQuery>;
+export type GetUserInfoLazyQueryHookResult = ReturnType<
+  typeof useGetUserInfoLazyQuery
+>;
+export type GetUserInfoQueryResult = Apollo.QueryResult<
+  GetUserInfoQuery,
+  GetUserInfoQueryVariables
 >;
 export const MeDocument = gql`
   query Me {

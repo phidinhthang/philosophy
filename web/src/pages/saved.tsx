@@ -15,18 +15,22 @@ import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
 import {
-  useGetAllExercisesQuery,
   useMeQuery,
   useSaveExerciseMutation,
   GetAllExercisesQuery,
   GetAllExercisesDocument,
+  useGetAllSavedExerciseQuery,
+  GetAllSavedExerciseQuery,
+  GetAllSavedExerciseDocument,
 } from '../generated/graphql';
 import { Layout } from '../layouts/Layout';
 import { withApollo } from '../lib/withApollo';
 
 const SavedPage = () => {
   const router = useRouter();
-  const { data, error, loading } = useGetAllExercisesQuery();
+  const { data, error, loading } = useGetAllSavedExerciseQuery({
+    fetchPolicy: 'network-only',
+  });
   const { data: meData } = useMeQuery();
   const [targeted, setTargeted] = React.useState<string>('');
   const [saveExercise, { loading: isSaving, data: saveExerciseData }] =
@@ -41,89 +45,94 @@ const SavedPage = () => {
         <div>loading...</div>
       ) : (
         <Stack spacing={8}>
-          {data!.getAllExercises
-            .filter((exercise) => exercise.saved)
-            .map((e, index) => {
-              if (!e) return e;
-              const done = meData?.me?.completes?.find(
-                (c) => c.exercise.id === e.id,
-              );
-              let text = '';
-              if (done) {
-                text = `finished ${done.corrects as number} / ${e.length}`;
-              } else {
-                text = `${e.length} question`;
-              }
-              return (
-                <Flex
-                  boxShadow="md"
-                  key={e.id || index}
-                  p={5}
-                  borderWidth="1px"
-                  backgroundColor={
-                    done ? useColorModeValue('cyan.100', '#242424') : undefined
-                  }
+          {data!.getAllSavedExercise!.map((e, index) => {
+            if (!e) return e;
+            const done = meData?.me?.completes?.find(
+              (c) => c.exercise.id === e.id,
+            );
+            let text = '';
+            if (done) {
+              text = `finished ${done.corrects as number} / ${e.length}`;
+            } else {
+              text = `${e.length} question`;
+            }
+            return (
+              <Flex
+                boxShadow="md"
+                key={e.id || index}
+                p={5}
+                borderWidth="1px"
+                backgroundColor={
+                  done ? useColorModeValue('cyan.100', '#242424') : undefined
+                }
+              >
+                <Box
+                  flex={1}
+                  display="flex"
+                  justifyContent="space-between"
+                  alignItems="center"
                 >
+                  <NextLink href="/quizzes/[id]" as={`/quizzes/${e.id}`}>
+                    <Link>
+                      <Heading fontSize="large">{e.title}</Heading>
+                    </Link>
+                  </NextLink>
                   <Box
-                    flex={1}
                     display="flex"
-                    justifyContent="space-between"
                     alignItems="center"
+                    justifyContent="center"
                   >
-                    <NextLink href="/quizzes/[id]" as={`/quizzes/${e.id}`}>
-                      <Link>
-                        <Heading fontSize="large">{e.title}</Heading>
-                      </Link>
-                    </NextLink>
-                    <Box
-                      display="flex"
-                      alignItems="center"
-                      justifyContent="center"
-                    >
-                      <Text mr="4">{text}</Text>
-                      <Button
-                        isLoading={isSaving && targeted === e.id}
-                        disabled={isSaving && targeted === e.id}
-                        onClick={() => {
-                          setTargeted(e.id);
-                          saveExercise({
-                            variables: { exerciseId: e.id },
-                            update: (cache, { data }) => {
-                              if (!data?.saveExercise) return;
-                              const updatedExercises =
-                                cache.readQuery<GetAllExercisesQuery>({
-                                  query: GetAllExercisesDocument,
-                                });
-
-                              const draft = cloneDeep(
-                                updatedExercises?.getAllExercises,
-                              );
-                              let foundChange = false;
-                              draft?.forEach((d) => {
-                                if (d.id === e.id) {
-                                  d.saved = !d.saved;
-                                  foundChange = true;
-                                }
+                    <Text mr="4">{text}</Text>
+                    <Button
+                      isLoading={isSaving && targeted === e.id}
+                      disabled={isSaving && targeted === e.id}
+                      onClick={() => {
+                        setTargeted(e.id);
+                        saveExercise({
+                          variables: { exerciseId: e.id },
+                          update: (cache, { data }) => {
+                            if (!data?.saveExercise) return;
+                            const updatedExercises =
+                              cache.readQuery<GetAllExercisesQuery>({
+                                query: GetAllExercisesDocument,
                               });
 
-                              if (foundChange) {
-                                cache.writeQuery<GetAllExercisesQuery>({
-                                  query: GetAllExercisesDocument,
-                                  // @ts-ignore
-                                  data: { getAllExercises: draft },
-                                });
+                            const draft = cloneDeep(
+                              updatedExercises?.getAllExercises,
+                            );
+                            let foundChange = false;
+                            draft?.exercises!.forEach((d) => {
+                              if (d.id === e.id) {
+                                d.saved = false;
+                                foundChange = true;
                               }
-                            },
-                          }).then(() => setTargeted(''));
-                        }}
-                      >
-                        {<DeleteIcon />}
-                      </Button>
-                    </Box>
+                            });
+
+                            if (foundChange) {
+                              cache.writeQuery<GetAllExercisesQuery>({
+                                query: GetAllExercisesDocument,
+                                // @ts-ignore
+                                data: {
+                                  getAllExercises: {
+                                    exercises: draft?.exercises,
+                                    hasMore: draft?.hasMore,
+                                  },
+                                },
+                                overwrite: true,
+                              });
+                            }
+                          },
+                          refetchQueries: [GetAllSavedExerciseDocument],
+                        }).then(() => setTargeted(''));
+                      }}
+                    >
+                      {<DeleteIcon />}
+                    </Button>
                   </Box>
-                </Flex>
-              );
-            })}
+                </Box>
+              </Flex>
+            );
+          })}
         </Stack>
       )}
     </Layout>

@@ -19,12 +19,15 @@ import { getUserById } from '../utils/auth/getUserById';
 import { ADD_EMAIL_PREFIX, FORGET_PASSWORD_PREFIX } from '../constants';
 import { v4 } from 'uuid';
 import { sendMail } from '../utils/sendEmail';
-import { LoginResponse } from './inputs';
+import { LoginResponse, UserInfoResponse } from './inputs';
 import { sendRefreshToken } from '../utils/auth/sendRefreshToken';
 import {
   createAccessToken,
   createRefreshToken,
 } from '../utils/auth/createToken';
+import { ScorePerDay } from '../entities/ScorePerDay';
+import { scorePlaceholder } from '../utils/scorePlaceholder';
+import { getTodayTime } from '../utils/time/getTodayTime';
 
 @ObjectType()
 class TopUser implements Partial<User> {
@@ -284,5 +287,40 @@ export class AccountResolver {
     await em.persistAndFlush(user);
 
     return true;
+  }
+
+  @Query(() => UserInfoResponse)
+  async getUserInfo(
+    @Arg('id', () => ID) id: string,
+    @Ctx() { em }: MyContext,
+  ): Promise<UserInfoResponse> {
+    const user = await em.findOneOrFail(User, id);
+
+    let scoreOfWeek = scorePlaceholder();
+    const scores = await em.find(ScorePerDay, {
+      day: { $gte: getTodayTime({ offset: 6 }) },
+      owner: user,
+    });
+    scoreOfWeek = scoreOfWeek.map((score) => {
+      let final: ReturnType<typeof scorePlaceholder>[0] = score;
+      scores.map((s) => {
+        if (s.day === score.day) {
+          final = s;
+        }
+      });
+      return final;
+    });
+
+    return {
+      id: user.id,
+      name: user.name,
+      scorePerDay: scoreOfWeek.map((s) => ({
+        id: s.id,
+        score: s.score,
+        day: s.day,
+        owner: user,
+      })),
+      avatarUrl: user.avatarUrl,
+    };
   }
 }

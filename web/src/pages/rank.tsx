@@ -2,6 +2,7 @@ import { Stack, Flex, Box, Text, Avatar } from '@chakra-ui/react';
 import { useGetTopUsersQuery } from '../generated/graphql';
 import { Layout } from '../layouts/Layout';
 import { withApollo } from '../lib/withApollo';
+import { UserInfoModal } from '../ui/UserInfoModal';
 
 interface RankItemProps {
   name: string;
@@ -29,9 +30,12 @@ const RankItem = ({
         />
         <Text ml="3">{name}</Text>
       </Box>
-      <Box display="flex" alignItems="center">
-        <Text>{score}</Text>
-      </Box>
+      <Flex alignItems="center">
+        <Box display="flex" alignItems="center" mr="3">
+          <Text>{score}</Text>
+        </Box>
+        <UserInfoModal userId={id} />
+      </Flex>
     </Flex>
   );
 };

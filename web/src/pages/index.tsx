@@ -2,9 +2,10 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import {
-  ExerciseResponse,
   GetAllExercisesDocument,
   GetAllExercisesQuery,
+  GetAllSavedExerciseDocument,
+  GetAllSavedExerciseQuery,
   useGetAllExercisesQuery,
   useMeQuery,
   useSaveExerciseMutation,
@@ -103,30 +104,36 @@ const HomePage = () => {
                           saveExercise({
                             variables: { exerciseId: e.id },
                             update: (cache, { data }) => {
-                              const updatedExercises =
+                              const cachedExercises =
                                 cache.readQuery<GetAllExercisesQuery>({
                                   query: GetAllExercisesDocument,
                                 });
 
-                              const draft = cloneDeep(
-                                updatedExercises?.getAllExercises,
+                              let exerciseDraft = cloneDeep(
+                                cachedExercises?.getAllExercises,
                               );
-                              let foundChange = false;
-                              draft?.exercises?.forEach((d) => {
-                                if (d.id === e.id) {
-                                  d.saved = !d.saved;
-                                  foundChange = true;
+                              let haveFound = false;
+                              exerciseDraft?.exercises?.forEach((exercise) => {
+                                if (exercise.id === e.id) {
+                                  exercise.saved = !exercise.saved;
+                                  haveFound = true;
                                 }
                               });
 
-                              if (foundChange) {
+                              if (haveFound) {
                                 cache.writeQuery<GetAllExercisesQuery>({
                                   query: GetAllExercisesDocument,
-                                  // @ts-ignore
-                                  data: { getAllExercises: draft },
+                                  data: {
+                                    getAllExercises: {
+                                      exercises: exerciseDraft?.exercises,
+                                      hasMore: exerciseDraft!.hasMore,
+                                    },
+                                  },
+                                  overwrite: true,
                                 });
                               }
                             },
+                            refetchQueries: [GetAllSavedExerciseDocument],
                           }).then(() => setTargeted(''));
                         }}
                       >

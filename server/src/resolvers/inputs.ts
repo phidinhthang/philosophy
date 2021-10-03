@@ -1,6 +1,7 @@
 import { Field, ID, InputType, Int, ObjectType } from 'type-graphql';
 import { Answer } from '../entities/Answer';
 import { Exercise } from '../entities/Exercise';
+import { ScorePerDay } from '../entities/ScorePerDay';
 import { User } from '../entities/User';
 import { CustomError } from '../utils/CustomError';
 
@@ -125,4 +126,20 @@ export class ExerciseResponse {
 
   @Field(() => Boolean, { defaultValue: true })
   hasMore: boolean;
+}
+
+@ObjectType()
+export class UserInfoResponse implements Partial<User> {
+  @Field(() => ID)
+  id: string;
+
+  @Field(() => String)
+  name: string;
+
+  @Field(() => String, { nullable: true })
+  avatarUrl?: string;
+
+  @Field(() => [ScorePerDay], { nullable: true })
+  // @ts-ignore
+  scorePerDay: ScorePerDay[];
 }

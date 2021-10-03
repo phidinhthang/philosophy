@@ -1,0 +1,12 @@
+query GetUserInfo($id: ID!) {
+  getUserInfo(id: $id) {
+    id
+    name
+    avatarUrl
+    scorePerDay {
+      id
+      day
+      score
+    }
+  }
+}
