@@ -32,6 +32,7 @@ export const CompareScoreChart = ({ id }: { id: string }) => {
         display="flex"
         justifyContent="center"
         alignItems="center"
+        mt="4"
       >
         <CircularProgress isIndeterminate color="blue.300" />
       </Box>

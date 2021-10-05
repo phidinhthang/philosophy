@@ -156,8 +156,9 @@ const Question = () => {
             />
           </Box>
         </Box>
-        <Heading mb="5" flexGrow={1}>
-          {data!.getQuestions?.[current]?.title}
+
+        <Heading mb="5" flexGrow={1} size="md">
+          Câu {current + 1}: {data!.getQuestions?.[current]?.title}
         </Heading>
 
         {score === 0 ? null : (
@@ -181,7 +182,8 @@ const Question = () => {
               delay={0.1}
               redraw={true}
               duration={2}
-            />
+            />{' '}
+            điểm
           </Text>
           <Stack my="4">
             {data!.getQuestions[current].answers.map((a) => (

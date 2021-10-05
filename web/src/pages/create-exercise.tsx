@@ -121,7 +121,6 @@ const CreatePostPage: React.FC<{}> = ({}) => {
           name="title"
           register={register as any}
         />
-        {}
         <ErrorMessage
           name="title"
           errors={errors}
@@ -160,7 +159,7 @@ const CreatePostPage: React.FC<{}> = ({}) => {
                   {q.answers.map((a, a_index) => (
                     <>
                       <AnswerInput
-                        label={`Nội dung câu trả lời ${a_index}`}
+                        label={`Nội dung câu trả lời ${a_index + 1}`}
                         name={`questions.${index}.correct`}
                         inputName={`questions.${index}.answers.${a_index}.text`}
                         value={a_index}
