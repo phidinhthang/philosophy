@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Head from 'next/head';
 import { Layout } from '../layouts/Layout';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { Box, Heading, Button } from '@chakra-ui/react';
@@ -7,6 +8,14 @@ import { withApollo } from '../lib/withApollo';
 function NotFoundPage() {
   return (
     <Layout variant="regular">
+      <Head>
+        <title>Không tìm thấy trang này</title>
+        <meta
+          property="og:title"
+          content="Không tìm thấy trang này"
+          key="title"
+        />
+      </Head>
       <Box
         display="flex"
         flexDir="column"

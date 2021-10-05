@@ -136,7 +136,7 @@ const SavedPage = () => {
               );
             })
           ) : (
-            <Heading>Chưa lưu gì.</Heading>
+            <Heading>Bạn chưa lưu bài nào.</Heading>
           )}
         </Stack>
       )}
