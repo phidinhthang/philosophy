@@ -16,7 +16,12 @@ export const Layout: React.FC<LayoutProps> = ({ children, variant }) => {
 
   return (
     <>
-      <Box display="flex" flexDirection="column" height="100vh">
+      <Box
+        display="flex"
+        flexDirection="column"
+        height="100vh"
+        maxHeight={window.innerHeight ? window.innerHeight : undefined}
+      >
         <NavBar />
         <Box overflowY="auto" flexGrow={1}>
           <Wrapper variant={variant}>{children}</Wrapper>
