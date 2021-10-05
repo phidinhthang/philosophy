@@ -1,7 +1,9 @@
+import Head from 'next/head';
 import { Stack, Flex, Box, Text, Avatar } from '@chakra-ui/react';
 import { useGetTopUsersQuery } from '../generated/graphql';
 import { Layout } from '../layouts/Layout';
 import { withApollo } from '../lib/withApollo';
+import { LoadingScreen } from '../ui/LoadingScreen';
 import { UserInfoModal } from '../ui/UserInfoModal';
 
 interface RankItemProps {
@@ -43,9 +45,9 @@ const RankItem = ({
 const RankPage = () => {
   const { data, error, loading } = useGetTopUsersQuery();
 
-  if (loading) return <div>loading...</div>;
+  if (loading) return <LoadingScreen />;
 
-  if (error) return <div>Co loi...</div>;
+  if (error) return <div>Có lỗi xảy ra. Vui lòng thử lại.</div>;
 
   if (!data) {
     console.log('no data');
@@ -53,6 +55,10 @@ const RankPage = () => {
   }
   return (
     <Layout variant="small">
+      <Head>
+        <title>Xếp hạng</title>
+        <meta property="og:title" content="Xếp hạng" key="title" />
+      </Head>
       <Stack spacing={8}>
         {[...data!.getTopUsers]
           .sort((a, b) => b.score - a.score)

@@ -89,7 +89,7 @@ export const ChangePassword = () => {
   };
   return (
     <>
-      <Button mb="1" onClick={onToggle}>
+      <Button mb="4" onClick={onToggle}>
         Đổi mật khẩu
       </Button>
       {isOpen && (
@@ -100,7 +100,7 @@ export const ChangePassword = () => {
             </Text>
           )}
           <Box mb="2" />
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={handleSubmit(onSubmit)} style={{ marginBottom: 24 }}>
             <InputField
               label="Mật khẩu hiện tại"
               name="password"

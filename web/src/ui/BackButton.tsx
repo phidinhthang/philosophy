@@ -43,7 +43,7 @@ export const BackButton = ({
         <ModalContent>
           <ModalHeader>{title}</ModalHeader>
           <ModalCloseButton />
-          <ModalBody>Test</ModalBody>
+          <ModalBody>Bạn có muốn quay trở lại ?</ModalBody>
 
           <ModalFooter>
             <Button colorScheme="blue" mr={3} onClick={onClose}>

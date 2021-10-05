@@ -25,6 +25,7 @@ import {
 } from '../generated/graphql';
 import { Layout } from '../layouts/Layout';
 import { withApollo } from '../lib/withApollo';
+import { LoadingScreen } from '../ui/LoadingScreen';
 
 const SavedPage = () => {
   const router = useRouter();
@@ -42,97 +43,101 @@ const SavedPage = () => {
         <meta property="og:title" content="Đã lưu" key="title" />
       </Head>
       {!data && loading ? (
-        <div>loading...</div>
+        <LoadingScreen />
       ) : (
         <Stack spacing={8}>
-          {data!.getAllSavedExercise!.map((e, index) => {
-            if (!e) return e;
-            const done = meData?.me?.completes?.find(
-              (c) => c.exercise.id === e.id,
-            );
-            let text = '';
-            if (done) {
-              text = `Hoàn thành ${done.corrects as number} / ${e.length}`;
-            } else {
-              text = `${e.length} câu hỏi`;
-            }
-            return (
-              <Flex
-                boxShadow="md"
-                key={e.id || index}
-                p={5}
-                borderWidth="1px"
-                backgroundColor={
-                  done ? useColorModeValue('cyan.100', '#242424') : undefined
-                }
-              >
-                <Box
-                  flex={1}
-                  display="flex"
-                  justifyContent="space-between"
-                  alignItems="center"
+          {data!.getAllSavedExercise?.length ? (
+            data!.getAllSavedExercise!.map((e, index) => {
+              if (!e) return e;
+              const done = meData?.me?.completes?.find(
+                (c) => c.exercise.id === e.id,
+              );
+              let text = '';
+              if (done) {
+                text = `Hoàn thành ${done.corrects as number} / ${e.length}`;
+              } else {
+                text = `${e.length} câu hỏi`;
+              }
+              return (
+                <Flex
+                  boxShadow="md"
+                  key={e.id || index}
+                  p={5}
+                  borderWidth="1px"
+                  backgroundColor={
+                    done ? useColorModeValue('cyan.100', '#242424') : undefined
+                  }
                 >
-                  <NextLink href="/quizzes/[id]" as={`/quizzes/${e.id}`}>
-                    <Link>
-                      <Heading fontSize="large">{e.title}</Heading>
-                    </Link>
-                  </NextLink>
                   <Box
+                    flex={1}
                     display="flex"
+                    justifyContent="space-between"
                     alignItems="center"
-                    justifyContent="center"
                   >
-                    <Text mr="4">{text}</Text>
-                    <Button
-                      isLoading={isSaving && targeted === e.id}
-                      disabled={isSaving && targeted === e.id}
-                      onClick={() => {
-                        setTargeted(e.id);
-                        saveExercise({
-                          variables: { exerciseId: e.id },
-                          update: (cache, { data }) => {
-                            if (!data?.saveExercise) return;
-                            const updatedExercises =
-                              cache.readQuery<GetAllExercisesQuery>({
-                                query: GetAllExercisesDocument,
-                              });
-
-                            const draft = cloneDeep(
-                              updatedExercises?.getAllExercises,
-                            );
-                            let foundChange = false;
-                            draft?.exercises!.forEach((d) => {
-                              if (d.id === e.id) {
-                                d.saved = false;
-                                foundChange = true;
-                              }
-                            });
-
-                            if (foundChange) {
-                              cache.writeQuery<GetAllExercisesQuery>({
-                                query: GetAllExercisesDocument,
-                                // @ts-ignore
-                                data: {
-                                  getAllExercises: {
-                                    exercises: draft?.exercises,
-                                    hasMore: draft?.hasMore,
-                                  },
-                                },
-                                overwrite: true,
-                              });
-                            }
-                          },
-                          refetchQueries: [GetAllSavedExerciseDocument],
-                        }).then(() => setTargeted(''));
-                      }}
+                    <NextLink href="/quizzes/[id]" as={`/quizzes/${e.id}`}>
+                      <Link>
+                        <Heading fontSize="large">{e.title}</Heading>
+                      </Link>
+                    </NextLink>
+                    <Box
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="center"
                     >
-                      {<DeleteIcon />}
-                    </Button>
+                      <Text mr="4">{text}</Text>
+                      <Button
+                        isLoading={isSaving && targeted === e.id}
+                        disabled={isSaving && targeted === e.id}
+                        onClick={() => {
+                          setTargeted(e.id);
+                          saveExercise({
+                            variables: { exerciseId: e.id },
+                            update: (cache, { data }) => {
+                              if (!data?.saveExercise) return;
+                              const updatedExercises =
+                                cache.readQuery<GetAllExercisesQuery>({
+                                  query: GetAllExercisesDocument,
+                                });
+
+                              const draft = cloneDeep(
+                                updatedExercises?.getAllExercises,
+                              );
+                              let foundChange = false;
+                              draft?.exercises!.forEach((d) => {
+                                if (d.id === e.id) {
+                                  d.saved = false;
+                                  foundChange = true;
+                                }
+                              });
+
+                              if (foundChange) {
+                                cache.writeQuery<GetAllExercisesQuery>({
+                                  query: GetAllExercisesDocument,
+                                  // @ts-ignore
+                                  data: {
+                                    getAllExercises: {
+                                      exercises: draft?.exercises,
+                                      hasMore: draft?.hasMore,
+                                    },
+                                  },
+                                  overwrite: true,
+                                });
+                              }
+                            },
+                            refetchQueries: [GetAllSavedExerciseDocument],
+                          }).then(() => setTargeted(''));
+                        }}
+                      >
+                        {<DeleteIcon />}
+                      </Button>
+                    </Box>
                   </Box>
-                </Box>
-              </Flex>
-            );
-          })}
+                </Flex>
+              );
+            })
+          ) : (
+            <Heading>Chưa lưu gì.</Heading>
+          )}
         </Stack>
       )}
     </Layout>

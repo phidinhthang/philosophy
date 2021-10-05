@@ -19,6 +19,7 @@ import { useMeQuery, useLogoutMutation } from '../generated/graphql';
 import { useRouter } from 'next/router';
 import { useApolloClient } from '@apollo/client';
 import { setAccessToken } from '../lib/accessToken';
+import { useMediaQuery } from 'react-responsive';
 
 interface NavbarProps {}
 
@@ -37,8 +38,11 @@ export const NavBar: React.FC<NavbarProps> = ({}) => {
       router.replace('/login');
     },
   });
+  const isDesktop = useMediaQuery({
+    query: '(min-width: 480px)',
+  });
   const { data, loading } = useMeQuery();
-  const bg = useColorModeValue('blue.200', 'purple.900');
+  const bg = useColorModeValue('#1DA1F2', 'purple.900');
   const isLightMode = useColorModeValue(true, false);
   let body = null;
   if (loading) {
@@ -66,7 +70,7 @@ export const NavBar: React.FC<NavbarProps> = ({}) => {
             height: '40px',
             backgroundColor: 'white',
           }}
-          mr="4"
+          mr="1"
         >
           <img
             style={{
@@ -91,17 +95,19 @@ export const NavBar: React.FC<NavbarProps> = ({}) => {
           }
           menuStyles={{
             marginTop: 15,
-            marginRight: 50,
+            marginRight: 15,
           }}
         >
           <Box mr={2} textAlign="center" my="2" fontWeight="bold">
             {data.me.name}
           </Box>
-          <MenuItem>
-            <NextLink href="/profile">
-              <Button w="full">Xem thông tin</Button>
-            </NextLink>
-          </MenuItem>
+          {isDesktop && (
+            <MenuItem>
+              <NextLink href="/profile">
+                <Button w="full">Xem thông tin</Button>
+              </NextLink>
+            </MenuItem>
+          )}
           <MenuItem>
             <NextLink href="/create-exercise">
               <Button w="full">Thêm bài học</Button>
@@ -112,11 +118,13 @@ export const NavBar: React.FC<NavbarProps> = ({}) => {
               {isLightMode ? <MoonIcon /> : <SunIcon />}
             </Button>
           </MenuItem>
-          <MenuItem>
-            <NextLink href="/saved">
-              <Button w="full">Đã lưu</Button>
-            </NextLink>
-          </MenuItem>
+          {isDesktop && (
+            <MenuItem>
+              <NextLink href="/saved">
+                <Button w="full">Đã lưu</Button>
+              </NextLink>
+            </MenuItem>
+          )}
           <MenuItem>
             <Button
               w="full"

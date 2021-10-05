@@ -94,9 +94,13 @@ export const useQuiz = () => {
     });
 
     if (a.data?.checkAnswer.isCorrect === true) {
+      const audio = new Audio('/audios/success.mp3');
+      audio.play();
       setCorrects((c) => c + 1);
       floating({ number: 5, duration: 6, repeat: '1' });
     } else if (a.data?.checkAnswer.isCorrect === false) {
+      const audio = new Audio('/audios/failure.mp3');
+      audio.play();
       floating({ number: 5, duration: 6, repeat: '1', content: '😢' });
     }
     if (a.data?.checkAnswer) {

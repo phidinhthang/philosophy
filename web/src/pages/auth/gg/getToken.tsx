@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 
 import { useEffect } from 'react';
 import { withApollo } from '../../../lib/withApollo';
+import { LoadingScreen } from '../../../ui/LoadingScreen';
 
 function GetOAuthToken() {
   const router = useRouter();
@@ -29,7 +30,7 @@ function GetOAuthToken() {
     }
   }, [refresh_token]);
 
-  return <div>loading...</div>;
+  return <LoadingScreen />;
 }
 
 export default withApollo({})(GetOAuthToken);

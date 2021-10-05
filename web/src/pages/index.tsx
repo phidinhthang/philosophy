@@ -5,7 +5,6 @@ import {
   GetAllExercisesDocument,
   GetAllExercisesQuery,
   GetAllSavedExerciseDocument,
-  GetAllSavedExerciseQuery,
   useGetAllExercisesQuery,
   useMeQuery,
   useSaveExerciseMutation,
@@ -25,6 +24,7 @@ import {
 import { AddIcon, DeleteIcon } from '@chakra-ui/icons';
 import NextLink from 'next/link';
 import { useColorModeValue } from '@chakra-ui/color-mode';
+import { LoadingScreen } from '../ui/LoadingScreen';
 import cloneDeep from 'clone-deep';
 
 const HomePage = () => {
@@ -54,10 +54,10 @@ const HomePage = () => {
         <meta property="og:title" content="Trang chủ" key="title" />
       </Head>
       {!data && loading ? (
-        <div>loading...</div>
+        <LoadingScreen />
       ) : (
         <>
-          <Stack spacing={8}>
+          <Stack spacing={8} marginBottom={16}>
             {data?.getAllExercises?.exercises?.map((e, index) => {
               if (!e) return e;
               const done = meData?.me?.completes?.find(
@@ -146,7 +146,7 @@ const HomePage = () => {
             })}
           </Stack>
           {data?.getAllExercises.hasMore ? (
-            <Box display="flex" justifyContent="center" mt="8">
+            <Box display="flex" justifyContent="center" mb="8">
               <Button
                 isLoading={loading}
                 isDisabled={loading}
@@ -161,8 +161,10 @@ const HomePage = () => {
                     },
                   });
                 }}
+                borderWidth={2}
+                borderColor={useColorModeValue('gray.300', undefined)}
               >
-                Load more
+                Xem thêm
               </Button>
             </Box>
           ) : null}

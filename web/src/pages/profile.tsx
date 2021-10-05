@@ -11,13 +11,14 @@ import { useIsAuth } from '../utils/useIsAuth';
 import { ChangeInfo } from '../ui/ChangeInfo';
 import { ChangePassword } from '../ui/ChangePassword';
 import { AddEmail } from '../ui/AddEmail';
+import { LoadingScreen } from '../ui/LoadingScreen';
 
 dayjs.locale('vi');
 
 function Profile() {
   useIsAuth();
   const { data, loading, error } = useGetScoreOfWeekQuery();
-  if (loading) return <p>Đang load...</p>;
+  if (loading) return <LoadingScreen />;
   if (error) {
     console.log('get score ', error);
     return <p>Có lỗi xảy ra.</p>;
@@ -42,7 +43,7 @@ function Profile() {
         <title>Tài khoản</title>
         <meta property="og:title" content="Tài khoản" key="title" />
       </Head>
-      <Stack direction={['column', 'row']} alignItems="flex-start">
+      <Stack direction={['column', 'row']} alignItems="space-between">
         <Box flexGrow={2} maxWidth={['95%', '40%']} marginX="auto">
           <AvatarInfo />
           <ScoreChart data={score} labels={day} />

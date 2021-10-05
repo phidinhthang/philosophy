@@ -87,7 +87,11 @@ const Question = () => {
           <ModalContent>
             <ModalHeader>Hoàn thành</ModalHeader>
             <ModalCloseButton />
-            <ModalBody></ModalBody>
+            <ModalBody>
+              <Text fontSize="20">
+                {totalScore > 0 ? `+${totalScore}` : `${totalScore}`} điểm
+              </Text>
+            </ModalBody>
 
             <ModalFooter>
               <Button
@@ -114,7 +118,7 @@ const Question = () => {
                   }
                 }}
               >
-                Câu tiếp
+                Bài khác
               </Button>
             </ModalFooter>
           </ModalContent>

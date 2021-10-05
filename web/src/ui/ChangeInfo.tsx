@@ -14,7 +14,7 @@ export const ChangeInfo = () => {
   const { data } = useMeQuery();
   const [updateInfo, { loading }] = useUpdateInfoMutation();
   return (
-    <div style={{ width: '100%' }}>
+    <div style={{ width: '100%', marginTop: 16 }}>
       <h2 style={{ fontSize: 24, marginBottom: 16, fontWeight: 600 }}>
         Thay đổi thông tin
       </h2>
