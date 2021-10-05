@@ -6,7 +6,6 @@ import {
   Text,
   Button,
   Modal,
-  ModalOverlay,
   ModalContent,
   ModalHeader,
   ModalFooter,
@@ -15,6 +14,7 @@ import {
 } from '@chakra-ui/react';
 import ProgressBar from '@ramonak/react-progress-bar';
 import CountUp from 'react-countup';
+import { LoadingScreen } from '../../ui/LoadingScreen';
 import React, { useState } from 'react';
 import { useQuiz } from '../../hooks/useQuiz';
 import { withApollo } from '../../lib/withApollo';
@@ -24,6 +24,7 @@ import styled from '@emotion/styled';
 import { BackButton } from '../../ui/BackButton';
 import { useGetRandomExerciseQuery } from '../../generated/graphql';
 import { useRouter } from 'next/router';
+import { useIsAuth } from '../../utils/useIsAuth';
 
 const WrapperAlert = styled('div')`
   & a.btn.btn-lg.btn-primary {
@@ -56,16 +57,24 @@ const Question = () => {
     onOpen,
     score,
     totalScore,
+    error,
   } = useQuiz();
+  useIsAuth();
   const router = useRouter();
+
   console.log('router ', router.query.id);
   const { data: nextExerciseData } = useGetRandomExerciseQuery({
     variables: {
       currentId: typeof router.query.id === 'string' ? router.query.id : '',
     },
   });
+  console.log('error detect', error);
+  if (error) {
+    router.replace('/404');
+    return <LoadingScreen />;
+  }
+  if (!data && loading) return <LoadingScreen />;
   if (!loading && !data) return <div>có lỗi xảy ra </div>;
-  if (!data && loading) return <div>loading ...</div>;
   return (
     <>
       <Head>
@@ -148,7 +157,7 @@ const Question = () => {
           </Box>
         </Box>
         <Heading mb="5" flexGrow={1}>
-          {data!.getQuestions[current].title}
+          {data!.getQuestions?.[current]?.title}
         </Heading>
 
         {score === 0 ? null : (

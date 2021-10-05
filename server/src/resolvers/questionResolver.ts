@@ -22,6 +22,7 @@ export class QuestionResolver {
       .select('*')
       .where({ exercise })
       .getResult();
+    if (!questions.length) throw new Error('not found');
     await em.populate(questions, ['answers']);
     return questions;
   }

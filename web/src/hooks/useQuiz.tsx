@@ -29,7 +29,7 @@ export const useQuiz = () => {
   const [checked, setChecked] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { data: meData } = useMeQuery();
-  const { data, loading } = useGetQuestionsQuery({
+  const { data, loading, error } = useGetQuestionsQuery({
     variables: { id: router.query.id as string },
     fetchPolicy: 'no-cache',
   });
@@ -172,6 +172,7 @@ export const useQuiz = () => {
 
   return {
     data,
+    error,
     loading,
     complete,
     current,

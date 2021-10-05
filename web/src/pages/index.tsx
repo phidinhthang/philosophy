@@ -32,7 +32,7 @@ const HomePage = () => {
   if (router.query) useIsAuth();
   const { data, error, loading, fetchMore, variables } =
     useGetAllExercisesQuery({
-      variables: { limit: 1 },
+      variables: { limit: 8 },
       notifyOnNetworkStatusChange: true,
     });
   const { data: meData } = useMeQuery();
