@@ -22,12 +22,7 @@ export const AnswerInput: React.FC<AnswerInputProps> = ({
 }) => {
   return (
     <>
-      <InputField
-        name={inputName}
-        label={label}
-        placeholder="write answer here"
-        register={register}
-      />
+      <InputField name={inputName} label={label} register={register} />
       <Box>
         <input
           // as={Button}
