@@ -9,6 +9,7 @@ import { Question } from '../entities/Question';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { ScorePerDay } from '../entities/ScorePerDay';
 import { SavedExercise } from '../entities/SavedExercise';
+import { Upvote } from '../entities/Upvote';
 
 export default {
   migrations: {
@@ -24,6 +25,7 @@ export default {
     Answer,
     ScorePerDay,
     SavedExercise,
+    Upvote,
   ],
 
   type: 'postgresql',

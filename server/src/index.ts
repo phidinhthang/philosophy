@@ -33,9 +33,14 @@ import { configPassport } from './loaders/passport-oauth';
  */
 import { UserResolver } from './resolvers/userResolver';
 import { helloResolver } from './resolvers/helloResolver';
-import { ExerciseResolver } from './resolvers/exerciseResolver';
+import {
+  ExerciseFieldResolver,
+  exerciseResolver,
+} from './resolvers/exerciseResolver';
 import { QuestionResolver } from './resolvers/questionResolver';
 import { AccountResolver } from './resolvers/accountResolver';
+import { createUserLoader } from './utils/createUserLoader';
+import { createUpvoteLoader } from './utils/createUpvoteLoader';
 
 const PORT = process.env.PORT || 4000;
 
@@ -87,14 +92,22 @@ const main = async () => {
       resolvers: [
         helloResolver,
         UserResolver,
-        ExerciseResolver,
+        ExerciseFieldResolver,
+        exerciseResolver,
         QuestionResolver,
         AccountResolver,
       ],
       validate: false,
     }),
     context: ({ req, res }) =>
-      ({ req, res, em: orm.em, redis } as unknown as MyContext),
+      ({
+        req,
+        res,
+        em: orm.em,
+        redis,
+        userLoader: createUserLoader(orm.em.fork()),
+        upvoteLoader: createUpvoteLoader(orm.em.fork()),
+      } as unknown as MyContext),
     plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
   });
   await server.start();

@@ -1,11 +1,7 @@
 query GetAllExercises($limit: Int!, $cursor: String) {
   getAllExercises(limit: $limit, cursor: $cursor) {
     exercises {
-      id
-      title
-      length
-      saved
-      createdAt
+      ...exerciseFieldSnippet
     }
     hasMore
   }

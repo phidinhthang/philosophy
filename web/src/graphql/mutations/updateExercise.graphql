@@ -1,0 +1,3 @@
+mutation UpdateExercise($id: String!, $title: String!) {
+  updateExercise(id: $id, title: $title)
+}

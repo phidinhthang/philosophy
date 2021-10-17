@@ -1,9 +1,18 @@
-import { Arg, Ctx, Mutation, Query, Resolver } from 'type-graphql';
+import {
+  Arg,
+  Ctx,
+  Mutation,
+  Query,
+  Resolver,
+  UseMiddleware,
+} from 'type-graphql';
 import { v4 } from 'uuid';
 import { Answer } from '../entities/Answer';
 import { Exercise } from '../entities/Exercise';
 import { Question } from '../entities/Question';
+import { isAuth } from '../middleware/isAuth';
 import { MyContext } from '../types';
+import { getUserId } from '../utils/auth/getUserId';
 import { QuestionInput } from './inputs';
 
 @Resolver()
@@ -25,6 +34,22 @@ export class QuestionResolver {
     if (!questions.length) throw new Error('not found');
     await em.populate(questions, ['answers']);
     return questions;
+  }
+
+  @Mutation(() => Boolean)
+  @UseMiddleware(isAuth)
+  async deleteQuestion(
+    @Arg('id', () => String) id: string,
+    @Ctx() { req, em }: MyContext,
+  ): Promise<boolean> {
+    const userId = getUserId(req)!;
+    const question = await em.findOne(Question, { id }, ['exercise']);
+    if (question?.exercise?.creator.id !== userId) {
+      console.log('dont belong to this user');
+      return false;
+    }
+    await em.nativeDelete(Question, { id });
+    return true;
   }
 
   @Mutation(() => Boolean)

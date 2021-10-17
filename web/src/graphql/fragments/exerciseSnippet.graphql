@@ -2,4 +2,24 @@ fragment exerciseSnippet on Exercise {
   id
   title
   length
+  createdAt
+  creator {
+    id
+    name
+  }
+  voteStatus
+}
+
+fragment exerciseFieldSnippet on ExerciseField {
+  id
+  title
+  length
+  saved
+  createdAt
+  points
+  creator {
+    id
+    name
+  }
+  voteStatus
 }

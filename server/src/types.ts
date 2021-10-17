@@ -3,12 +3,16 @@ import { Redis } from 'ioredis';
 import { Request, Response } from 'express';
 import { Field, Int, ObjectType } from 'type-graphql';
 import { Exercise } from './entities/Exercise';
+import { createUserLoader } from './utils/createUserLoader';
+import { createUpvoteLoader } from './utils/createUpvoteLoader';
 
 export type MyContext = {
   req: Request;
   res: Response;
   em: EntityManager;
   redis: Redis;
+  userLoader: ReturnType<typeof createUserLoader>;
+  upvoteLoader: ReturnType<typeof createUpvoteLoader>;
 };
 
 @ObjectType()

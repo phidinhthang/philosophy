@@ -26,6 +26,8 @@ import NextLink from 'next/link';
 import { useColorModeValue } from '@chakra-ui/color-mode';
 import { LoadingScreen } from '../ui/LoadingScreen';
 import cloneDeep from 'clone-deep';
+import { EditDeleteExerciseButtons } from '../ui/EditDeleteExerciseButton';
+import { UpvoteSection } from '../ui/UpvoteSection';
 
 const HomePage = () => {
   const router = useRouter();
@@ -79,17 +81,21 @@ const HomePage = () => {
                     done ? useColorModeValue('cyan.100', '#242424') : undefined
                   }
                 >
+                  <UpvoteSection exercise={e} />
                   <Box
                     flex={1}
                     display="flex"
                     justifyContent="space-between"
                     alignItems="center"
                   >
-                    <NextLink href="/quizzes/[id]" as={`/quizzes/${e.id}`}>
-                      <Link>
-                        <Heading fontSize="large">{e.title}</Heading>
-                      </Link>
-                    </NextLink>
+                    <Box>
+                      <NextLink href="/quizzes/[id]" as={`/quizzes/${e.id}`}>
+                        <Link>
+                          <Heading fontSize="large">{e.title}</Heading>
+                        </Link>
+                      </NextLink>
+                      <Text mt={5}>Tạo bởi {e.creator.name}</Text>
+                    </Box>
                     <Box
                       display="flex"
                       alignItems="center"
@@ -139,6 +145,12 @@ const HomePage = () => {
                       >
                         {e.saved ? <DeleteIcon /> : <AddIcon />}
                       </Button>
+                      <Box ml="4">
+                        <EditDeleteExerciseButtons
+                          id={e.id}
+                          creatorId={e.creator.id}
+                        />
+                      </Box>
                     </Box>
                   </Box>
                 </Flex>

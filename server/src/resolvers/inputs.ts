@@ -117,6 +117,15 @@ export class ExerciseField implements Partial<Exercise> {
 
   @Field(() => String)
   createdAt: string;
+
+  @Field(() => User)
+  creator: User;
+
+  @Field(() => Int, { defaultValue: 0 })
+  points: number;
+
+  @Field(() => Int, { nullable: true })
+  voteStatus: number;
 }
 
 @ObjectType()
