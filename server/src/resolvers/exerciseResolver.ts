@@ -126,11 +126,42 @@ export class ExerciseFieldResolver {
     @Arg('id', () => String) id: string,
     @Ctx() { req, em }: MyContext,
   ): Promise<boolean> {
-    await em.nativeDelete(Exercise, {
-      id,
-      creator: em.getReference(User, getUserId(req)!),
-    });
-    return true;
+    const userId = getUserId(req)!;
+    const exercise = await em.findOne(Exercise, { id, creator: userId });
+    if (!exercise) return false;
+
+    try {
+      await em.getConnection('write').transactional(async (tm) => {
+        await tm.raw(
+          `
+          delete from completes where exercise_id = ?
+        `,
+          [id],
+        );
+        await tm.raw(
+          `
+          delete from saved_exercise where exercise_id = ?
+          `,
+          [id],
+        );
+        await tm.raw(
+          `
+          delete from upvote where exercise_id = ?
+        `,
+          [id],
+        );
+        await tm.raw(
+          `
+          delete from exercise where id = ? and creator_id = ?
+        `,
+          [id, userId],
+        );
+      });
+      return true;
+    } catch (err) {
+      console.log(err);
+      return false;
+    }
   }
 
   @Mutation(() => Boolean)
@@ -140,6 +171,8 @@ export class ExerciseFieldResolver {
     @Arg('title') title: string,
     @Ctx() { em, req }: MyContext,
   ): Promise<boolean> {
+    console.log('title ', title);
+    em = em.fork();
     const userId = getUserId(req)!;
     await em.nativeUpdate(Exercise, { id, creator: userId }, { title });
     return true;
@@ -204,33 +237,38 @@ export class ExerciseFieldResolver {
     @Ctx() { em, req }: MyContext,
     @Arg('input') input: ExerciseInput,
   ): Promise<CreateExerciseResponse> {
-    em = em.fork();
-    const userId = getUserId(req)!;
-    const { errors, hasError } = validateExerciseInput(input);
-    if (hasError) {
-      return {
-        hasError,
-        errors,
-      };
-    }
-    const newExercise = em.create(Exercise, {
-      title: input.title,
-      length: input.questions?.length || 0,
-      createdAt: new Date().getTime().toString(),
-      points: 0,
-      creator: em.getReference(User, userId),
-    });
-    input.questions?.forEach((q) => {
-      const newQuestion = em.create(Question, q);
-      q.answers?.forEach((a) => {
-        const newAnswer = em.create(Answer, a);
-        newQuestion.answers.add(newAnswer);
-      });
-      newExercise.questions.add(newQuestion);
-    });
     try {
-      await em.persistAndFlush(newExercise);
-      return { hasError, exercise: newExercise };
+      em = em.fork();
+      const userId = getUserId(req)!;
+      const { errors, hasError } = validateExerciseInput(input);
+      if (hasError) {
+        return {
+          hasError,
+          errors,
+        };
+      }
+      const newExercise = em.create(Exercise, {
+        title: input.title,
+        length: input.questions?.length || 0,
+        createdAt: new Date().getTime().toString(),
+        points: 0,
+        creator: em.getReference(User, userId),
+      });
+      input.questions?.forEach((q) => {
+        const newQuestion = em.create(Question, q);
+        q.answers?.forEach((a) => {
+          const newAnswer = em.create(Answer, a);
+          newQuestion.answers.add(newAnswer);
+        });
+        newExercise.questions.add(newQuestion);
+      });
+      try {
+        await em.persistAndFlush(newExercise);
+        return { hasError, exercise: newExercise };
+      } catch (err) {
+        console.log(err);
+        return { hasError: true };
+      }
     } catch (err) {
       console.log(err);
       return { hasError: true };

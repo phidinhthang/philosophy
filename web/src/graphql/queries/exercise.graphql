@@ -1,21 +1,5 @@
 query Exercise($id: String!) {
   exercise(id: $id) {
-    id
-    title
-    length
-    points
-    creator {
-      id
-      name
-    }
-    voteStatus
-    questions {
-      id
-      title
-      answers {
-        id
-        text
-      }
-    }
+    ...exerciseSnippet
   }
 }

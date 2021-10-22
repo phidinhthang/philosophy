@@ -13,7 +13,15 @@ mutation CreateExercise($input: ExerciseInput!) {
       }
     }
     exercise {
-      ...exerciseSnippet
+      id
+      title
+      length
+      points
+      creator {
+        id
+        name
+      }
+      voteStatus
     }
   }
 }

@@ -11,6 +11,8 @@ import {
 } from '../../../generated/graphql';
 import { useGetId } from '../../../utils/useGetId';
 import { withApollo } from '../../../lib/withApollo';
+import gql from 'graphql-tag';
+import { InputFieldFormik } from '../../../ui/InputFieldFormik';
 
 const EditExercise = () => {
   const router = useRouter();
@@ -45,13 +47,40 @@ const EditExercise = () => {
       <Formik
         initialValues={{ title: data.exercise.title }}
         onSubmit={async (values) => {
-          await updateExercise({ variables: { id: id!, title: values.title } });
+          console.log(values);
+          await updateExercise({
+            variables: { id: id!, title: values.title },
+            update: (cache) => {
+              cache.writeFragment({
+                id: 'ExerciseField:' + id,
+                fragment: gql`
+                  fragment updateExerciseFieldTitle on ExerciseField {
+                    title
+                  }
+                `,
+                data: {
+                  title: values.title,
+                },
+              });
+              cache.writeFragment({
+                id: 'Exercise:' + id,
+                fragment: gql`
+                  fragment updateExerciseTitle on Exercise {
+                    title
+                  }
+                `,
+                data: {
+                  title: values.title,
+                },
+              });
+            },
+          });
           router.back();
         }}
       >
         {({ isSubmitting }) => (
           <Form>
-            <InputField name="title" placeholder="title" label="Title" />
+            <InputFieldFormik name="title" placeholder="title" label="Title" />
             <Button
               mt={4}
               type="submit"

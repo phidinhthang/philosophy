@@ -9,6 +9,7 @@ import { InputField } from '../ui/InputField';
 import { Layout } from '../layouts/Layout';
 import {
   GetAllExercisesDocument,
+  GetAllExercisesQuery,
   useCreateExerciseMutation,
 } from '../generated/graphql';
 import { useIsAuth } from '../utils/useIsAuth';
@@ -56,30 +57,42 @@ const CreatePostPage: React.FC<{}> = ({}) => {
       return newQ;
     });
     const newValues = { title: values.title, questions: newQuestions };
+    console.log('new values ', newValues);
     const { data } = await createExercise({
       variables: { input: newValues },
-      update: (cache, { data }) => {
-        if (data?.createExercise?.exercise) {
-          const existingsExercise = cache.readQuery({
-            query: GetAllExercisesDocument,
-          });
-          cache.writeQuery({
-            query: GetAllExercisesDocument,
-            data: {
-              getAllExercises: [
-                {
-                  __typename: 'Exercise',
-                  id: data.createExercise.exercise.id!,
-                  title: data.createExercise.exercise.title!,
-                  length: data.createExercise.exercise.length!,
-                },
-                //@ts-ignore
-                ...cloneDeep(existingsExercise!.getAllExercises!),
-              ],
-            },
-          });
-        }
-      },
+      // update: (cache, { data }) => {
+      //   if (data?.createExercise?.exercise) {
+      //     const existingsExercise = cache.readQuery({
+      //       query: GetAllExercisesDocument,
+      //     });
+      //     if (!existingsExercise) return;
+      //     let copy = cloneDeep((existingsExercise as any)?.getAllExercises!);
+      //     if (!copy) copy = [];
+      //     cache.writeQuery({
+      //       query: GetAllExercisesDocument,
+      //       data: {
+      //         getAllExercises: {
+      //           ...copy,
+      //           exercises: [
+      //             {
+      //               __typename: 'ExerciseField',
+      //               id: data.createExercise.exercise.id!,
+      //               title: data.createExercise.exercise.title!,
+      //               length: data.createExercise.exercise.length!,
+      //               creator: {
+      //                 id: data.createExercise.exercise.creator.id,
+      //                 name: data.createExercise.exercise.creator.name,
+      //               },
+      //               points: 0,
+      //               saved: false,
+      //             },
+      //             //@ts-ignore
+      //           ],
+      //         },
+      //       },
+      //     });
+      //   }
+      // },
     });
     if (data?.createExercise?.hasError === false) {
       router.push('/');
@@ -209,6 +222,11 @@ const CreatePostPage: React.FC<{}> = ({}) => {
             </Button>
           )}
           <Box>
+            {isSubmitting ? (
+              <Button onClick={() => setSubmitting(false)} colorScheme="red">
+                Cancel
+              </Button>
+            ) : null}
             <Button type="submit" isLoading={isSubmitting}>
               Tạo
             </Button>

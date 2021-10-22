@@ -2,12 +2,20 @@ fragment exerciseSnippet on Exercise {
   id
   title
   length
-  createdAt
+  points
   creator {
     id
     name
   }
   voteStatus
+  questions {
+    id
+    title
+    answers {
+      id
+      text
+    }
+  }
 }
 
 fragment exerciseFieldSnippet on ExerciseField {

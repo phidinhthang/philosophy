@@ -34,7 +34,7 @@ export const EditDeleteExerciseButtons: React.FC<EditDeleteExerciseButtonsProps>
             deleteExercise({
               variables: { id },
               update: (cache) => {
-                cache.evict({ id: 'Post:' + id });
+                cache.evict({ id: 'ExerciseField:' + id });
               },
             });
           }}

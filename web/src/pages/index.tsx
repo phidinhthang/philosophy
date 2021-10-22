@@ -20,8 +20,12 @@ import {
   Stack,
   Text,
   Button,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
 } from '@chakra-ui/react';
-import { AddIcon, DeleteIcon } from '@chakra-ui/icons';
+import { AddIcon, DeleteIcon, ChevronDownIcon } from '@chakra-ui/icons';
 import NextLink from 'next/link';
 import { useColorModeValue } from '@chakra-ui/color-mode';
 import { LoadingScreen } from '../ui/LoadingScreen';
@@ -102,55 +106,74 @@ const HomePage = () => {
                       justifyContent="center"
                     >
                       <Text mr="4">{text}</Text>
-                      <Button
-                        isLoading={isSaving && targeted === e.id}
-                        disabled={isSaving && targeted === e.id}
-                        onClick={() => {
-                          setTargeted(e.id);
-                          saveExercise({
-                            variables: { exerciseId: e.id },
-                            update: (cache, { data }) => {
-                              const cachedExercises =
-                                cache.readQuery<GetAllExercisesQuery>({
-                                  query: GetAllExercisesDocument,
-                                });
-
-                              let exerciseDraft = cloneDeep(
-                                cachedExercises?.getAllExercises,
-                              );
-                              let haveFound = false;
-                              exerciseDraft?.exercises?.forEach((exercise) => {
-                                if (exercise.id === e.id) {
-                                  exercise.saved = !exercise.saved;
-                                  haveFound = true;
-                                }
-                              });
-
-                              if (haveFound) {
-                                cache.writeQuery<GetAllExercisesQuery>({
-                                  query: GetAllExercisesDocument,
-                                  data: {
-                                    getAllExercises: {
-                                      exercises: exerciseDraft?.exercises,
-                                      hasMore: exerciseDraft!.hasMore,
-                                    },
-                                  },
-                                  overwrite: true,
-                                });
-                              }
-                            },
-                            refetchQueries: [GetAllSavedExerciseDocument],
-                          }).then(() => setTargeted(''));
-                        }}
-                      >
-                        {e.saved ? <DeleteIcon /> : <AddIcon />}
-                      </Button>
                       <Box ml="4">
                         <EditDeleteExerciseButtons
                           id={e.id}
                           creatorId={e.creator.id}
                         />
                       </Box>
+                      <Menu>
+                        <MenuButton as={Button}>
+                          <ChevronDownIcon />
+                        </MenuButton>
+                        <MenuList>
+                          <MenuItem>
+                            <Button
+                              isFullWidth
+                              isLoading={isSaving && targeted === e.id}
+                              disabled={isSaving && targeted === e.id}
+                              onClick={() => {
+                                setTargeted(e.id);
+                                saveExercise({
+                                  variables: { exerciseId: e.id },
+                                  update: (cache, { data }) => {
+                                    const cachedExercises =
+                                      cache.readQuery<GetAllExercisesQuery>({
+                                        query: GetAllExercisesDocument,
+                                      });
+
+                                    let exerciseDraft = cloneDeep(
+                                      cachedExercises?.getAllExercises,
+                                    );
+                                    let haveFound = false;
+                                    exerciseDraft?.exercises?.forEach(
+                                      (exercise) => {
+                                        if (exercise.id === e.id) {
+                                          exercise.saved = !exercise.saved;
+                                          haveFound = true;
+                                        }
+                                      },
+                                    );
+
+                                    if (haveFound) {
+                                      cache.writeQuery<GetAllExercisesQuery>({
+                                        query: GetAllExercisesDocument,
+                                        data: {
+                                          getAllExercises: {
+                                            exercises: exerciseDraft?.exercises,
+                                            hasMore: exerciseDraft!.hasMore,
+                                          },
+                                        },
+                                        overwrite: true,
+                                      });
+                                    }
+                                  },
+                                  refetchQueries: [GetAllSavedExerciseDocument],
+                                }).then(() => setTargeted(''));
+                              }}
+                            >
+                              <Button
+                                isFullWidth
+                                display="flex"
+                                justifyContent="space-between"
+                              >
+                                {e.saved ? 'Bỏ lưu' : 'Lưu'}
+                                {e.saved ? <DeleteIcon /> : <AddIcon />}
+                              </Button>
+                            </Button>
+                          </MenuItem>
+                        </MenuList>
+                      </Menu>
                     </Box>
                   </Box>
                 </Flex>
